@@ -52,6 +52,14 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				evidence: {
+					suspicious: 'hsl(var(--evidence-suspicious))',
+					'suspicious-foreground': 'hsl(var(--evidence-suspicious-foreground))',
+					calming: 'hsl(var(--evidence-calming))',
+					'calming-foreground': 'hsl(var(--evidence-calming-foreground))',
+					neutral: 'hsl(var(--evidence-neutral))',
+					'neutral-foreground': 'hsl(var(--evidence-neutral-foreground))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
