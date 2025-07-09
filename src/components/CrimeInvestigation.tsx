@@ -13,74 +13,98 @@ const sampleEvidence: Evidence[] = [
   {
     id: "1",
     title: "טביעת אצבע על כלי הנשק",
-    description: "טביעת אצבע ברורה נמצאה על הדק הרובה, תואמת לחשוד הראשי",
+    content: "טביעת אצבע ברורה נמצאה על הדק הרובה, תואמת לחשוד הראשי בצורה מושלמת",
     type: "physical",
-    location: "זירת הפשע - חדר השינה",
-    timestamp: "2024-01-15 14:30",
-    severity: "high"
+    issueDate: "2024-01-16 09:30",
+    incidentDate: "2024-01-15 14:30",
+    system: "זיהוי פלילי",
+    anomalyLevel: "critical",
+    issuingUnit: "מעבדת משטרה מרכזית",
+    source: "זירת הפשע - חדר השינה"
   },
   {
     id: "2", 
-    title: "עדות שכנה",
-    description: "השכנה מעידה שראתה את החשוד עוזב את הבניין בשעות הערב",
+    title: "עדות שכנה על נוכחות החשוד",
+    content: "השכנה מעידה שראתה את החשוד עוזב את הבניין בשעות הערב עם תיק חשוד",
     type: "witness",
-    location: "דירה 4א",
-    timestamp: "2024-01-15 20:15",
-    severity: "medium"
+    issueDate: "2024-01-16 08:15",
+    incidentDate: "2024-01-15 20:15",
+    system: "חקירות",
+    anomalyLevel: "medium",
+    issuingUnit: "תחנת משטרה מרכז",
+    source: "דירה 4א - עדה ראשית"
   },
   {
     id: "3",
-    title: "אליבי מוכח",
-    description: "תמונות ממצלמות אבטחה מראות את החשוד במקום אחר בזמן הפשע",
+    title: "אליבי מוכח ממצלמות אבטחה",
+    content: "תמונות ממצלמות אבטחה מראות את החשוד במקום אחר בזמן הפשע בצורה ברורה",
     type: "digital",
-    location: "קניון עזריאלי",
-    timestamp: "2024-01-15 14:25",
-    severity: "low"
+    issueDate: "2024-01-16 10:45",
+    incidentDate: "2024-01-15 14:25",
+    system: "מצלמות אבטחה",
+    anomalyLevel: "low",
+    issuingUnit: "יחידת טכנולוגיות",
+    source: "קניון עזריאלי - מערכת אבטחה"
   },
   {
     id: "4",
     title: "הודעות טקסט מאיימות",
-    description: "סדרה של הודעות מאיימות נשלחו מהטלפון של החשוד לקורבן",
+    content: "סדרה של הודעות מאיימות נשלחו מהטלפון של החשוד לקורבן שעות לפני הרצח",
     type: "digital",
-    location: "טלפון נייד",
-    timestamp: "2024-01-14 22:30",
-    severity: "high"
+    issueDate: "2024-01-16 07:20",
+    incidentDate: "2024-01-14 22:30",
+    system: "תקשורת דיגיטלית",
+    anomalyLevel: "high",
+    issuingUnit: "יחידת סייבר",
+    source: "טלפון נייד - רשת סלולרית"
   },
   {
     id: "5",
-    title: "תוצאות בדיקת פוליגרף",
-    description: "החשוד עבר בהצלחה בדיקת פוליגרף ללא סימני שקר",
+    title: "תוצאות בדיקת פוליגרף חיובי",
+    content: "החשוד עבר בהצלחה בדיקת פוליגרף ללא סימני שקר או מתח במהלך החקירה",
     type: "document",
-    location: "תחנת המשטרה",
-    timestamp: "2024-01-16 10:00",
-    severity: "low"
+    issueDate: "2024-01-16 11:30",
+    incidentDate: "2024-01-16 10:00",
+    system: "בדיקות פסיכולוגיות",
+    anomalyLevel: "low",
+    issuingUnit: "יחידה פסיכולוגית",
+    source: "תחנת המשטרה - חדר חקירות"
   },
   {
     id: "6",
-    title: "כתם דם על בגדים",
-    description: "כתמי דם נמצאו על חולצת החשוד, בדיקות DNA בתהליך",
+    title: "כתמי דם על בגדי החשוד",
+    content: "כתמי דם נמצאו על חולצת החשוד, בדיקות DNA מצביעות על התאמה לקורבן",
     type: "physical",
-    location: "דירת החשוד",
-    timestamp: "2024-01-16 08:45",
-    severity: "high"
+    issueDate: "2024-01-16 13:15",
+    incidentDate: "2024-01-16 08:45",
+    system: "זיהוי פלילי",
+    anomalyLevel: "critical",
+    issuingUnit: "מעבדת DNA",
+    source: "דירת החשוד - חדר הכביסה"
   },
   {
     id: "7",
-    title: "רישומים רפואיים",
-    description: "החשוד מטופל בתרופות נוגדות דיכאון וללא היסטוריה של אלימות",
+    title: "רישומים רפואיים נקיים",
+    content: "החשוד מטופל בתרופות נוגדות דיכאון וללא היסטוריה של אלימות או התפרצויות",
     type: "document",
-    location: "קופת חולים כללית",
-    timestamp: "2024-01-16 11:20",
-    severity: "low"
+    issueDate: "2024-01-16 14:20",
+    incidentDate: "2024-01-16 11:20",
+    system: "רפואי",
+    anomalyLevel: "low",
+    issuingUnit: "קופת חולים כללית",
+    source: "מערכת רפואית ממוחשבת"
   },
   {
     id: "8",
-    title: "מוטיב כלכלי",
-    description: "החשוד היה חייב לקורבן סכום כסף גדול שלא החזיר",
+    title: "מוטיב כלכלי מוכח",
+    content: "החשוד היה חייב לקורבן סכום כסף גדול של 500,000 ש״ח שלא החזיר במועד",
     type: "document",
-    location: "רישומי בנק",
-    timestamp: "2024-01-12",
-    severity: "medium"
+    issueDate: "2024-01-16 12:40",
+    incidentDate: "2024-01-12 00:00",
+    system: "כלכלי",
+    anomalyLevel: "high",
+    issuingUnit: "יחידת כלכלה",
+    source: "רישומי בנק לאומי"
   }
 ];
 
@@ -131,7 +155,24 @@ export function CrimeInvestigation() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Available Evidence */}
+          {/* Drop Zones - Left Side */}
+          <div className="lg:col-span-2 space-y-6">
+            <EvidenceDropZone
+              type="suspicious"
+              evidence={suspiciousEvidence}
+              onDrop={handleDrop}
+              title="ראיות חשודות"
+            />
+            
+            <EvidenceDropZone
+              type="calming"
+              evidence={calmingEvidence}
+              onDrop={handleDrop}
+              title="ראיות מרגיעות"
+            />
+          </div>
+
+          {/* Available Evidence - Right Side */}
           <Card className="lg:col-span-1">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -161,23 +202,6 @@ export function CrimeInvestigation() {
               </ScrollArea>
             </CardContent>
           </Card>
-
-          {/* Drop Zones */}
-          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <EvidenceDropZone
-              type="suspicious"
-              evidence={suspiciousEvidence}
-              onDrop={handleDrop}
-              title="ראיות חשודות"
-            />
-            
-            <EvidenceDropZone
-              type="calming"
-              evidence={calmingEvidence}
-              onDrop={handleDrop}
-              title="ראיות מרגיעות"
-            />
-          </div>
         </div>
 
         {/* Investigation Summary */}
