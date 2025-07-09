@@ -146,17 +146,18 @@ export function CrimeInvestigation() {
           </p>
         </div>
 
-        {/* Evidence Ratio Meter */}
-        <div className="max-w-md mx-auto">
-          <EvidenceRatioMeter 
-            suspiciousCount={suspiciousEvidence.length}
-            calmingCount={calmingEvidence.length}
-          />
-        </div>
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+          {/* Evidence Ratio Meter - Left Side */}
+          <div className="xl:col-span-1">
+            <EvidenceRatioMeter 
+              suspiciousCount={suspiciousEvidence.length}
+              calmingCount={calmingEvidence.length}
+              totalEvidenceCount={sampleEvidence.length}
+            />
+          </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Drop Zones - Left Side */}
-          <div className="lg:col-span-2 space-y-6">
+          {/* Drop Zones - Center */}
+          <div className="xl:col-span-2 space-y-6">
             <EvidenceDropZone
               type="suspicious"
               evidence={suspiciousEvidence}
@@ -173,7 +174,7 @@ export function CrimeInvestigation() {
           </div>
 
           {/* Available Evidence - Right Side */}
-          <Card className="lg:col-span-1">
+          <Card className="xl:col-span-1">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Eye className="w-5 h-5" />
