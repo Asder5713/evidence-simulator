@@ -48,9 +48,32 @@ const anomalyColors = {
 export function EvidenceCard({ evidence, onDragStart, onReturn, showReturnButton = false, isCondensed = false }: EvidenceCardProps) {
   const [isDragging, setIsDragging] = useState(false);
 
+  const getContentTypeLabel = () => {
+    if (typeof evidence.content === 'string') {
+      return 'טקסט';
+    }
+    
+    const contentData = evidence.content as { type: 'text' | 'image' | 'audio' | 'video'; data: string };
+    
+    switch (contentData.type) {
+      case 'image': return 'תמונה';
+      case 'audio': return 'קובץ שמע';
+      case 'video': return 'וידיאו';
+      default: return 'טקסט';
+    }
+  };
+
   const renderContent = () => {
     if (typeof evidence.content === 'string') {
-      return <p className="text-sm text-muted-foreground">{evidence.content}</p>;
+      return (
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <FileText className="w-4 h-4" />
+            <span>טקסט</span>
+          </div>
+          <p className="text-sm text-muted-foreground">{evidence.content}</p>
+        </div>
+      );
     }
 
     const contentData = evidence.content as { type: 'text' | 'image' | 'audio' | 'video'; data: string };
@@ -113,7 +136,15 @@ export function EvidenceCard({ evidence, onDragStart, onReturn, showReturnButton
           </div>
         );
       default:
-        return <p className="text-sm text-muted-foreground">{contentData.data}</p>;
+        return (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <FileText className="w-4 h-4" />
+              <span>טקסט</span>
+            </div>
+            <p className="text-sm text-muted-foreground">{contentData.data}</p>
+          </div>
+        );
     }
   };
 
@@ -129,7 +160,7 @@ export function EvidenceCard({ evidence, onDragStart, onReturn, showReturnButton
           <div className="flex-1 min-w-0">
             <h3 className="text-sm font-medium truncate">{evidence.title}</h3>
             <div className="text-xs text-muted-foreground">
-              {evidence.issueDate}
+              {getContentTypeLabel()} • {evidence.issueDate}
             </div>
           </div>
         </div>

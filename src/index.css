@@ -128,3 +128,14 @@ All colors MUST be HSL.
     text-orientation: mixed;
   }
 }
+
+@layer components {
+  /* Button hover styles with subtle grayscale colors */
+  .hover\:bg-muted:hover {
+    background-color: hsl(var(--muted));
+  }
+  
+  .hover\:bg-muted\/50:hover {
+    background-color: hsl(var(--muted) / 0.5);
+  }
+}

@@ -20,8 +20,8 @@ export function VerticalThreatMeter({ suspiciousCount, calmingCount, totalEviden
   // בדיקה אם יש וודאות של 80% לאחד מהצדדים
   const hasHighConfidence = suspiciousRatio >= 80 || calmingRatio >= 80;
   
-  // הכפתור מופעל רק אם שני התנאים מתקיימים
-  const canReport = allEvidenceSorted && hasHighConfidence;
+  // הכפתור מופעל רק אם כל הראיות מוינו (ללא תלות בוודאות)
+  const canReport = allEvidenceSorted;
 
   // חישוב מיקום המד (0 = מרכז, חיובי = מרגיע, שלילי = חשוד)
   const meterPosition = calmingRatio - suspiciousRatio; // -100 עד 100 (מרגיע חיובי, חשוד שלילי)
@@ -51,9 +51,12 @@ export function VerticalThreatMeter({ suspiciousCount, calmingCount, totalEviden
   return (
     <div className="w-16 h-full flex flex-col items-center py-4 bg-card border-l border-border">
       {/* כותרת */}
-      <div className="text-xs font-medium text-center mb-4">
+      <div className="text-xs font-medium text-center mb-2">
         מד איום
       </div>
+
+      {/* תווית עליונה */}
+      <div className="text-xs text-evidence-calming font-medium mb-2">מרגיע</div>
 
       {/* המד הוורטיקלי */}
       <div className="flex-1 w-6 relative bg-muted rounded-full">
@@ -70,32 +73,10 @@ export function VerticalThreatMeter({ suspiciousCount, calmingCount, totalEviden
         >
           <div className="absolute inset-0 bg-primary rounded-full animate-pulse"></div>
         </div>
-
-        {/* תוויות */}
-        <div className="absolute -right-8 top-2 text-xs text-evidence-calming">מרגיע</div>
-        <div className="absolute -right-6 top-1/2 transform -translate-y-1/2 text-xs text-muted-foreground">0</div>
-        <div className="absolute -right-8 bottom-2 text-xs text-evidence-suspicious">חשוד</div>
       </div>
 
-      {/* רמת איום */}
-      <div className="mt-4 text-center">
-        <div className="text-xs text-muted-foreground mb-1">רמת איום</div>
-        <div className={`text-xs font-bold ${threatLevel.color}`}>
-          {threatLevel.level}
-        </div>
-      </div>
-
-      {/* סטטיסטיקות קצרות */}
-      <div className="mt-4 text-center space-y-2">
-        <div className="text-xs">
-          <div className="text-evidence-suspicious font-bold">{suspiciousCount}</div>
-          <div className="text-muted-foreground">חשודות</div>
-        </div>
-        <div className="text-xs">
-          <div className="text-evidence-calming font-bold">{calmingCount}</div>
-          <div className="text-muted-foreground">מרגיעות</div>
-        </div>
-      </div>
+      {/* תווית תחתונה */}
+      <div className="text-xs text-evidence-suspicious font-medium mt-2">מחשיד</div>
 
       {/* כפתור דיווח */}
       <div className="mt-6">
