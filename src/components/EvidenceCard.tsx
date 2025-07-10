@@ -117,39 +117,34 @@ export function EvidenceCard({ evidence, onDragStart, onReturn, showReturnButton
     }
   };
 
-  // תצוגה מקוצרת לראיות מוינות
+  // תצוגה מקוצרת לראיות מוינות - שורה אחת
   if (isCondensed) {
     return (
-      <Card 
-        className={`transition-all duration-200 hover:shadow-lg ${
-          evidence.category === 'suspicious' ? 'border-evidence-suspicious/50' : 
-          evidence.category === 'calming' ? 'border-evidence-calming/50' : 'border-border'
-        }`}
-      >
-        <CardContent className="p-4 space-y-3">
-          <div className="flex items-center gap-2">
-            <span className="text-lg">{typeIcons[evidence.type]}</span>
-            <h3 className="text-sm font-medium">{evidence.title}</h3>
+      <div className={`flex items-center justify-between p-3 rounded-lg border transition-all duration-200 ${
+        evidence.category === 'suspicious' ? 'border-evidence-suspicious/50 bg-evidence-suspicious/5' : 
+        evidence.category === 'calming' ? 'border-evidence-calming/50 bg-evidence-calming/5' : 'border-border'
+      }`}>
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          <span className="text-base">{typeIcons[evidence.type]}</span>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-sm font-medium truncate">{evidence.title}</h3>
+            <div className="text-xs text-muted-foreground">
+              {evidence.issueDate}
+            </div>
           </div>
-          
-          <div className="text-xs text-muted-foreground">
-            <Calendar className="w-3 h-3 inline ml-1" />
-            תאריך הפקה: {evidence.issueDate}
-          </div>
+        </div>
 
-          {showReturnButton && onReturn && (
-            <Button 
-              onClick={() => onReturn(evidence)}
-              variant="outline"
-              size="sm"
-              className="w-full"
-            >
-              <ArrowRight className="w-3 h-3 ml-1" />
-              החזר לראיות זמינות
-            </Button>
-          )}
-        </CardContent>
-      </Card>
+        {showReturnButton && onReturn && (
+          <Button 
+            onClick={() => onReturn(evidence)}
+            variant="ghost"
+            size="sm"
+            className="shrink-0 w-8 h-8 p-0"
+          >
+            <ArrowRight className="w-4 h-4" />
+          </Button>
+        )}
+      </div>
     );
   }
 
