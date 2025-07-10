@@ -12,9 +12,10 @@ interface ReportFormProps {
   calmingCount: number;
   suspiciousRatio: number;
   calmingRatio: number;
+  isVertical?: boolean;
 }
 
-export function ReportForm({ suspiciousCount, calmingCount, suspiciousRatio, calmingRatio }: ReportFormProps) {
+export function ReportForm({ suspiciousCount, calmingCount, suspiciousRatio, calmingRatio, isVertical = false }: ReportFormProps) {
   const [reportText, setReportText] = useState("");
   const [investigatorName, setInvestigatorName] = useState("");
   const [open, setOpen] = useState(false);
@@ -50,10 +51,17 @@ export function ReportForm({ suspiciousCount, calmingCount, suspiciousRatio, cal
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full" size="lg">
-          <FileText className="w-4 h-4 mr-2" />
-          דווח לממונה
-        </Button>
+        {isVertical ? (
+          <Button size="sm" className="writing-mode-vertical text-xs p-2 h-auto">
+            <FileText className="w-3 h-3 mb-1" />
+            דווח לממונה
+          </Button>
+        ) : (
+          <Button className="w-full" size="lg">
+            <FileText className="w-4 h-4 mr-2" />
+            דווח לממונה
+          </Button>
+        )}
       </DialogTrigger>
       
       <DialogContent className="max-w-md">
