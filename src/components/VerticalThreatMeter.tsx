@@ -51,7 +51,7 @@ export function VerticalThreatMeter({ suspiciousCount, calmingCount, totalEviden
   return (
     <div className="w-16 h-full flex flex-col items-center py-4 bg-card border-l border-border">
       {/* כותרת */}
-      <div className="text-xs font-medium text-center mb-4 writing-mode-vertical">
+      <div className="text-xs font-medium text-center mb-4">
         מד איום
       </div>
 
@@ -116,10 +116,10 @@ export function VerticalThreatMeter({ suspiciousCount, calmingCount, totalEviden
                     size="sm" 
                     disabled
                     variant="outline"
-                    className="writing-mode-vertical text-xs p-2 h-auto"
+                    className="text-xs p-2 h-auto flex flex-col items-center gap-1"
                   >
-                    <FileText className="w-3 h-3 mb-1" />
-                    דווח לממונה
+                    <FileText className="w-3 h-3" />
+                    <span className="text-[10px] leading-tight text-center">דווח לממונה</span>
                   </Button>
                 )}
               </div>

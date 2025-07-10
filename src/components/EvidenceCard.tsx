@@ -7,7 +7,12 @@ import { Clock, MapPin, User, AlertTriangle, Building, FileText, Calendar, Arrow
 export interface Evidence {
   id: string;
   title: string; // כותרת הראייה
-  content: string | { type: 'text' | 'image' | 'audio' | 'video'; data: string }; // תוכן הראייה
+  content: string | { 
+    type: 'text' | 'image' | 'audio' | 'video'; 
+    data: string;
+    callOriginator?: string; // עבור אודיו - מוציא שיחה
+    callReceiver?: string; // עבור אודיו - מקבל שיחה
+  }; // תוכן הראייה
   type: 'physical' | 'digital' | 'witness' | 'document';
   issueDate: string; // תאריך ושעת הפקה
   incidentDate: string; // תאריך ושעת מקרה
@@ -23,6 +28,7 @@ interface EvidenceCardProps {
   onDragStart?: (e: React.DragEvent<HTMLDivElement>, evidence: Evidence) => void;
   onReturn?: (evidence: Evidence) => void;
   showReturnButton?: boolean;
+  isCondensed?: boolean; // תצוגה מקוצרת לראיות מוינות
 }
 
 const typeIcons = {
@@ -39,7 +45,7 @@ const anomalyColors = {
   critical: "bg-destructive text-destructive-foreground"
 };
 
-export function EvidenceCard({ evidence, onDragStart, onReturn, showReturnButton = false }: EvidenceCardProps) {
+export function EvidenceCard({ evidence, onDragStart, onReturn, showReturnButton = false, isCondensed = false }: EvidenceCardProps) {
   const [isDragging, setIsDragging] = useState(false);
 
   const renderContent = () => {
@@ -61,15 +67,37 @@ export function EvidenceCard({ evidence, onDragStart, onReturn, showReturnButton
           </div>
         );
       case 'audio':
+        const audioData = contentData as { type: 'audio'; data: string; callOriginator?: string; callReceiver?: string };
         return (
-          <div className="space-y-2">
+          <div className="space-y-3">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Volume2 className="w-4 h-4" />
               <span>קובץ שמע</span>
             </div>
-            <audio controls className="w-full">
-              <source src={contentData.data} type="audio/mpeg" />
-            </audio>
+            
+            {/* פרטי שיחה אם קיימים */}
+            {(audioData.callOriginator || audioData.callReceiver) && (
+              <div className="bg-muted/50 p-3 rounded-lg border space-y-2">
+                {audioData.callOriginator && (
+                  <div className="text-sm">
+                    <span className="font-medium text-muted-foreground">מוציא שיחה: </span>
+                    <span className="text-foreground">{audioData.callOriginator}</span>
+                  </div>
+                )}
+                {audioData.callReceiver && (
+                  <div className="text-sm">
+                    <span className="font-medium text-muted-foreground">מקבל שיחה: </span>
+                    <span className="text-foreground">{audioData.callReceiver}</span>
+                  </div>
+                )}
+              </div>
+            )}
+            
+            <div className="bg-slate-900 p-3 rounded-lg border border-slate-700">
+              <audio controls className="w-full [&::-webkit-media-controls-panel]:bg-slate-800 [&::-webkit-media-controls-play-button]:filter-invert">
+                <source src={audioData.data} type="audio/mpeg" />
+              </audio>
+            </div>
           </div>
         );
       case 'video':
@@ -88,6 +116,42 @@ export function EvidenceCard({ evidence, onDragStart, onReturn, showReturnButton
         return <p className="text-sm text-muted-foreground">{contentData.data}</p>;
     }
   };
+
+  // תצוגה מקוצרת לראיות מוינות
+  if (isCondensed) {
+    return (
+      <Card 
+        className={`transition-all duration-200 hover:shadow-lg ${
+          evidence.category === 'suspicious' ? 'border-evidence-suspicious/50' : 
+          evidence.category === 'calming' ? 'border-evidence-calming/50' : 'border-border'
+        }`}
+      >
+        <CardContent className="p-4 space-y-3">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">{typeIcons[evidence.type]}</span>
+            <h3 className="text-sm font-medium">{evidence.title}</h3>
+          </div>
+          
+          <div className="text-xs text-muted-foreground">
+            <Calendar className="w-3 h-3 inline ml-1" />
+            תאריך הפקה: {evidence.issueDate}
+          </div>
+
+          {showReturnButton && onReturn && (
+            <Button 
+              onClick={() => onReturn(evidence)}
+              variant="outline"
+              size="sm"
+              className="w-full"
+            >
+              <ArrowRight className="w-3 h-3 ml-1" />
+              החזר לראיות זמינות
+            </Button>
+          )}
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card 

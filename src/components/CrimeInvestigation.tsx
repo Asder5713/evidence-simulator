@@ -61,7 +61,12 @@ const sampleEvidence: Evidence[] = [
   {
     id: "5",
     title: "תוצאות בדיקת פוליגרף חיובי",
-    content: { type: "audio", data: "/placeholder-audio.mp3" },
+    content: { 
+      type: "audio", 
+      data: "/placeholder-audio.mp3",
+      callOriginator: "יוסי כהן (חשוד)",
+      callReceiver: "דני לוי (קורבן)"
+    },
     type: "document",
     issueDate: "2024-01-16 11:30",
     incidentDate: "2024-01-16 10:00",

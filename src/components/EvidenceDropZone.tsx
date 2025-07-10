@@ -73,6 +73,7 @@ export function EvidenceDropZone({ type, evidence, onDrop, onReturn, title }: Ev
                 evidence={item}
                 showReturnButton={true}
                 onReturn={onReturn}
+                isCondensed={true}
               />
             ))}
             {evidence.length === 0 && (
