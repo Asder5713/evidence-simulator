@@ -23,16 +23,16 @@ export function VerticalThreatMeter({ suspiciousCount, calmingCount, totalEviden
   // הכפתור מופעל רק אם שני התנאים מתקיימים
   const canReport = allEvidenceSorted && hasHighConfidence;
 
-  // חישוב מיקום המד (0 = מרכז, חיובי = חשוד, שלילי = מרגיע)
-  const meterPosition = suspiciousRatio - calmingRatio; // -100 עד 100
+  // חישוב מיקום המד (0 = מרכז, חיובי = מרגיע, שלילי = חשוד)
+  const meterPosition = calmingRatio - suspiciousRatio; // -100 עד 100 (מרגיע חיובי, חשוד שלילי)
   const meterPercentage = 50 + (meterPosition / 2); // המרה ל0-100% למיקום ויזואלי
 
   const getThreatLevel = () => {
     if (Math.abs(meterPosition) < 20) return { level: 'ניטרלי', color: 'text-muted-foreground' };
-    if (meterPosition > 60) return { level: 'גבוה', color: 'text-evidence-suspicious' };
-    if (meterPosition > 20) return { level: 'בינוני', color: 'text-orange-500' };
-    if (meterPosition < -60) return { level: 'נמוך', color: 'text-evidence-calming' };
-    if (meterPosition < -20) return { level: 'בינוני נמוך', color: 'text-evidence-calming' };
+    if (meterPosition > 60) return { level: 'נמוך', color: 'text-evidence-calming' };
+    if (meterPosition > 20) return { level: 'בינוני נמוך', color: 'text-evidence-calming' };
+    if (meterPosition < -60) return { level: 'גבוה', color: 'text-evidence-suspicious' };
+    if (meterPosition < -20) return { level: 'בינוני', color: 'text-orange-500' };
     return { level: 'ניטרלי', color: 'text-muted-foreground' };
   };
 
@@ -58,7 +58,7 @@ export function VerticalThreatMeter({ suspiciousCount, calmingCount, totalEviden
       {/* המד הוורטיקלי */}
       <div className="flex-1 w-6 relative bg-muted rounded-full">
         {/* רקע הדרגתי */}
-        <div className="absolute inset-0 rounded-full bg-gradient-to-b from-evidence-suspicious via-muted to-evidence-calming opacity-30"></div>
+        <div className="absolute inset-0 rounded-full bg-gradient-to-b from-evidence-calming via-muted to-evidence-suspicious opacity-30"></div>
         
         {/* חציון */}
         <div className="absolute w-8 h-0.5 bg-border left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
@@ -72,9 +72,9 @@ export function VerticalThreatMeter({ suspiciousCount, calmingCount, totalEviden
         </div>
 
         {/* תוויות */}
-        <div className="absolute -right-8 top-2 text-xs text-evidence-suspicious">חשוד</div>
+        <div className="absolute -right-8 top-2 text-xs text-evidence-calming">מרגיע</div>
         <div className="absolute -right-6 top-1/2 transform -translate-y-1/2 text-xs text-muted-foreground">0</div>
-        <div className="absolute -right-8 bottom-2 text-xs text-evidence-calming">מרגיע</div>
+        <div className="absolute -right-8 bottom-2 text-xs text-evidence-suspicious">חשוד</div>
       </div>
 
       {/* רמת איום */}
