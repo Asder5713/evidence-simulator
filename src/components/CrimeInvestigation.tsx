@@ -110,6 +110,24 @@ const sampleEvidence: Evidence[] = [
     anomalyLevel: "high",
     issuingUnit: "יחידת כלכלה",
     source: "רישומי בנק לאומי"
+  },
+  {
+    id: "9",
+    title: "אימייל איום מהחשוד",
+    content: { 
+      type: "email", 
+      data: "שלום דני, אני יודע איפה אתה גר ואני יודע איפה הילדים שלך לומדים. אם לא תחזיר לי את הכסף עד סוף השבוע, אני אדאג שתתחרט על כך שלא פיתחת איתי את העסקה. זה לא איום, זו הבטחה.",
+      emailFrom: "yossi.cohen@gmail.com",
+      emailTo: "danny.levi@outlook.com",
+      emailSubject: "לגבי החוב - דחוף!"
+    },
+    type: "digital",
+    issueDate: "2024-01-16 15:30",
+    incidentDate: "2024-01-13 21:45",
+    system: "תקשורת דיגיטלית",
+    anomalyLevel: "critical",
+    issuingUnit: "יחידת סייבר",
+    source: "שרת מייל גוגל"
   }
 ];
 

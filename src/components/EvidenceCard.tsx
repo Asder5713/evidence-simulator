@@ -2,16 +2,19 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Clock, MapPin, User, AlertTriangle, Building, FileText, Calendar, ArrowRight, Play, Image, Volume2, Video } from "lucide-react";
+import { Clock, MapPin, User, AlertTriangle, Building, FileText, Calendar, ArrowRight, Play, Image, Volume2, Video, Mail } from "lucide-react";
 
 export interface Evidence {
   id: string;
   title: string; // כותרת הראייה
   content: string | { 
-    type: 'text' | 'image' | 'audio' | 'video'; 
+    type: 'text' | 'image' | 'audio' | 'video' | 'email'; 
     data: string;
     callOriginator?: string; // עבור אודיו - מוציא שיחה
     callReceiver?: string; // עבור אודיו - מקבל שיחה
+    emailFrom?: string; // עבור אימייל - שולח
+    emailTo?: string; // עבור אימייל - נמען
+    emailSubject?: string; // עבור אימייל - נושא
   }; // תוכן הראייה
   type: 'physical' | 'digital' | 'witness' | 'document';
   issueDate: string; // תאריך ושעת הפקה
@@ -53,12 +56,13 @@ export function EvidenceCard({ evidence, onDragStart, onReturn, showReturnButton
       return 'טקסט';
     }
     
-    const contentData = evidence.content as { type: 'text' | 'image' | 'audio' | 'video'; data: string };
+    const contentData = evidence.content as { type: 'text' | 'image' | 'audio' | 'video' | 'email'; data: string };
     
     switch (contentData.type) {
       case 'image': return 'תמונה';
       case 'audio': return 'קובץ שמע';
       case 'video': return 'וידיאו';
+      case 'email': return 'אימייל';
       default: return 'טקסט';
     }
   };
@@ -76,7 +80,7 @@ export function EvidenceCard({ evidence, onDragStart, onReturn, showReturnButton
       );
     }
 
-    const contentData = evidence.content as { type: 'text' | 'image' | 'audio' | 'video'; data: string };
+    const contentData = evidence.content as { type: 'text' | 'image' | 'audio' | 'video' | 'email'; data: string };
     
     switch (contentData.type) {
       case 'image':
@@ -92,7 +96,7 @@ export function EvidenceCard({ evidence, onDragStart, onReturn, showReturnButton
       case 'audio':
         const audioData = contentData as { type: 'audio'; data: string; callOriginator?: string; callReceiver?: string };
         return (
-          <div className="space-y-3">
+          <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Volume2 className="w-4 h-4" />
               <span>קובץ שמע</span>
@@ -100,27 +104,19 @@ export function EvidenceCard({ evidence, onDragStart, onReturn, showReturnButton
             
             {/* פרטי שיחה אם קיימים */}
             {(audioData.callOriginator || audioData.callReceiver) && (
-              <div className="bg-muted/50 p-3 rounded-lg border space-y-2">
+              <div className="text-xs text-muted-foreground space-y-1">
                 {audioData.callOriginator && (
-                  <div className="text-sm">
-                    <span className="font-medium text-muted-foreground">מוציא שיחה: </span>
-                    <span className="text-foreground">{audioData.callOriginator}</span>
-                  </div>
+                  <div>מוציא שיחה: {audioData.callOriginator}</div>
                 )}
                 {audioData.callReceiver && (
-                  <div className="text-sm">
-                    <span className="font-medium text-muted-foreground">מקבל שיחה: </span>
-                    <span className="text-foreground">{audioData.callReceiver}</span>
-                  </div>
+                  <div>מקבל שיחה: {audioData.callReceiver}</div>
                 )}
               </div>
             )}
             
-            <div className="bg-slate-900 p-3 rounded-lg border border-slate-700">
-              <audio controls className="w-full [&::-webkit-media-controls-panel]:bg-slate-800 [&::-webkit-media-controls-play-button]:filter-invert">
-                <source src={audioData.data} type="audio/mpeg" />
-              </audio>
-            </div>
+            <audio controls className="w-full">
+              <source src={audioData.data} type="audio/mpeg" />
+            </audio>
           </div>
         );
       case 'video':
@@ -133,6 +129,35 @@ export function EvidenceCard({ evidence, onDragStart, onReturn, showReturnButton
             <video controls className="w-full h-32 object-cover rounded-md">
               <source src={contentData.data} type="video/mp4" />
             </video>
+          </div>
+        );
+      case 'email':
+        const emailData = contentData as { type: 'email'; data: string; emailFrom?: string; emailTo?: string; emailSubject?: string };
+        return (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Mail className="w-4 h-4" />
+              <span>אימייל</span>
+            </div>
+            
+            {/* פרטי אימייל אם קיימים */}
+            {(emailData.emailFrom || emailData.emailTo || emailData.emailSubject) && (
+              <div className="text-xs text-muted-foreground space-y-1">
+                {emailData.emailFrom && (
+                  <div>שולח: {emailData.emailFrom}</div>
+                )}
+                {emailData.emailTo && (
+                  <div>נמען: {emailData.emailTo}</div>
+                )}
+                {emailData.emailSubject && (
+                  <div>נושא: {emailData.emailSubject}</div>
+                )}
+              </div>
+            )}
+            
+            <div className="bg-muted/50 p-3 rounded-md text-sm">
+              {emailData.data}
+            </div>
           </div>
         );
       default:
