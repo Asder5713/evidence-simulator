@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Search, FileText, Clock, BarChart3 } from "lucide-react";
+import { Search, FileText, Clock, BarChart3, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const taskbarItems = [
@@ -15,6 +15,12 @@ const taskbarItems = [
     label: "חקירה פלילית",
     icon: Search,
     path: "/",
+  },
+  {
+    id: "emails",
+    label: "אימיילים",
+    icon: Mail,
+    path: "/emails",
   },
   {
     id: "reports",
