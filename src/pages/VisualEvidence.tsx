@@ -95,19 +95,19 @@ const getTypeIcon = (type: string) => {
 
 const getTypeColor = (type: string) => {
   switch (type) {
-    case "image": return "from-emerald-900/40 to-emerald-800/30 border-emerald-600/40";
-    case "video": return "from-blue-900/40 to-blue-800/30 border-blue-600/40";
-    case "audio": return "from-purple-900/40 to-purple-800/30 border-purple-600/40";
-    default: return "from-gray-900/40 to-gray-800/30 border-gray-600/40";
+    case "image": return "from-zinc-900/50 to-zinc-800/40 border-zinc-700/40";
+    case "video": return "from-neutral-900/50 to-neutral-800/40 border-neutral-700/40";
+    case "audio": return "from-stone-900/50 to-stone-800/40 border-stone-700/40";
+    default: return "from-gray-900/50 to-gray-800/40 border-gray-700/40";
   }
 };
 
 const getPriorityColor = (priority: string) => {
   switch (priority) {
-    case "critical": return "bg-red-500/20 text-red-300 border-red-500/30";
-    case "high": return "bg-orange-500/20 text-orange-300 border-orange-500/30";
-    case "medium": return "bg-yellow-500/20 text-yellow-300 border-yellow-500/30";
-    default: return "bg-gray-500/20 text-gray-300 border-gray-500/30";
+    case "critical": return "bg-zinc-800 text-zinc-200 border-zinc-600";
+    case "high": return "bg-neutral-800 text-neutral-200 border-neutral-600";
+    case "medium": return "bg-stone-800 text-stone-200 border-stone-600";
+    default: return "bg-gray-800 text-gray-200 border-gray-600";
   }
 };
 
@@ -120,16 +120,16 @@ const VisualEvidence = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-black pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-neutral-950 to-stone-950 pb-20">
       {/* Header */}
-      <div className="bg-gradient-to-r from-gray-800 to-slate-800 border-b border-gray-600 p-4 shadow-lg">
+      <div className="bg-gradient-to-r from-zinc-900 to-neutral-900 border-b border-zinc-700/50 p-4 shadow-2xl">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-emerald-500/20 rounded-lg">
-            <Camera className="w-6 h-6 text-emerald-400" />
+          <div className="p-2 bg-zinc-800/50 rounded-lg border border-zinc-700/30">
+            <Camera className="w-6 h-6 text-zinc-300" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white">ראיות ויזואליות</h1>
-            <p className="text-sm text-gray-300">תמונות, וידיאו והקלטות אודיו</p>
+            <h1 className="text-xl font-bold text-zinc-100">ראיות ויזואליות</h1>
+            <p className="text-sm text-zinc-400">תמונות, וידיאו והקלטות אודיו</p>
           </div>
         </div>
       </div>
@@ -150,12 +150,12 @@ const VisualEvidence = () => {
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="p-2 bg-white/10 rounded-lg">
-                          <TypeIcon className="w-5 h-5 text-white" />
+                        <div className="p-2 bg-zinc-800/30 rounded-lg border border-zinc-700/20">
+                          <TypeIcon className="w-5 h-5 text-zinc-300" />
                         </div>
                         <div>
-                          <CardTitle className="text-white text-lg">{evidence.title}</CardTitle>
-                          <p className="text-gray-300 text-sm">{evidence.source}</p>
+                          <CardTitle className="text-zinc-100 text-lg">{evidence.title}</CardTitle>
+                          <p className="text-zinc-400 text-sm">{evidence.source}</p>
                         </div>
                       </div>
                       <Badge className={`text-xs border ${getPriorityColor(evidence.priority)}`}>
@@ -244,12 +244,12 @@ const VisualEvidence = () => {
                     </div>
 
                     {/* Evidence Notes */}
-                    <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3">
+                    <div className="bg-zinc-800/20 border border-zinc-600/30 rounded-lg p-3">
                       <div className="flex items-start gap-2">
-                        <AlertTriangle className="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0" />
+                        <AlertTriangle className="w-4 h-4 text-zinc-400 mt-0.5 flex-shrink-0" />
                         <div>
-                          <p className="text-amber-300 text-xs font-medium mb-1">הערת חוקר:</p>
-                          <p className="text-amber-200 text-xs leading-relaxed">{evidence.evidence_notes}</p>
+                          <p className="text-zinc-300 text-xs font-medium mb-1">הערת חוקר:</p>
+                          <p className="text-zinc-200 text-xs leading-relaxed">{evidence.evidence_notes}</p>
                         </div>
                       </div>
                     </div>
@@ -260,28 +260,28 @@ const VisualEvidence = () => {
           </div>
 
           {/* Summary Section */}
-          <div className="mt-8 p-6 bg-gradient-to-r from-gray-800/60 to-slate-800/60 border border-gray-600/50 rounded-xl backdrop-blur-sm shadow-lg">
+          <div className="mt-8 p-6 bg-gradient-to-r from-zinc-900/40 to-neutral-900/40 border border-zinc-700/40 rounded-xl backdrop-blur-sm shadow-lg">
             <div className="flex items-start gap-4">
-              <div className="p-2 bg-blue-500/20 rounded-lg">
-                <FileImage className="w-6 h-6 text-blue-400 flex-shrink-0" />
+              <div className="p-2 bg-zinc-800/40 rounded-lg border border-zinc-700/30">
+                <FileImage className="w-6 h-6 text-zinc-300 flex-shrink-0" />
               </div>
               <div>
-                <h3 className="text-blue-300 font-bold text-lg mb-3">סיכום ראיות ויזואליות</h3>
+                <h3 className="text-zinc-200 font-bold text-lg mb-3">סיכום ראיות ויזואליות</h3>
                 <div className="grid md:grid-cols-3 gap-4 text-sm">
-                  <div className="bg-black/20 rounded-lg p-3 border border-white/10">
-                    <p className="text-emerald-400 font-medium mb-1">תמונות: 2</p>
-                    <p className="text-gray-300">מעקב ותיעוד זירה</p>
+                  <div className="bg-black/20 rounded-lg p-3 border border-zinc-700/30">
+                    <p className="text-zinc-300 font-medium mb-1">תמונות: 2</p>
+                    <p className="text-zinc-400">מעקב ותיעוד זירה</p>
                   </div>
-                  <div className="bg-black/20 rounded-lg p-3 border border-white/10">
-                    <p className="text-blue-400 font-medium mb-1">סרטונים: 2</p>
-                    <p className="text-gray-300">מעקב וחקירה</p>
+                  <div className="bg-black/20 rounded-lg p-3 border border-zinc-700/30">
+                    <p className="text-zinc-300 font-medium mb-1">סרטונים: 2</p>
+                    <p className="text-zinc-400">מעקב וחקירה</p>
                   </div>
-                  <div className="bg-black/20 rounded-lg p-3 border border-white/10">
-                    <p className="text-purple-400 font-medium mb-1">הקלטות: 2</p>
-                    <p className="text-gray-300">איומים ועדויות</p>
+                  <div className="bg-black/20 rounded-lg p-3 border border-zinc-700/30">
+                    <p className="text-zinc-300 font-medium mb-1">הקלטות: 2</p>
+                    <p className="text-zinc-400">איומים ועדויות</p>
                   </div>
                 </div>
-                <p className="text-gray-200 text-sm leading-relaxed mt-4">
+                <p className="text-zinc-300 text-sm leading-relaxed mt-4">
                   הראיות הויזואליות מספקות תמונה מלאה של רצף האירועים מהאיומים הראשוניים ועד לגילוי הרצח. 
                   כל ראיה תומכת ומחזקת את השרשרת הראייתית נגד החשודים.
                 </p>
