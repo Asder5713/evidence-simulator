@@ -10,288 +10,330 @@ import {
   MapPin,
   Building,
   Target,
-  TrendingUp,
   Calendar,
   FileText,
   Fingerprint,
   Camera,
-  Phone
+  Phone,
+  Skull,
+  UserX,
+  Clock,
+  Globe
 } from "lucide-react";
 
 const Overview = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 pb-20 p-6">
-      {/* Header */}
-      <div className="text-center space-y-2 mb-8">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-          תיק חקירה: ארגון פשע "הנשרים השחורים"
-        </h1>
-        <p className="text-muted-foreground">
-          הערכת מצב מודיעינית והערכות יחידות החקירה
-        </p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pb-20">
+      {/* Header with dark gradient overlay */}
+      <div className="relative py-12 px-6">
+        <div className="absolute inset-0 bg-gradient-to-r from-red-900/20 via-transparent to-red-900/20" />
+        <div className="relative text-center space-y-4">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <Skull className="w-8 h-8 text-red-400" />
+            <h1 className="text-5xl font-black bg-gradient-to-r from-red-400 via-red-300 to-orange-400 bg-clip-text text-transparent">
+              "הנשרים השחורים"
+            </h1>
+            <Skull className="w-8 h-8 text-red-400" />
+          </div>
+          <div className="bg-slate-800/50 backdrop-blur-sm border border-red-900/30 rounded-lg p-4 max-w-4xl mx-auto">
+            <p className="text-red-200 text-lg font-medium">
+              ארגון פשע בינלאומי - רמת סיכון קריטית
+            </p>
+            <p className="text-slate-300 text-sm mt-2">
+              הערכת מצב מודיעינית • עדכון אחרון: 16.1.2024
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Investigation Summary */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="w-5 h-5" />
-              רקע החקירה - ארגון "הנשרים השחורים"
+      <div className="px-6 space-y-6">
+        {/* Critical Info Banner */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="bg-gradient-to-br from-red-900/80 to-red-800/60 border border-red-700/50 rounded-xl p-4 backdrop-blur-sm">
+            <div className="flex items-center gap-3">
+              <UserX className="w-6 h-6 text-red-300" />
+              <div>
+                <p className="text-red-100 font-bold text-xl">45</p>
+                <p className="text-red-300 text-sm">חברים פעילים</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-gradient-to-br from-orange-900/80 to-orange-800/60 border border-orange-700/50 rounded-xl p-4 backdrop-blur-sm">
+            <div className="flex items-center gap-3">
+              <MapPin className="w-6 h-6 text-orange-300" />
+              <div>
+                <p className="text-orange-100 font-bold text-xl">3</p>
+                <p className="text-orange-300 text-sm">תאי פעילות</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-gradient-to-br from-purple-900/80 to-purple-800/60 border border-purple-700/50 rounded-xl p-4 backdrop-blur-sm">
+            <div className="flex items-center gap-3">
+              <Target className="w-6 h-6 text-purple-300" />
+              <div>
+                <p className="text-purple-100 font-bold text-xl">12</p>
+                <p className="text-purple-300 text-sm">מעצרים השנה</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-gradient-to-br from-yellow-900/80 to-yellow-800/60 border border-yellow-700/50 rounded-xl p-4 backdrop-blur-sm">
+            <div className="flex items-center gap-3">
+              <AlertTriangle className="w-6 h-6 text-yellow-300" />
+              <div>
+                <p className="text-yellow-100 font-bold text-xl">גבוהה</p>
+                <p className="text-yellow-300 text-sm">רמת סיכון</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          {/* Investigation Brief - Large Card */}
+          <div className="lg:col-span-3">
+            <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur-sm">
+              <CardHeader className="bg-gradient-to-r from-slate-800/80 to-slate-700/60 rounded-t-lg">
+                <CardTitle className="flex items-center gap-3 text-slate-100">
+                  <FileText className="w-6 h-6 text-blue-400" />
+                  מידע מודיעיני - רקע החקירה
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6 space-y-6">
+                <div className="bg-slate-900/60 border border-slate-600/30 rounded-lg p-5">
+                  <h3 className="text-red-300 font-bold text-lg mb-4 flex items-center gap-2">
+                    <Globe className="w-5 h-5" />
+                    פרופיל הארגון
+                  </h3>
+                  <div className="space-y-4 text-slate-300 leading-relaxed">
+                    <p className="border-l-4 border-red-500/50 pl-4">
+                      <strong className="text-red-300">מנהיג:</strong> שמואל "סמי" כהן (52), נמלט מהמשפט בארה"ב. 
+                      מבוקש בינלאומית על הלבנת הון, סחר בסמים וסחר בנשק.
+                    </p>
+                    
+                    <p className="border-l-4 border-orange-500/50 pl-4">
+                      <strong className="text-orange-300">מבנה:</strong> שלושה תאים עיקריים - צפון (חיפה), מרכז (תל-אביב), 
+                      דרום (באר שבע). כל תא פועל עצמאית תחת פיקוד מרכזי.
+                    </p>
+                    
+                    <p className="border-l-4 border-purple-500/50 pl-4">
+                      <strong className="text-purple-300">פעילות:</strong> ייבוא סמים מאמריקה הדרומית, הפעלת מעבדות סמים, 
+                      רשת הימורים בלתי חוקיים, מכירת נשק וגביית כספי הגנה.
+                    </p>
+                    
+                    <p className="border-l-4 border-yellow-500/50 pl-4">
+                      <strong className="text-yellow-300">החקירה הנוכחית:</strong> רצח דני לוי (15.1.2024) - בעל חנות תכשיטים 
+                      שסירב לשלם כספי הגנה. החשוד העיקרי: יוסי כהן, בן המנהיג.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Key Suspects - Sidebar */}
+          <div className="lg:col-span-2">
+            <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur-sm h-full">
+              <CardHeader className="bg-gradient-to-r from-red-900/60 to-red-800/40 rounded-t-lg">
+                <CardTitle className="flex items-center gap-3 text-red-100">
+                  <Eye className="w-6 h-6" />
+                  חשודים מרכזיים
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 space-y-4">
+                {/* Suspect Cards */}
+                <div className="bg-gradient-to-r from-red-900/40 to-red-800/20 border border-red-700/40 rounded-lg p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 bg-red-900/60 rounded-full flex items-center justify-center">
+                      <Skull className="w-6 h-6 text-red-300" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-red-200 font-bold">שמואל "סמי" כהן</h4>
+                      <p className="text-red-300 text-sm">מנהיג הארגון</p>
+                      <p className="text-slate-300 text-xs mt-1">גיל 52 • נמלט • מבוקש בינלאומית</p>
+                      <Badge className="mt-2 bg-red-800/60 text-red-200 border-red-700">
+                        מסוכן ביותר
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-r from-orange-900/40 to-orange-800/20 border border-orange-700/40 rounded-lg p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 bg-orange-900/60 rounded-full flex items-center justify-center">
+                      <UserX className="w-6 h-6 text-orange-300" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-orange-200 font-bold">יוסי כהן</h4>
+                      <p className="text-orange-300 text-sm">חשוד עיקרי ברצח</p>
+                      <p className="text-slate-300 text-xs mt-1">גיל 28 • בן המנהיג</p>
+                      <Badge className="mt-2 bg-orange-800/60 text-orange-200 border-orange-700">
+                        תיק פעיל
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-r from-yellow-900/40 to-yellow-800/20 border border-yellow-700/40 rounded-lg p-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 bg-yellow-900/60 rounded-full flex items-center justify-center">
+                      <Users className="w-6 h-6 text-yellow-300" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-yellow-200 font-bold">מיכאל "מיקי" אבן</h4>
+                      <p className="text-yellow-300 text-sm">סגן ומנהל תא המרכז</p>
+                      <p className="text-slate-300 text-xs mt-1">גיל 45 • אזור תל-אביב</p>
+                      <Badge className="mt-2 bg-yellow-800/60 text-yellow-200 border-yellow-700">
+                        במעקב
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+
+                <Separator className="bg-slate-600/30" />
+
+                <div className="space-y-2">
+                  <h4 className="text-slate-200 font-medium text-sm">סטטוס חקירה</h4>
+                  <div className="grid grid-cols-3 gap-2 text-xs">
+                    <div className="text-center p-2 bg-slate-700/30 rounded">
+                      <p className="text-slate-300">ראיות</p>
+                      <p className="text-blue-300 font-bold">9</p>
+                    </div>
+                    <div className="text-center p-2 bg-slate-700/30 rounded">
+                      <p className="text-slate-300">עדויות</p>
+                      <p className="text-green-300 font-bold">7</p>
+                    </div>
+                    <div className="text-center p-2 bg-slate-700/30 rounded">
+                      <p className="text-slate-300">צווים</p>
+                      <p className="text-purple-300 font-bold">3</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Intelligence Assessments - Full Width */}
+        <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur-sm">
+          <CardHeader className="bg-gradient-to-r from-slate-800/80 to-slate-700/60">
+            <CardTitle className="flex items-center gap-3 text-slate-100">
+              <Shield className="w-6 h-6 text-blue-400" />
+              הערכות מודיעיניות מיחידות החקירה
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="prose prose-sm max-w-none dark:prose-invert">
-              <p className="text-sm leading-relaxed">
-                ארגון הפשע "הנשרים השחורים" הוא ארגון פלילי בינלאומי הפועל בישראל מזה כשלוש שנים. 
-                הארגון מתמחה בהלבנת הון, סחר בסמים, וסחר בנשק. מנהיג הארגון, שמואל "סמי" כהן, 
-                בן 52, נמלט מהמשפט בארה"ב ומתחבא ברחבי ישראל ומזרח אירופה.
-              </p>
-              
-              <p className="text-sm leading-relaxed">
-                הארגון מונה כ-45 חברים פעילים בישראל, מחולקים לשלוש תאים עיקריים: תא הצפון (חיפה ואזור הצפון), 
-                תא המרכז (תל-אביב וגוש דן), ותא הדרום (באר שבע והנגב). כל תא פועל באופן עצמאי יחסית אך מקבל 
-                הוראות מהמפקדה המרכזית הממוקמת במזרח תל-אביב.
-              </p>
-              
-              <p className="text-sm leading-relaxed">
-                פעילות הארגון כוללת ייבוא סמים מאמריקה הדרומית דרך נמל אשדוד, הפעלת בתי מרקחת בלתי חוקיים, 
-                וניהול רשת הימורים בלתי חוקיים. בנוסף, הארגון מעורב במכירת נשק לארגונים פליליים נוספים ובאיומים 
-                על עסקים מקומיים לצורך גביית כספי הגנה.
-              </p>
-              
-              <p className="text-sm leading-relaxed">
-                החקירה הנוכחית התחילה לאחר רצח דני לוי, בעל חנות תכשיטים בתל-אביב, שסירב לשלם כספי הגנה לארגון. 
-                הרצח בוצע בדירתו ביום 15.1.2024, והראיות מצביעות על מעורבות ישירה של יוסי כהן, בנו של מנהיג הארגון.
-              </p>
-            </div>
-
-            <Separator />
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-red-500" />
-                  <span className="font-medium">מספר חברים ידועים</span>
-                </div>
-                <p className="text-2xl font-bold text-red-600">45</p>
-                <p className="text-xs text-muted-foreground">בישראל</p>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-orange-500" />
-                  <span className="font-medium">תאי פעילות</span>
-                </div>
-                <p className="text-2xl font-bold text-orange-600">3</p>
-                <p className="text-xs text-muted-foreground">צפון, מרכז, דרום</p>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <Target className="w-4 h-4 text-purple-500" />
-                  <span className="font-medium">מעצרים השנה</span>
-                </div>
-                <p className="text-2xl font-bold text-purple-600">12</p>
-                <p className="text-xs text-muted-foreground">חברי ארגון</p>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 text-red-500" />
-                  <span className="font-medium">רמת סיכון</span>
-                </div>
-                <p className="text-2xl font-bold text-red-600">גבוהה</p>
-                <p className="text-xs text-muted-foreground">חמוש ומסוכן</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Key Suspects */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Eye className="w-5 h-5" />
-              חשודים מרכזיים
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="p-3 rounded-lg border border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-950/20">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium text-sm">שמואל "סמי" כהן</h4>
-                  <Badge className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100">
-                    מנהיג
-                  </Badge>
-                </div>
-                <p className="text-xs text-muted-foreground mb-1">גיל: 52, נמלט מהמשפט</p>
-                <p className="text-xs">מנהיג הארגון, מבוקש בינלאומית</p>
-              </div>
-              
-              <div className="p-3 rounded-lg border border-orange-200 bg-orange-50 dark:border-orange-900 dark:bg-orange-950/20">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium text-sm">יוסי כהן</h4>
-                  <Badge className="bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-100">
-                    חשוד עיקרי
-                  </Badge>
-                </div>
-                <p className="text-xs text-muted-foreground mb-1">גיל: 28, בן המנהיג</p>
-                <p className="text-xs">חשוד ברצח דני לוי</p>
-              </div>
-              
-              <div className="p-3 rounded-lg border border-yellow-200 bg-yellow-50 dark:border-yellow-900 dark:bg-yellow-950/20">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium text-sm">מיכאל "מיקי" אבן</h4>
-                  <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100">
-                    סגן
-                  </Badge>
-                </div>
-                <p className="text-xs text-muted-foreground mb-1">גיל: 45, ראש תא המרכז</p>
-                <p className="text-xs">מנהל פעילות בגוש דן</p>
-              </div>
-            </div>
-
-            <Separator />
-
-            <div className="space-y-2">
-              <h4 className="font-medium text-sm">סטטוס חקירה</h4>
-              <div className="space-y-2 text-xs">
-                <div className="flex items-center justify-between">
-                  <span>ראיות שנאספו</span>
-                  <Badge variant="outline">9</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>עדויות</span>
-                  <Badge variant="outline">7</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>צווי חיפוש</span>
-                  <Badge variant="outline">3</Badge>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Intelligence Assessments */}
-        <Card className="lg:col-span-3">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="w-5 h-5" />
-              הערכות מודיעיניות - יחידות המשטרה
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+          <CardContent className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               
-              {/* Crime Investigation Unit */}
-              <Card className="bg-muted/20">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm flex items-center gap-2">
-                    <Fingerprint className="w-4 h-4 text-blue-500" />
-                    יחידת חקירות פליליות
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center gap-2 text-xs">
-                    <Calendar className="w-3 h-3" />
-                    <span>עודכן: 16.1.2024, 14:30</span>
+              {/* Investigation Unit */}
+              <div className="bg-gradient-to-br from-blue-900/30 to-blue-800/20 border border-blue-700/30 rounded-xl p-5">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-blue-900/60 rounded-lg flex items-center justify-center">
+                    <Fingerprint className="w-5 h-5 text-blue-300" />
                   </div>
-                  <ScrollArea className="h-32">
-                    <p className="text-sm leading-relaxed">
-                      "הארגון מפגין רמת ארגון גבוהה ומשמעת פנימית קפדנית. דפוסי הפעולה מעידים על הכשרה מקצועית 
-                      של החברים ועל תכנון מוקדם של הפעילות הפלילית. המבנה ההיררכי ברור ומקשה על חדירה. 
-                      נמצאו עדויות לקשרים עם ארגונים פליליים באירופה ובאמריקה הדרומית. הארגון משתמש בטכנולוגיות 
-                      מתקדמות להסתרת עקבות דיגיטליים."
-                    </p>
-                  </ScrollArea>
-                  <Badge className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100">
-                    רמת איום: גבוהה
-                  </Badge>
-                </CardContent>
-              </Card>
+                  <div>
+                    <h3 className="text-blue-200 font-bold">יחידת חקירות פליליות</h3>
+                    <div className="flex items-center gap-2 text-xs text-blue-400">
+                      <Clock className="w-3 h-3" />
+                      <span>עודכן: 16.1.2024, 14:30</span>
+                    </div>
+                  </div>
+                </div>
+                <ScrollArea className="h-32">
+                  <p className="text-slate-300 text-sm leading-relaxed">
+                    "הארגון מפגין רמת ארגון גבוהה ומשמעת פנימית קפדנית. דפוסי הפעולה מעידים על הכשרה מקצועית 
+                    של החברים ועל תכנון מוקדם של הפעילות הפלילית. המבנה ההיררכי ברור ומקשה על חדירה. 
+                    נמצאו עדויות לקשרים עם ארגונים פליליים באירופה ובאמריקה הדרומית. הארגון משתמש בטכנולוגיות 
+                    מתקדמות להסתרת עקבות דיגיטליים."
+                  </p>
+                </ScrollArea>
+                <Badge className="mt-3 bg-red-900/60 text-red-200 border-red-700">
+                  רמת איום: גבוהה
+                </Badge>
+              </div>
 
               {/* Intelligence Unit */}
-              <Card className="bg-muted/20">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm flex items-center gap-2">
-                    <Eye className="w-4 h-4 text-purple-500" />
-                    יחידת המודיעין
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center gap-2 text-xs">
-                    <Calendar className="w-3 h-3" />
-                    <span>עודכן: 16.1.2024, 12:15</span>
+              <div className="bg-gradient-to-br from-purple-900/30 to-purple-800/20 border border-purple-700/30 rounded-xl p-5">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-purple-900/60 rounded-lg flex items-center justify-center">
+                    <Eye className="w-5 h-5 text-purple-300" />
                   </div>
-                  <ScrollArea className="h-32">
-                    <p className="text-sm leading-relaxed">
-                      "מעקב מתמשך מגלה שהארגון מתכנן להרחיב את פעילותו לאזור השפלה. זוהו מפגשים בין חברי 
-                      הארגון לבין נציגי רשויות מקומיות, המעלים חשש להתערבות בפוליטיקה המקומית. הארגון 
-                      מגלה יכולת הסתגלות גבוהה ומשנה שיטות פעולה לאחר כל מעצר. יש צורך במשאבים נוספים 
-                      למעקב טכנולוגי מתקדם."
-                    </p>
-                  </ScrollArea>
-                  <Badge className="bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-100">
-                    מגמה: הרחבת פעילות
-                  </Badge>
-                </CardContent>
-              </Card>
+                  <div>
+                    <h3 className="text-purple-200 font-bold">יחידת המודיעין</h3>
+                    <div className="flex items-center gap-2 text-xs text-purple-400">
+                      <Clock className="w-3 h-3" />
+                      <span>עודכן: 16.1.2024, 12:15</span>
+                    </div>
+                  </div>
+                </div>
+                <ScrollArea className="h-32">
+                  <p className="text-slate-300 text-sm leading-relaxed">
+                    "מעקב מתמשך מגלה שהארגון מתכנן להרחיב את פעילותו לאזור השפלה. זוהו מפגשים בין חברי 
+                    הארגון לבין נציגי רשויות מקומיות, המעלים חשש להתערבות בפוליטיקה המקומית. הארגון 
+                    מגלה יכולת הסתגלות גבוהה ומשנה שיטות פעולה לאחר כל מעצר. יש צורך במשאבים נוספים 
+                    למעקב טכנולוגי מתקדם."
+                  </p>
+                </ScrollArea>
+                <Badge className="mt-3 bg-orange-900/60 text-orange-200 border-orange-700">
+                  מגמה: הרחבת פעילות
+                </Badge>
+              </div>
 
               {/* Cyber Unit */}
-              <Card className="bg-muted/20">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm flex items-center gap-2">
-                    <Building className="w-4 h-4 text-green-500" />
-                    יחידת הסייבר
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center gap-2 text-xs">
-                    <Calendar className="w-3 h-3" />
-                    <span>עודכן: 16.1.2024, 16:45</span>
+              <div className="bg-gradient-to-br from-green-900/30 to-green-800/20 border border-green-700/30 rounded-xl p-5">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-green-900/60 rounded-lg flex items-center justify-center">
+                    <Building className="w-5 h-5 text-green-300" />
                   </div>
-                  <ScrollArea className="h-32">
-                    <p className="text-sm leading-relaxed">
-                      "הארגון משתמש באפליקציות מוצפנות ובתקשורת מאובטחת ברמה גבוהה. זוהה שימוש בכספי דיגיטליים 
-                      להלבנת הון ובשרתים זרים להסתרת נתונים. החברים עברו הכשרה בטכנולוגיות אנונימיות ובשימוש 
-                      ב-VPN מתקדמים. פעילות הארגון ברשתות החברתיות מינימלית ומבוקרת היטב. דרושים כלים 
-                      טכנולוגיים מתקדמים לפריצת ההצפנה."
-                    </p>
-                  </ScrollArea>
-                  <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100">
-                    רמת הצפנה: מתקדמת
-                  </Badge>
-                </CardContent>
-              </Card>
+                  <div>
+                    <h3 className="text-green-200 font-bold">יחידת הסייבר</h3>
+                    <div className="flex items-center gap-2 text-xs text-green-400">
+                      <Clock className="w-3 h-3" />
+                      <span>עודכן: 16.1.2024, 16:45</span>
+                    </div>
+                  </div>
+                </div>
+                <ScrollArea className="h-32">
+                  <p className="text-slate-300 text-sm leading-relaxed">
+                    "הארגון משתמש באפליקציות מוצפנות ובתקשורת מאובטחת ברמה גבוהה. זוהה שימוש בכספי דיגיטליים 
+                    להלבנת הון ובשרתים זרים להסתרת נתונים. החברים עברו הכשרה בטכנולוגיות אנונימיות ובשימוש 
+                    ב-VPN מתקדמים. פעילות הארגון ברשתות החברתיות מינימלית ומבוקרת היטב. דרושים כלים 
+                    טכנולוגיים מתקדמים לפריצת ההצפנה."
+                  </p>
+                </ScrollArea>
+                <Badge className="mt-3 bg-blue-900/60 text-blue-200 border-blue-700">
+                  רמת הצפנה: מתקדמת
+                </Badge>
+              </div>
 
               {/* Surveillance Unit */}
-              <Card className="bg-muted/20">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm flex items-center gap-2">
-                    <Camera className="w-4 h-4 text-yellow-600" />
-                    יחידת המעקבים
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center gap-2 text-xs">
-                    <Calendar className="w-3 h-3" />
-                    <span>עודכן: 16.1.2024, 11:20</span>
+              <div className="bg-gradient-to-br from-yellow-900/30 to-yellow-800/20 border border-yellow-700/30 rounded-xl p-5">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-yellow-900/60 rounded-lg flex items-center justify-center">
+                    <Camera className="w-5 h-5 text-yellow-300" />
                   </div>
-                  <ScrollArea className="h-32">
-                    <p className="text-sm leading-relaxed">
-                      "חברי הארגון מפגינים מודעות גבוהה לנוכחות כוחות הביטחון ומשנים מסלולי תנועה באופן תדיר. 
-                      המפגשים מתקיימים במקומות ציבוריים צפופים או במתקנים פרטיים עם מערכות אבטחה מתקדמות. 
-                      זוהה שימוש ברכבים גנובים ובהחלפת לוחיות זיהוי. המעקב הפיזי מסובך עקב שימוש בטכניקות 
-                      נגד-מעקב מקצועיות."
-                    </p>
-                  </ScrollArea>
-                  <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100">
-                    קושי מעקב: גבוה
-                  </Badge>
-                </CardContent>
-              </Card>
+                  <div>
+                    <h3 className="text-yellow-200 font-bold">יחידת המעקבים</h3>
+                    <div className="flex items-center gap-2 text-xs text-yellow-400">
+                      <Clock className="w-3 h-3" />
+                      <span>עודכן: 16.1.2024, 11:20</span>
+                    </div>
+                  </div>
+                </div>
+                <ScrollArea className="h-32">
+                  <p className="text-slate-300 text-sm leading-relaxed">
+                    "חברי הארגון מפגינים מודעות גבוהה לנוכחות כוחות הביטחון ומשנים מסלולי תנועה באופן תדיר. 
+                    המפגשים מתקיימים במקומות ציבוריים צפופים או במתקנים פרטיים עם מערכות אבטחה מתקדמות. 
+                    זוהה שימוש ברכבים גנובים ובהחלפת לוחיות זיהוי. המעקב הפיזי מסובך עקב שימוש בטכניקות 
+                    נגד-מעקב מקצועיות."
+                  </p>
+                </ScrollArea>
+                <Badge className="mt-3 bg-yellow-900/60 text-yellow-200 border-yellow-700">
+                  קושי מעקב: גבוה
+                </Badge>
+              </div>
 
             </div>
           </CardContent>
