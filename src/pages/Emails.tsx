@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -63,6 +64,8 @@ const emailEvidence = [{
   threat_level: "medium"
 }];
 const Emails = () => {
+  const [selectedEmail, setSelectedEmail] = useState(emailEvidence[0]);
+
   return <div className="min-h-screen bg-slate-900 pb-20">
       {/* Header */}
       <div className="bg-slate-800 border-b border-slate-700 p-4">
@@ -84,7 +87,13 @@ const Emails = () => {
           <div className="w-1/2 border-r border-slate-700">
             <ScrollArea className="h-full">
               <div className="p-4 space-y-2">
-                {emailEvidence.map(email => <Card key={email.id} className="bg-slate-800/50 border-slate-700 hover:bg-slate-700/50 cursor-pointer">
+                {emailEvidence.map(email => <Card 
+                  key={email.id} 
+                  className={`border-slate-700 hover:bg-slate-700/50 cursor-pointer ${
+                    selectedEmail.id === email.id ? 'bg-slate-700/70 border-blue-500' : 'bg-slate-800/50'
+                  }`}
+                  onClick={() => setSelectedEmail(email)}
+                >
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-2">
@@ -116,7 +125,7 @@ const Emails = () => {
             <Card className="bg-slate-800/50 border-slate-700 h-full">
               <CardHeader className="border-b border-slate-700">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-slate-100">{emailEvidence[0].subject}</CardTitle>
+                  <CardTitle className="text-slate-100">{selectedEmail.subject}</CardTitle>
                   <div className="flex items-center gap-2">
                     <Button variant="ghost" size="sm">
                       <Reply className="w-4 h-4" />
@@ -133,15 +142,15 @@ const Emails = () => {
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center gap-2">
                     <span className="text-slate-400">מאת:</span>
-                    <span className="text-slate-200">{emailEvidence[0].from}</span>
+                    <span className="text-slate-200">{selectedEmail.from}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-slate-400">אל:</span>
-                    <span className="text-slate-200">{emailEvidence[0].to}</span>
+                    <span className="text-slate-200">{selectedEmail.to}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="w-3 h-3 text-slate-400" />
-                    <span className="text-slate-400">{emailEvidence[0].date}</span>
+                    <span className="text-slate-400">{selectedEmail.date}</span>
                   </div>
                 </div>
               </CardHeader>
@@ -149,7 +158,7 @@ const Emails = () => {
               <CardContent className="p-6">
                 <div className="bg-slate-900/60 border border-slate-600/30 rounded-lg p-4">
                   <pre className="text-slate-300 text-sm whitespace-pre-wrap font-sans leading-relaxed">
-                    {emailEvidence[0].content}
+                    {selectedEmail.content}
                   </pre>
                 </div>
                 
