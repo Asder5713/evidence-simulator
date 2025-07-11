@@ -74,68 +74,74 @@ const getSourceIcon = (type: string) => {
 
 const getSourceColor = (type: string) => {
   switch (type) {
-    case "intelligence": return "from-blue-900/30 to-blue-800/20 border-blue-700/30";
-    case "informant": return "from-purple-900/30 to-purple-800/20 border-purple-700/30";
-    case "dispatch": return "from-red-900/30 to-red-800/20 border-red-700/30";
-    case "investigation": return "from-orange-900/30 to-orange-800/20 border-orange-700/30";
-    case "forensics": return "from-green-900/30 to-green-800/20 border-green-700/30";
-    case "command": return "from-yellow-900/30 to-yellow-800/20 border-yellow-700/30";
-    default: return "from-slate-900/30 to-slate-800/20 border-slate-700/30";
+    case "intelligence": return "from-indigo-900/40 to-indigo-800/30 border-indigo-600/40 shadow-indigo-900/20";
+    case "informant": return "from-violet-900/40 to-violet-800/30 border-violet-600/40 shadow-violet-900/20";
+    case "dispatch": return "from-rose-900/40 to-rose-800/30 border-rose-600/40 shadow-rose-900/20";
+    case "investigation": return "from-amber-900/40 to-amber-800/30 border-amber-600/40 shadow-amber-900/20";
+    case "forensics": return "from-emerald-900/40 to-emerald-800/30 border-emerald-600/40 shadow-emerald-900/20";
+    case "command": return "from-sky-900/40 to-sky-800/30 border-sky-600/40 shadow-sky-900/20";
+    default: return "from-gray-900/40 to-gray-800/30 border-gray-600/40 shadow-gray-900/20";
   }
 };
 
 const getPriorityColor = (priority: string) => {
   switch (priority) {
-    case "critical": return "bg-red-900 text-red-200";
-    case "urgent": return "bg-orange-900 text-orange-200";
-    case "high": return "bg-yellow-900 text-yellow-200";
-    case "medium": return "bg-blue-900 text-blue-200";
-    default: return "bg-slate-900 text-slate-200";
+    case "critical": return "bg-red-500/20 text-red-300 border-red-500/30";
+    case "urgent": return "bg-orange-500/20 text-orange-300 border-orange-500/30";
+    case "high": return "bg-yellow-500/20 text-yellow-300 border-yellow-500/30";
+    case "medium": return "bg-cyan-500/20 text-cyan-300 border-cyan-500/30";
+    default: return "bg-gray-500/20 text-gray-300 border-gray-500/30";
   }
 };
 
 const TextMessages = () => {
   return (
-    <div className="min-h-screen bg-slate-900 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-black pb-20">
       {/* Header */}
-      <div className="bg-slate-800 border-b border-slate-700 p-4">
+      <div className="bg-gradient-to-r from-gray-800 to-slate-800 border-b border-gray-600 p-4 shadow-lg">
         <div className="flex items-center gap-3">
-          <MessageSquare className="w-6 h-6 text-blue-400" />
-          <h1 className="text-xl font-bold text-slate-100">ראיות טקסטואליות - תקשורת מבצעית</h1>
+          <div className="p-2 bg-cyan-500/20 rounded-lg">
+            <MessageSquare className="w-6 h-6 text-cyan-400" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-white">תקשורת מבצעית</h1>
+            <p className="text-sm text-gray-300">ראיות טקסטואליות - חקירה פלילית</p>
+          </div>
         </div>
       </div>
 
       {/* Chat Container */}
-      <div className="max-w-4xl mx-auto p-6">
+      <div className="max-w-5xl mx-auto p-6">
         <ScrollArea className="h-[calc(100vh-200px)]">
-          <div className="space-y-4">
+          <div className="space-y-6">
             {textEvidence.map((message, index) => {
               const SourceIcon = getSourceIcon(message.type);
-              const isEven = index % 2 === 0;
               
               return (
                 <div
                   key={message.id}
-                  className={`flex ${isEven ? 'justify-start' : 'justify-end'} animate-fade-in`}
-                  style={{ animationDelay: `${index * 0.1}s` }}
+                  className="flex justify-start animate-fade-in"
+                  style={{ animationDelay: `${index * 0.15}s` }}
                 >
-                  <Card className={`max-w-2xl bg-gradient-to-br ${getSourceColor(message.type)} border backdrop-blur-sm`}>
-                    <CardHeader className="pb-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <SourceIcon className="w-4 h-4 text-slate-300" />
-                          <span className="text-sm font-medium text-slate-200">{message.source}</span>
+                  <Card className={`w-full max-w-3xl bg-gradient-to-br ${getSourceColor(message.type)} border backdrop-blur-sm shadow-lg shadow-black/20 hover:shadow-xl transition-all duration-300`}>
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-3">
+                          <div className="p-1.5 bg-white/10 rounded-lg">
+                            <SourceIcon className="w-4 h-4 text-white" />
+                          </div>
+                          <span className="text-sm font-bold text-white">{message.source}</span>
                         </div>
-                        <Badge className={`text-xs ${getPriorityColor(message.priority)}`}>
+                        <Badge className={`text-xs border ${getPriorityColor(message.priority)}`}>
                           {message.priority === 'critical' ? 'קריטי' : 
                            message.priority === 'urgent' ? 'דחוף' :
                            message.priority === 'high' ? 'גבוה' : 'בינוני'}
                         </Badge>
                       </div>
                       
-                      <div className="flex items-center gap-2 text-xs text-slate-400">
-                        <span>{message.sender}</span>
-                        <span>•</span>
+                      <div className="flex items-center gap-2 text-xs text-gray-300">
+                        <span className="font-medium">{message.sender}</span>
+                        <span className="text-gray-500">•</span>
                         <div className="flex items-center gap-1">
                           <Clock className="w-3 h-3" />
                           <span>{message.timestamp}</span>
@@ -144,7 +150,9 @@ const TextMessages = () => {
                     </CardHeader>
                     
                     <CardContent className="pt-0">
-                      <p className="text-slate-300 leading-relaxed">{message.content}</p>
+                      <div className="bg-black/20 rounded-lg p-4 border border-white/10">
+                        <p className="text-gray-100 leading-relaxed font-medium">{message.content}</p>
+                      </div>
                     </CardContent>
                   </Card>
                 </div>
@@ -154,12 +162,14 @@ const TextMessages = () => {
         </ScrollArea>
 
         {/* Bottom Note */}
-        <div className="mt-6 p-4 bg-slate-800/50 border border-slate-700/50 rounded-lg">
-          <div className="flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" />
+        <div className="mt-8 p-5 bg-gradient-to-r from-gray-800/60 to-slate-800/60 border border-gray-600/50 rounded-xl backdrop-blur-sm shadow-lg">
+          <div className="flex items-start gap-4">
+            <div className="p-2 bg-amber-500/20 rounded-lg">
+              <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0" />
+            </div>
             <div>
-              <h3 className="text-amber-400 font-medium text-sm mb-1">הערת חוקר ראשי</h3>
-              <p className="text-slate-300 text-sm leading-relaxed">
+              <h3 className="text-amber-300 font-bold text-sm mb-2">הערת חוקר ראשי</h3>
+              <p className="text-gray-200 text-sm leading-relaxed">
                 הודעות אלו מתעדות את השרשרת המבצעית מתחילת החקירה ועד לגילוי הרצח. 
                 ניתן לראות בבירור את התקדמות האירועים והקשר הישיר בין האיומים לבצוע הרצח.
               </p>
