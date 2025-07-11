@@ -1,9 +1,15 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Search, FileText, Clock } from "lucide-react";
+import { Search, FileText, Clock, BarChart3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const taskbarItems = [
+  {
+    id: "overview",
+    label: "סקירה כללית",
+    icon: BarChart3,
+    path: "/overview",
+  },
   {
     id: "investigation",
     label: "חקירה פלילית",
