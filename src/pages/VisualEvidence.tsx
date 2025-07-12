@@ -12,7 +12,7 @@ const visualEvidence = [
     title: "תמונת מעקב - יוסי כהן",
     location: "רחוב הנביאים 12, תל-אביב",
     timestamp: "13.1.2024, 21:15",
-    description: "תמונה של החשוד יוסי כהן יוצא מהרכב ליד בית הקורבן",
+    
     priority: "critical",
     source: "מצלמת מעקב עירונית",
     url: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=300&fit=crop",
@@ -24,7 +24,7 @@ const visualEvidence = [
     title: "סרטון מעקב - כניסה למחסן",
     location: "נמל אשדוד - מחסן 7",
     timestamp: "13.1.2024, 22:30",
-    description: "הקלטת וידיאו המראה את החשודים נכנסים למחסן עם הקורבן",
+    
     priority: "critical",
     source: "מצלמת אבטחה פרטית",
     duration: "03:45",
@@ -37,11 +37,13 @@ const visualEvidence = [
     title: "הקלטת שיחה - איום טלפוני",
     location: "מעקב טלפוני",
     timestamp: "12.1.2024, 19:45",
-    description: "הקלטת שיחת טלפון בה יוסי כהן מאיים על דני לוי",
     priority: "high",
     source: "מעקב משטרתי מאושר",
     duration: "02:18",
     url: "",
+    call_type: "outgoing",
+    caller: "יוסי כהן",
+    receiver: "דני לוי",
     evidence_notes: "איום ברור על חיי הקורבן - מהווה מניע לרצח"
   },
   {
@@ -50,7 +52,7 @@ const visualEvidence = [
     title: "תמונות זירת הפשע",
     location: "נמל אשדוד - מחסן 7",
     timestamp: "14.1.2024, 00:45",
-    description: "תיעוד מלא של זירת הרצח והראיות הפיזיות",
+    
     priority: "critical",
     source: "זק״א ומעבדה פלילית",
     url: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=500&h=400&fit=crop",
@@ -62,7 +64,7 @@ const visualEvidence = [
     title: "חקירת זירה - תיעוד מלא",
     location: "נמל אשדוד - מחסן 7", 
     timestamp: "14.1.2024, 01:30",
-    description: "תיעוד מקצועי של זירת הפשע על ידי חוקרי המעבדה הפלילית",
+    
     priority: "high",
     source: "מעבדה פלילית משטרת ישראל",
     duration: "12:33",
@@ -75,11 +77,13 @@ const visualEvidence = [
     title: "עדות קולית - עד ראייה", 
     location: "תחנת משטרה מרכז",
     timestamp: "14.1.2024, 10:00",
-    description: "עדותו של עד ראייה ששמע צעקות מהמחסן",
     priority: "medium",
     source: "חקירה משטרתי",
     duration: "08:12",
     url: "",
+    call_type: "interview",
+    caller: "חוקר",
+    receiver: "עד ראייה",
     evidence_notes: "עדות תומכת המחזקת את ציר הזמן של האירועים"
   }
 ];
@@ -218,7 +222,7 @@ const VisualEvidence = () => {
 
                     {evidence.type === "audio" && (
                       <div className="bg-black/20 rounded-lg p-4 border border-white/10">
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-3">
                             <Button
                               onClick={() => handlePlay(evidence.id)}
@@ -235,13 +239,32 @@ const VisualEvidence = () => {
                             <Download className="w-4 h-4" />
                           </Button>
                         </div>
+                        
+                        {/* Call Details */}
+                        {evidence.caller && evidence.receiver && (
+                          <div className="flex items-center gap-4 text-sm text-blue-200">
+                            <div className="flex items-center gap-2">
+                              <span className="text-blue-400">מ:</span>
+                              <span>{evidence.caller}</span>
+                            </div>
+                            <span className="text-blue-500">→</span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-blue-400">אל:</span>
+                              <span>{evidence.receiver}</span>
+                            </div>
+                            <Badge className={`text-xs ${
+                              evidence.call_type === 'outgoing' ? 'bg-green-600/30 text-green-300 border-green-500/50' :
+                              evidence.call_type === 'incoming' ? 'bg-blue-600/30 text-blue-300 border-blue-500/50' :
+                              'bg-purple-600/30 text-purple-300 border-purple-500/50'
+                            }`}>
+                              {evidence.call_type === 'outgoing' ? 'יוצאת' : 
+                               evidence.call_type === 'incoming' ? 'נכנסת' : 'חקירה'}
+                            </Badge>
+                          </div>
+                        )}
                       </div>
                     )}
 
-                    {/* Description */}
-                    <div className="bg-blue-950/30 rounded-lg p-3 border border-blue-800/30">
-                      <p className="text-blue-100 text-sm leading-relaxed">{evidence.description}</p>
-                    </div>
 
                     {/* Evidence Notes */}
                     <div className="bg-blue-900/20 border border-blue-700/30 rounded-lg p-3">
