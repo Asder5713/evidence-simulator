@@ -12,9 +12,9 @@ const taskbarItems = [
   },
   {
     id: "investigation",
-    label: "חקירה פלילית",
+    label: "מעבדת ראיות",
     icon: Search,
-    path: "/",
+    path: "/lab",
   },
   {
     id: "emails",
