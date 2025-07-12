@@ -95,19 +95,19 @@ const getTypeIcon = (type: string) => {
 
 const getTypeColor = (type: string) => {
   switch (type) {
-    case "image": return "from-zinc-900/50 to-zinc-800/40 border-zinc-700/40";
-    case "video": return "from-neutral-900/50 to-neutral-800/40 border-neutral-700/40";
-    case "audio": return "from-stone-900/50 to-stone-800/40 border-stone-700/40";
-    default: return "from-gray-900/50 to-gray-800/40 border-gray-700/40";
+    case "image": return "from-blue-950/70 to-blue-900/50 border-blue-800/60";
+    case "video": return "from-indigo-950/70 to-indigo-900/50 border-indigo-800/60";
+    case "audio": return "from-cyan-950/70 to-cyan-900/50 border-cyan-800/60";
+    default: return "from-slate-950/70 to-slate-900/50 border-slate-800/60";
   }
 };
 
 const getPriorityColor = (priority: string) => {
   switch (priority) {
-    case "critical": return "bg-zinc-800 text-zinc-200 border-zinc-600";
-    case "high": return "bg-neutral-800 text-neutral-200 border-neutral-600";
-    case "medium": return "bg-stone-800 text-stone-200 border-stone-600";
-    default: return "bg-gray-800 text-gray-200 border-gray-600";
+    case "critical": return "bg-red-600/30 text-red-300 border-red-500/50";
+    case "high": return "bg-orange-600/30 text-orange-300 border-orange-500/50";
+    case "medium": return "bg-blue-600/30 text-blue-300 border-blue-500/50";
+    default: return "bg-slate-600/30 text-slate-300 border-slate-500/50";
   }
 };
 
@@ -120,16 +120,16 @@ const VisualEvidence = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-neutral-950 to-stone-950 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-blue-950 via-indigo-950 to-slate-950 pb-20">
       {/* Header */}
-      <div className="bg-gradient-to-r from-zinc-900 to-neutral-900 border-b border-zinc-700/50 p-4 shadow-2xl">
+      <div className="bg-gradient-to-r from-blue-900/80 to-indigo-900/80 border-b border-blue-700/50 p-4 shadow-2xl backdrop-blur-sm">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-zinc-800/50 rounded-lg border border-zinc-700/30">
-            <Camera className="w-6 h-6 text-zinc-300" />
+          <div className="p-3 bg-blue-500/20 rounded-lg border border-blue-400/30 shadow-lg shadow-blue-500/20">
+            <Camera className="w-6 h-6 text-blue-300" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-zinc-100">ראיות ויזואליות</h1>
-            <p className="text-sm text-zinc-400">תמונות, וידיאו והקלטות אודיו</p>
+            <h1 className="text-xl font-bold text-blue-100">ראיות ויזואליות</h1>
+            <p className="text-sm text-blue-300">תמונות, וידיאו והקלטות אודיו</p>
           </div>
         </div>
       </div>
@@ -150,12 +150,12 @@ const VisualEvidence = () => {
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="p-2 bg-zinc-800/30 rounded-lg border border-zinc-700/20">
-                          <TypeIcon className="w-5 h-5 text-zinc-300" />
+                        <div className="p-2 bg-blue-500/20 rounded-lg border border-blue-400/30 shadow-lg shadow-blue-500/10">
+                          <TypeIcon className="w-5 h-5 text-blue-300" />
                         </div>
                         <div>
-                          <CardTitle className="text-zinc-100 text-lg">{evidence.title}</CardTitle>
-                          <p className="text-zinc-400 text-sm">{evidence.source}</p>
+                          <CardTitle className="text-blue-100 text-lg">{evidence.title}</CardTitle>
+                          <p className="text-blue-300 text-sm">{evidence.source}</p>
                         </div>
                       </div>
                       <Badge className={`text-xs border ${getPriorityColor(evidence.priority)}`}>
@@ -164,17 +164,17 @@ const VisualEvidence = () => {
                       </Badge>
                     </div>
 
-                    <div className="space-y-2 text-sm text-gray-300">
+                    <div className="space-y-2 text-sm text-blue-200">
                       <div className="flex items-center gap-2">
-                        <MapPin className="w-3 h-3" />
+                        <MapPin className="w-3 h-3 text-blue-400" />
                         <span>{evidence.location}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Clock className="w-3 h-3" />
+                        <Clock className="w-3 h-3 text-blue-400" />
                         <span>{evidence.timestamp}</span>
                         {evidence.duration && (
                           <>
-                            <span className="text-gray-500">•</span>
+                            <span className="text-blue-500">•</span>
                             <span>משך: {evidence.duration}</span>
                           </>
                         )}
@@ -192,7 +192,7 @@ const VisualEvidence = () => {
                           className="w-full h-48 object-cover rounded-lg border border-white/10"
                         />
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-center justify-center">
-                          <Button variant="secondary" size="sm" className="gap-2">
+                          <Button variant="secondary" size="sm" className="gap-2 bg-blue-600/20 border-blue-500/50 text-blue-100 hover:bg-blue-600/30">
                             <ZoomIn className="w-4 h-4" />
                             הגדל
                           </Button>
@@ -208,7 +208,7 @@ const VisualEvidence = () => {
                           className="w-full h-48 object-cover rounded-lg border border-white/10"
                         />
                         <div className="absolute inset-0 bg-black/40 rounded-lg flex items-center justify-center">
-                          <Button variant="secondary" size="lg" className="gap-2">
+                          <Button variant="secondary" size="lg" className="gap-2 bg-blue-600/20 border-blue-500/50 text-blue-100 hover:bg-blue-600/30">
                             <Play className="w-5 h-5" />
                             נגן וידיאו
                           </Button>
@@ -239,17 +239,17 @@ const VisualEvidence = () => {
                     )}
 
                     {/* Description */}
-                    <div className="bg-black/20 rounded-lg p-3 border border-white/10">
-                      <p className="text-gray-200 text-sm leading-relaxed">{evidence.description}</p>
+                    <div className="bg-blue-950/30 rounded-lg p-3 border border-blue-800/30">
+                      <p className="text-blue-100 text-sm leading-relaxed">{evidence.description}</p>
                     </div>
 
                     {/* Evidence Notes */}
-                    <div className="bg-zinc-800/20 border border-zinc-600/30 rounded-lg p-3">
+                    <div className="bg-blue-900/20 border border-blue-700/30 rounded-lg p-3">
                       <div className="flex items-start gap-2">
-                        <AlertTriangle className="w-4 h-4 text-zinc-400 mt-0.5 flex-shrink-0" />
+                        <AlertTriangle className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
                         <div>
-                          <p className="text-zinc-300 text-xs font-medium mb-1">הערת חוקר:</p>
-                          <p className="text-zinc-200 text-xs leading-relaxed">{evidence.evidence_notes}</p>
+                          <p className="text-blue-300 text-xs font-medium mb-1">הערת חוקר:</p>
+                          <p className="text-blue-100 text-xs leading-relaxed">{evidence.evidence_notes}</p>
                         </div>
                       </div>
                     </div>

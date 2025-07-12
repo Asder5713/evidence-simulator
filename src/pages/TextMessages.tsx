@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageSquare, Shield, Eye, Phone, Users, Clock, AlertTriangle } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { MessageSquare, Shield, Eye, Phone, Users, Clock, AlertTriangle, ChevronDown, ChevronRight } from "lucide-react";
+import { useState } from "react";
 
 const textEvidence = [
   {
@@ -95,6 +97,12 @@ const getPriorityColor = (priority: string) => {
 };
 
 const TextMessages = () => {
+  const [openEvidence, setOpenEvidence] = useState<string | null>(null);
+
+  const toggleEvidence = (id: string) => {
+    setOpenEvidence(openEvidence === id ? null : id);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-black pb-20">
       {/* Header */}
@@ -104,58 +112,73 @@ const TextMessages = () => {
             <MessageSquare className="w-6 h-6 text-cyan-400" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white">תקשורת מבצעית</h1>
-            <p className="text-sm text-gray-300">ראיות טקסטואליות - חקירה פלילית</p>
+            <h1 className="text-xl font-bold text-white">ראיות טקסטואליות</h1>
+            <p className="text-sm text-gray-300">תקשורת מבצעית - חקירה פלילית</p>
           </div>
         </div>
       </div>
 
-      {/* Chat Container */}
-      <div className="max-w-5xl mx-auto p-6">
+      {/* Evidence Container */}
+      <div className="max-w-4xl mx-auto p-6">
         <ScrollArea className="h-[calc(100vh-200px)]">
-          <div className="space-y-6">
+          <div className="space-y-4">
             {textEvidence.map((message, index) => {
               const SourceIcon = getSourceIcon(message.type);
+              const isOpen = openEvidence === message.id;
               
               return (
-                <div
+                <Collapsible
                   key={message.id}
-                  className="flex justify-start animate-fade-in"
-                  style={{ animationDelay: `${index * 0.15}s` }}
+                  open={isOpen}
+                  onOpenChange={() => toggleEvidence(message.id)}
+                  className="animate-fade-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <Card className={`w-full max-w-3xl bg-gradient-to-br ${getSourceColor(message.type)} border backdrop-blur-sm shadow-lg shadow-black/20 hover:shadow-xl transition-all duration-300`}>
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-3">
-                          <div className="p-1.5 bg-white/10 rounded-lg">
-                            <SourceIcon className="w-4 h-4 text-white" />
+                  <Card className={`bg-gradient-to-br ${getSourceColor(message.type)} border backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300`}>
+                    <CollapsibleTrigger asChild>
+                      <CardHeader className="cursor-pointer hover:bg-white/5 transition-colors">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="p-1.5 bg-white/10 rounded-lg">
+                              <SourceIcon className="w-4 h-4 text-white" />
+                            </div>
+                            <div className="text-right">
+                              <CardTitle className="text-white text-lg font-bold">
+                                {message.source} - {message.sender}
+                              </CardTitle>
+                              <div className="flex items-center gap-2 text-xs text-gray-300 mt-1">
+                                <Clock className="w-3 h-3" />
+                                <span>{message.timestamp}</span>
+                              </div>
+                            </div>
                           </div>
-                          <span className="text-sm font-bold text-white">{message.source}</span>
+                          <div className="flex items-center gap-2">
+                            <Badge className={`text-xs border ${getPriorityColor(message.priority)}`}>
+                              {message.priority === 'critical' ? 'קריטי' : 
+                               message.priority === 'urgent' ? 'דחוף' :
+                               message.priority === 'high' ? 'גבוה' : 'בינוני'}
+                            </Badge>
+                            {isOpen ? (
+                              <ChevronDown className="w-5 h-5 text-white transition-transform" />
+                            ) : (
+                              <ChevronRight className="w-5 h-5 text-white transition-transform" />
+                            )}
+                          </div>
                         </div>
-                        <Badge className={`text-xs border ${getPriorityColor(message.priority)}`}>
-                          {message.priority === 'critical' ? 'קריטי' : 
-                           message.priority === 'urgent' ? 'דחוף' :
-                           message.priority === 'high' ? 'גבוה' : 'בינוני'}
-                        </Badge>
-                      </div>
-                      
-                      <div className="flex items-center gap-2 text-xs text-gray-300">
-                        <span className="font-medium">{message.sender}</span>
-                        <span className="text-gray-500">•</span>
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          <span>{message.timestamp}</span>
-                        </div>
-                      </div>
-                    </CardHeader>
+                      </CardHeader>
+                    </CollapsibleTrigger>
                     
-                    <CardContent className="pt-0">
-                      <div className="bg-black/20 rounded-lg p-4 border border-white/10">
-                        <p className="text-gray-100 leading-relaxed font-medium">{message.content}</p>
-                      </div>
-                    </CardContent>
+                    <CollapsibleContent>
+                      <CardContent className="pt-0 pb-4">
+                        <div className="bg-black/30 rounded-lg p-4 border border-white/20">
+                          <p className="text-gray-100 leading-relaxed font-medium text-right">
+                            {message.content}
+                          </p>
+                        </div>
+                      </CardContent>
+                    </CollapsibleContent>
                   </Card>
-                </div>
+                </Collapsible>
               );
             })}
           </div>
