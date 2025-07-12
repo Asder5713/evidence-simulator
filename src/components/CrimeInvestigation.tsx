@@ -164,11 +164,26 @@ export function CrimeInvestigation() {
   // עדכון הראיות הזמינות כאשר ראיות נבחרות מתעדכנות
   useEffect(() => {
     const convertedEvidence = selectedEvidence.map(convertToLabEvidence);
+    
     setAvailableEvidence(prev => {
-      // הוסף רק ראיות חדשות שלא קיימות כבר
-      const existingIds = prev.map(e => e.id);
-      const newEvidence = convertedEvidence.filter(e => !existingIds.includes(e.id));
-      return [...sampleEvidence, ...newEvidence];
+      // שמור על הראיות הקיימות שלא נמחקו
+      const currentIds = prev.map(e => e.id);
+      const selectedIds = selectedEvidence.map(e => e.id);
+      
+      // סנן ראיות שנמחקו מה-selectedEvidence
+      const filteredExisting = prev.filter(evidence => {
+        // אם זו ראיה מקורית (מ-sampleEvidence), שמור אותה
+        if (sampleEvidence.some(sample => sample.id === evidence.id)) {
+          return true;
+        }
+        // אם זו ראיה שנוספה ועדיין נבחרת, שמור אותה
+        return selectedIds.includes(evidence.id);
+      });
+      
+      // הוסף ראיות חדשות שלא קיימות עדיין
+      const newEvidence = convertedEvidence.filter(e => !currentIds.includes(e.id));
+      
+      return [...filteredExisting, ...newEvidence];
     });
   }, [selectedEvidence]);
 
@@ -199,8 +214,12 @@ export function CrimeInvestigation() {
       setCalmingEvidence(prev => prev.filter(item => item.id !== evidence.id));
     }
     
-    // החזר את הראיה לרשימה הזמינה
-    setAvailableEvidence(prev => [...prev, { ...evidence, category: null }]);
+    // החזר את הראיה לרשימה הזמינה (רק אם היא לא נמחקה מ-selectedEvidence)
+    setAvailableEvidence(prev => {
+      const alreadyExists = prev.some(item => item.id === evidence.id);
+      if (alreadyExists) return prev;
+      return [...prev, { ...evidence, category: null }];
+    });
   };
 
   return (
