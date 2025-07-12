@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { Search, Filter, Eye } from "lucide-react";
+import { Search, Filter, Eye, Trash2 } from "lucide-react";
 import { EvidenceCard, Evidence } from "./EvidenceCard";
 import { EvidenceDropZone } from "./EvidenceDropZone";
 import { VerticalThreatMeter } from "./VerticalThreatMeter";
+import { useEvidence } from "@/hooks/use-evidence";
+import { Button } from "@/components/ui/button";
 
 // נתוני ראיות לדוגמה
 const sampleEvidence: Evidence[] = [
@@ -136,6 +138,39 @@ export function CrimeInvestigation() {
   const [suspiciousEvidence, setSuspiciousEvidence] = useState<Evidence[]>([]);
   const [calmingEvidence, setCalmingEvidence] = useState<Evidence[]>([]);
   const [draggedEvidence, setDraggedEvidence] = useState<Evidence | null>(null);
+  const { selectedEvidence, removeEvidence } = useEvidence();
+
+  // המרת ראיות נבחרות לפורמט המעבדה
+  const convertToLabEvidence = (evidence: any): Evidence => {
+    return {
+      id: evidence.id,
+      title: evidence.title,
+      content: evidence.content || `${evidence.type}: ${evidence.title}`,
+      type: evidence.type === 'email' ? 'digital' : 
+            evidence.type === 'text' ? 'digital' :
+            evidence.type === 'audio' ? 'digital' :
+            evidence.type === 'video' ? 'digital' :
+            evidence.type === 'image' ? 'digital' : 'document',
+      issueDate: new Date().toISOString().replace('T', ' ').substring(0, 16),
+      incidentDate: evidence.timestamp || new Date().toISOString().replace('T', ' ').substring(0, 16),
+      system: evidence.source || "מערכת ראיות",
+      anomalyLevel: evidence.priority === 'critical' ? 'critical' :
+                   evidence.priority === 'high' ? 'high' : 'medium',
+      issuingUnit: evidence.source || "יחידת חקירות",
+      source: evidence.location || evidence.source || "מקור לא ידוע"
+    };
+  };
+
+  // עדכון הראיות הזמינות כאשר ראיות נבחרות מתעדכנות
+  useEffect(() => {
+    const convertedEvidence = selectedEvidence.map(convertToLabEvidence);
+    setAvailableEvidence(prev => {
+      // הוסף רק ראיות חדשות שלא קיימות כבר
+      const existingIds = prev.map(e => e.id);
+      const newEvidence = convertedEvidence.filter(e => !existingIds.includes(e.id));
+      return [...sampleEvidence, ...newEvidence];
+    });
+  }, [selectedEvidence]);
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, evidence: Evidence) => {
     setDraggedEvidence(evidence);
@@ -186,8 +221,13 @@ export function CrimeInvestigation() {
               חקירת פשע - מעבדת ראיות
             </h1>
             <p className="text-muted-foreground">
-              סווג את הראיות על מנת לקבוע את רמת החשד בפשע
+              סווג את הראיות על מנת לקבוע את רמת החשד בפשע. ראיות שנוספו מהעמודים השונים יופיעו כאן.
             </p>
+            {selectedEvidence.length > 0 && (
+              <p className="text-sm text-primary">
+                נוספו {selectedEvidence.length} ראיות חדשות מהעמודים השונים
+              </p>
+            )}
           </div>
 
           <div className="grid grid-cols-3 gap-6 h-[calc(100vh-180px)]">
@@ -225,11 +265,26 @@ export function CrimeInvestigation() {
                 <ScrollArea className="h-[calc(100vh-280px)] pl-4">
                   <div className="space-y-3">
                     {availableEvidence.map((evidence) => (
-                      <EvidenceCard
-                        key={evidence.id}
-                        evidence={evidence}
-                        onDragStart={handleDragStart}
-                      />
+                      <div key={evidence.id}>
+                        <EvidenceCard
+                          evidence={evidence}
+                          onDragStart={handleDragStart}
+                        />
+                        {/* הוסף כפתור מחיקה לראיות שנוספו מהעמודים */}
+                        {selectedEvidence.some(e => e.id === evidence.id) && (
+                          <div className="mt-2">
+                            <Button 
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => removeEvidence(evidence.id)}
+                              className="gap-1 text-xs w-full"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                              הסר מהראיות
+                            </Button>
+                          </div>
+                        )}
+                      </div>
                     ))}
                     {availableEvidence.length === 0 && (
                       <div className="text-center py-8">
