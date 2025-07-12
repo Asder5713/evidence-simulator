@@ -21,10 +21,54 @@ export function CrimeInvestigation() {
 
   // המרת ראיות נבחרות לפורמט המעבדה
   const convertToLabEvidence = (evidence: any): Evidence => {
+    // המרת תוכן הראיה לפורמט הנכון
+    let content: string | { 
+      type: 'text' | 'image' | 'audio' | 'video' | 'email'; 
+      data: string;
+      callOriginator?: string;
+      callReceiver?: string;
+      emailFrom?: string;
+      emailTo?: string;
+      emailSubject?: string;
+    } = evidence.content || `${evidence.type}: ${evidence.title}`;
+    
+    // אם יש תוכן מפורט, המר אותו לפורמט הנכון
+    if (evidence.type === 'email' && evidence.content) {
+      content = {
+        type: 'email' as const,
+        data: evidence.content,
+        emailFrom: evidence.caller || "לא ידוע",
+        emailTo: evidence.receiver || "לא ידוע",
+        emailSubject: evidence.title
+      };
+    } else if (evidence.type === 'audio' && evidence.url) {
+      content = {
+        type: 'audio' as const,
+        data: evidence.url,
+        callOriginator: evidence.caller || "לא ידוע",
+        callReceiver: evidence.receiver || "לא ידוע"
+      };
+    } else if (evidence.type === 'image' && evidence.url) {
+      content = {
+        type: 'image' as const,
+        data: evidence.url
+      };
+    } else if (evidence.type === 'video' && evidence.url) {
+      content = {
+        type: 'video' as const,
+        data: evidence.url
+      };
+    } else if (evidence.type === 'text') {
+      content = {
+        type: 'text' as const,
+        data: evidence.content || evidence.title
+      };
+    }
+
     return {
       id: evidence.id,
       title: evidence.title,
-      content: evidence.content || `${evidence.type}: ${evidence.title}`,
+      content: content,
       type: evidence.type === 'email' ? 'digital' : 
             evidence.type === 'text' ? 'digital' :
             evidence.type === 'audio' ? 'digital' :
