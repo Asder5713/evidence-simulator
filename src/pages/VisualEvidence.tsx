@@ -2,8 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Camera, Video, Volume2, FileImage, Play, Pause, Download, ZoomIn, Clock, MapPin, AlertTriangle } from "lucide-react";
+import { Camera, Video, Volume2, FileImage, Play, Pause, Download, ZoomIn, Clock, MapPin, Plus, Check } from "lucide-react";
 import { useState } from "react";
+import { useEvidence } from "@/hooks/use-evidence";
 
 const visualEvidence = [
   {
@@ -118,9 +119,27 @@ const getPriorityColor = (priority: string) => {
 const VisualEvidence = () => {
   const [selectedEvidence, setSelectedEvidence] = useState(null);
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
+  const { addEvidence, isEvidenceSelected } = useEvidence();
 
   const handlePlay = (id: string) => {
     setPlayingAudio(playingAudio === id ? null : id);
+  };
+
+  const handleAddEvidence = (evidence: any) => {
+    addEvidence({
+      id: evidence.id,
+      type: evidence.type,
+      title: evidence.title,
+      source: evidence.source,
+      timestamp: evidence.timestamp,
+      location: evidence.location,
+      priority: evidence.priority,
+      url: evidence.url,
+      duration: evidence.duration,
+      caller: evidence.caller,
+      receiver: evidence.receiver,
+      call_type: evidence.call_type
+    });
   };
 
   return (
@@ -166,6 +185,25 @@ const VisualEvidence = () => {
                         {evidence.priority === 'critical' ? 'קריטי' : 
                          evidence.priority === 'high' ? 'גבוה' : 'בינוני'}
                       </Badge>
+                      <Button
+                        variant={isEvidenceSelected(evidence.id) ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => handleAddEvidence(evidence)}
+                        disabled={isEvidenceSelected(evidence.id)}
+                        className="gap-1 text-xs"
+                      >
+                        {isEvidenceSelected(evidence.id) ? (
+                          <>
+                            <Check className="w-3 h-3" />
+                            נוסף
+                          </>
+                        ) : (
+                          <>
+                            <Plus className="w-3 h-3" />
+                            הוסף
+                          </>
+                        )}
+                      </Button>
                     </div>
 
                     <div className="space-y-2 text-sm text-blue-200">

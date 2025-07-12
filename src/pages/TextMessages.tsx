@@ -1,9 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { MessageSquare, Shield, Eye, Phone, Users, Clock, AlertTriangle, ChevronDown, ChevronRight } from "lucide-react";
+import { MessageSquare, Shield, Eye, Phone, Users, Clock, AlertTriangle, ChevronDown, ChevronRight, Plus, Check } from "lucide-react";
 import { useState } from "react";
+import { useEvidence } from "@/hooks/use-evidence";
 
 const textEvidence = [
   {
@@ -98,9 +100,22 @@ const getPriorityColor = (priority: string) => {
 
 const TextMessages = () => {
   const [openEvidence, setOpenEvidence] = useState<string | null>(null);
+  const { addEvidence, isEvidenceSelected } = useEvidence();
 
   const toggleEvidence = (id: string) => {
     setOpenEvidence(openEvidence === id ? null : id);
+  };
+
+  const handleAddEvidence = (message: any) => {
+    addEvidence({
+      id: message.id,
+      type: 'text',
+      title: `${message.source} - ${message.sender}`,
+      source: message.source,
+      timestamp: message.timestamp,
+      priority: message.priority,
+      content: message.content
+    });
   };
 
   return (
@@ -158,6 +173,28 @@ const TextMessages = () => {
                                message.priority === 'urgent' ? 'דחוף' :
                                message.priority === 'high' ? 'גבוה' : 'בינוני'}
                             </Badge>
+                            <Button
+                              variant={isEvidenceSelected(message.id) ? "default" : "outline"}
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAddEvidence(message);
+                              }}
+                              disabled={isEvidenceSelected(message.id)}
+                              className="gap-1 text-xs"
+                            >
+                              {isEvidenceSelected(message.id) ? (
+                                <>
+                                  <Check className="w-3 h-3" />
+                                  נוסף
+                                </>
+                              ) : (
+                                <>
+                                  <Plus className="w-3 h-3" />
+                                  הוסף
+                                </>
+                              )}
+                            </Button>
                             {isOpen ? (
                               <ChevronDown className="w-5 h-5 text-white transition-transform" />
                             ) : (

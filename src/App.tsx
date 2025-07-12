@@ -10,6 +10,7 @@ import Overview from "./pages/Overview";
 import Emails from "./pages/Emails";
 import TextMessages from "./pages/TextMessages";
 import VisualEvidence from "./pages/VisualEvidence";
+import EvidenceLab from "./pages/EvidenceLab";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/emails" element={<Emails />} />
             <Route path="/text-messages" element={<TextMessages />} />
             <Route path="/visual-evidence" element={<VisualEvidence />} />
+            <Route path="/evidence-lab" element={<EvidenceLab />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

@@ -4,15 +4,18 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Mail, Search, AlertCircle, Clock, Paperclip, Star, Archive, Trash2, Reply, Forward, MoreHorizontal } from "lucide-react";
-const emailEvidence = [{
-  id: "email_001",
-  from: "yossi.cohen@gmail.com",
-  to: "danny.levi@outlook.com",
-  subject: "לגבי החוב - דחוף!",
-  date: "13.1.2024, 21:45",
-  priority: "high",
-  content: `שלום דני,
+import { Mail, Search, AlertCircle, Clock, Paperclip, Star, Archive, Trash2, Reply, Forward, MoreHorizontal, Plus, Check } from "lucide-react";
+import { useEvidence } from "@/hooks/use-evidence";
+
+const emailEvidence = [
+  {
+    id: "email_001",
+    from: "yossi.cohen@gmail.com",
+    to: "danny.levi@outlook.com",
+    subject: "לגבי החוב - דחוף!",
+    date: "13.1.2024, 21:45",
+    priority: "high",
+    content: `שלום דני,
 
 אני יודע איפה אתה גר ואני יודע איפה הילדים שלך לומדים. 
 
@@ -21,16 +24,17 @@ const emailEvidence = [{
 זה לא איום, זו הבטחה.
 
 יוסי`,
-  attachments: 0,
-  threat_level: "critical"
-}, {
-  id: "email_002",
-  from: "sami.cohen.business@protonmail.com",
-  to: "miki.even@secure-mail.net",
-  subject: "עדכון תכנית - ינואר",
-  date: "10.1.2024, 14:22",
-  priority: "medium",
-  content: `מיקי,
+    attachments: 0,
+    threat_level: "critical"
+  },
+  {
+    id: "email_002",
+    from: "sami.cohen.business@protonmail.com",
+    to: "miki.even@secure-mail.net",
+    subject: "עדכון תכנית - ינואר",
+    date: "10.1.2024, 14:22",
+    priority: "medium",
+    content: `מיקי,
 
 המשלוח מקולומביה יגיע ביום רביעי לנמל אשדוד. 
 דאג שהאנשים יהיו מוכנים ב-03:00 בבוקר.
@@ -40,16 +44,17 @@ const emailEvidence = [{
 תיזהר עם המכס, יש לי חשד שהם עלו עלינו.
 
 ס.`,
-  attachments: 1,
-  threat_level: "high"
-}, {
-  id: "email_003",
-  from: "danny.levi@outlook.com",
-  to: "police.reports@gov.il",
-  subject: "תלונה על איומים - דחוף",
-  date: "14.1.2024, 08:15",
-  priority: "high",
-  content: `שלום,
+    attachments: 1,
+    threat_level: "high"
+  },
+  {
+    id: "email_003",
+    from: "danny.levi@outlook.com",
+    to: "police.reports@gov.il",
+    subject: "תלונה על איומים - דחוף",
+    date: "14.1.2024, 08:15",
+    priority: "high",
+    content: `שלום,
 
 אני דני לוי, בעל חנות תכשיטים ברחוב רוטשילד 45, תל-אביב.
 
@@ -60,13 +65,29 @@ const emailEvidence = [{
 בתודה,
 דני לוי
 054-9876543`,
-  attachments: 0,
-  threat_level: "medium"
-}];
+    attachments: 0,
+    threat_level: "medium"
+  }
+];
+
 const Emails = () => {
   const [selectedEmail, setSelectedEmail] = useState(emailEvidence[0]);
+  const { addEvidence, isEvidenceSelected } = useEvidence();
 
-  return <div className="min-h-screen bg-slate-900 pb-20">
+  const handleAddEvidence = (email: any) => {
+    addEvidence({
+      id: email.id,
+      type: 'email',
+      title: email.subject,
+      source: email.from,
+      timestamp: email.date,
+      priority: email.threat_level,
+      content: email.content
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-900 pb-20">
       {/* Header */}
       <div className="bg-slate-800 border-b border-slate-700 p-4">
         <div className="flex items-center justify-between">
@@ -74,30 +95,30 @@ const Emails = () => {
             <Mail className="w-6 h-6 text-blue-400" />
             <h1 className="text-xl font-bold text-slate-100">ראיות דיגיטליות - אימיילים</h1>
           </div>
-          
         </div>
       </div>
 
       <div className="flex h-screen">
-        {/* Sidebar */}
-        
-
         {/* Email List */}
         <div className="flex-1 flex">
           <div className="w-1/2 border-r border-slate-700">
             <ScrollArea className="h-full">
               <div className="p-4 space-y-2">
-                {emailEvidence.map(email => <Card 
-                  key={email.id} 
-                  className={`border-slate-700 hover:bg-slate-700/50 cursor-pointer ${
-                    selectedEmail.id === email.id ? 'bg-slate-700/70 border-blue-500' : 'bg-slate-800/50'
-                  }`}
-                  onClick={() => setSelectedEmail(email)}
-                >
+                {emailEvidence.map(email => (
+                  <Card 
+                    key={email.id} 
+                    className={`border-slate-700 hover:bg-slate-700/50 cursor-pointer ${
+                      selectedEmail.id === email.id ? 'bg-slate-700/70 border-blue-500' : 'bg-slate-800/50'
+                    }`}
+                    onClick={() => setSelectedEmail(email)}
+                  >
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-2">
-                          <div className={`w-2 h-2 rounded-full ${email.threat_level === 'critical' ? 'bg-red-500' : email.threat_level === 'high' ? 'bg-orange-500' : 'bg-yellow-500'}`} />
+                          <div className={`w-2 h-2 rounded-full ${
+                            email.threat_level === 'critical' ? 'bg-red-500' : 
+                            email.threat_level === 'high' ? 'bg-orange-500' : 'bg-yellow-500'
+                          }`} />
                           <span className="text-sm font-medium text-slate-200">{email.from}</span>
                         </div>
                         <span className="text-xs text-slate-400">{email.date}</span>
@@ -109,13 +130,41 @@ const Emails = () => {
                       <div className="flex items-center justify-between mt-3">
                         <div className="flex items-center gap-2">
                           {email.attachments > 0 && <Paperclip className="w-3 h-3 text-slate-400" />}
-                          <Badge className={`text-xs ${email.threat_level === 'critical' ? 'bg-red-900 text-red-200' : email.threat_level === 'high' ? 'bg-orange-900 text-orange-200' : 'bg-yellow-900 text-yellow-200'}`}>
-                            {email.threat_level === 'critical' ? 'איום קריטי' : email.threat_level === 'high' ? 'איום גבוה' : 'חשיבות בינונית'}
+                          <Badge className={`text-xs ${
+                            email.threat_level === 'critical' ? 'bg-red-900 text-red-200' : 
+                            email.threat_level === 'high' ? 'bg-orange-900 text-orange-200' : 
+                            'bg-yellow-900 text-yellow-200'
+                          }`}>
+                            {email.threat_level === 'critical' ? 'איום קריטי' : 
+                             email.threat_level === 'high' ? 'איום גבוה' : 'חשיבות בינונית'}
                           </Badge>
                         </div>
+                        <Button
+                          variant={isEvidenceSelected(email.id) ? "default" : "outline"}
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddEvidence(email);
+                          }}
+                          disabled={isEvidenceSelected(email.id)}
+                          className="gap-1 text-xs"
+                        >
+                          {isEvidenceSelected(email.id) ? (
+                            <>
+                              <Check className="w-3 h-3" />
+                              נוסף
+                            </>
+                          ) : (
+                            <>
+                              <Plus className="w-3 h-3" />
+                              הוסף
+                            </>
+                          )}
+                        </Button>
                       </div>
                     </CardContent>
-                  </Card>)}
+                  </Card>
+                ))}
               </div>
             </ScrollArea>
           </div>
@@ -127,6 +176,25 @@ const Emails = () => {
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-slate-100">{selectedEmail.subject}</CardTitle>
                   <div className="flex items-center gap-2">
+                    <Button
+                      variant={isEvidenceSelected(selectedEmail.id) ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handleAddEvidence(selectedEmail)}
+                      disabled={isEvidenceSelected(selectedEmail.id)}
+                      className="gap-2"
+                    >
+                      {isEvidenceSelected(selectedEmail.id) ? (
+                        <>
+                          <Check className="w-4 h-4" />
+                          נוסף לראיות
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="w-4 h-4" />
+                          הוסף לראיות
+                        </>
+                      )}
+                    </Button>
                     <Button variant="ghost" size="sm">
                       <Reply className="w-4 h-4" />
                     </Button>
@@ -161,12 +229,13 @@ const Emails = () => {
                     {selectedEmail.content}
                   </pre>
                 </div>
-                
               </CardContent>
             </Card>
           </div>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Emails;
