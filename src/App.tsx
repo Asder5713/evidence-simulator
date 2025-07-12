@@ -22,7 +22,8 @@ const App = () => (
       <BrowserRouter>
         <div className="min-h-screen">
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<Overview />} />
+            <Route path="/lab" element={<Index />} />
             <Route path="/overview" element={<Overview />} />
             <Route path="/emails" element={<Emails />} />
             <Route path="/text-messages" element={<TextMessages />} />
