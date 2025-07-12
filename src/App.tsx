@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Taskbar } from "@/components/Taskbar";
 import Index from "./pages/Index";
-import Reports from "./pages/Reports";
+
 import Overview from "./pages/Overview";
 import Emails from "./pages/Emails";
 import TextMessages from "./pages/TextMessages";
@@ -27,7 +27,7 @@ const App = () => (
             <Route path="/emails" element={<Emails />} />
             <Route path="/text-messages" element={<TextMessages />} />
             <Route path="/visual-evidence" element={<VisualEvidence />} />
-            <Route path="/reports" element={<Reports />} />
+            
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

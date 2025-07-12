@@ -185,20 +185,6 @@ const TextMessages = () => {
         </ScrollArea>
 
         {/* Bottom Note */}
-        <div className="mt-8 p-5 bg-gradient-to-r from-gray-800/60 to-slate-800/60 border border-gray-600/50 rounded-xl backdrop-blur-sm shadow-lg">
-          <div className="flex items-start gap-4">
-            <div className="p-2 bg-amber-500/20 rounded-lg">
-              <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0" />
-            </div>
-            <div>
-              <h3 className="text-amber-300 font-bold text-sm mb-2">הערת חוקר ראשי</h3>
-              <p className="text-gray-200 text-sm leading-relaxed">
-                הודעות אלו מתעדות את השרשרת המבצעית מתחילת החקירה ועד לגילוי הרצח. 
-                ניתן לראות בבירור את התקדמות האירועים והקשר הישיר בין האיומים לבצוע הרצח.
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

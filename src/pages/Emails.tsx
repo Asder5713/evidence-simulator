@@ -162,16 +162,6 @@ const Emails = () => {
                   </pre>
                 </div>
                 
-                <div className="mt-4 p-3 bg-red-900/20 border border-red-700/30 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4 text-red-400" />
-                    <span className="text-red-300 font-medium text-sm">הערת חוקר:</span>
-                  </div>
-                  <p className="text-red-200 text-sm mt-1">
-                    אימייל איום ישירות על הקורבן וביתו. נשלח יומיים לפני הרצח. 
-                    מהווה ראיה מרכזית לכוונה פלילית.
-                  </p>
-                </div>
               </CardContent>
             </Card>
           </div>

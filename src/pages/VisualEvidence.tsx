@@ -266,16 +266,6 @@ const VisualEvidence = () => {
                     )}
 
 
-                    {/* Evidence Notes */}
-                    <div className="bg-blue-900/20 border border-blue-700/30 rounded-lg p-3">
-                      <div className="flex items-start gap-2">
-                        <AlertTriangle className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
-                        <div>
-                          <p className="text-blue-300 text-xs font-medium mb-1">הערת חוקר:</p>
-                          <p className="text-blue-100 text-xs leading-relaxed">{evidence.evidence_notes}</p>
-                        </div>
-                      </div>
-                    </div>
                   </CardContent>
                 </Card>
               );
