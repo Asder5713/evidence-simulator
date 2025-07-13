@@ -23,8 +23,8 @@ const TOTAL_GAME_MINUTES =
   (GAME_END_TIME.hours - GAME_START_TIME.hours) * 60 + 
   (GAME_END_TIME.minutes - GAME_START_TIME.minutes);
 
-// Calculate real time for 30 game minutes (half hour in game time)
-const HALF_HOUR_GAME_MS = (30 / TOTAL_GAME_MINUTES) * REAL_GAME_DURATION_MS;
+// Save state every 30 seconds of real time
+const SAVE_INTERVAL_MS = 30 * 1000; // 30 seconds
 
 const STORAGE_KEY = 'crime-investigation-game-state';
 
@@ -113,8 +113,8 @@ export function useGameTime(): UseGameTimeReturn {
       const endTimeInMinutes = GAME_END_TIME.hours * 60 + GAME_END_TIME.minutes;
       const currentTimeInMinutes = currentHours * 60 + currentMinutes;
       
-      // Save state every half hour of game time
-      if (elapsedRealTimeMs - lastSaveTime >= HALF_HOUR_GAME_MS) {
+      // Save state every 30 seconds of real time
+      if (elapsedRealTimeMs - lastSaveTime >= SAVE_INTERVAL_MS) {
         setLastSaveTime(elapsedRealTimeMs);
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
           isGameStarted: true,
