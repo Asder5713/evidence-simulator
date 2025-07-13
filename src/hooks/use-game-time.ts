@@ -23,20 +23,67 @@ const TOTAL_GAME_MINUTES =
   (GAME_END_TIME.hours - GAME_START_TIME.hours) * 60 + 
   (GAME_END_TIME.minutes - GAME_START_TIME.minutes);
 
+// Calculate real time for 30 game minutes (half hour in game time)
+const HALF_HOUR_GAME_MS = (30 / TOTAL_GAME_MINUTES) * REAL_GAME_DURATION_MS;
+
+const STORAGE_KEY = 'crime-investigation-game-state';
+
 export function useGameTime(): UseGameTimeReturn {
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [isGameEnded, setIsGameEnded] = useState(false);
   const [gameStartTimestamp, setGameStartTimestamp] = useState<number | null>(null);
   const [gameTime, setGameTime] = useState<GameTime>(GAME_START_TIME);
+  const [lastSaveTime, setLastSaveTime] = useState<number>(0);
+
+  // Load saved state on mount
+  useEffect(() => {
+    const savedState = localStorage.getItem(STORAGE_KEY);
+    if (savedState) {
+      try {
+        const { 
+          isGameStarted: savedIsGameStarted, 
+          gameStartTimestamp: savedGameStartTimestamp,
+          isGameEnded: savedIsGameEnded 
+        } = JSON.parse(savedState);
+        
+        if (savedIsGameStarted && savedGameStartTimestamp && !savedIsGameEnded) {
+          setIsGameStarted(true);
+          setGameStartTimestamp(savedGameStartTimestamp);
+          setIsGameEnded(false);
+        } else if (savedIsGameEnded) {
+          setIsGameEnded(true);
+          setIsGameStarted(true);
+        }
+      } catch (error) {
+        console.error('Failed to load game state:', error);
+      }
+    }
+  }, []);
 
   const startGame = useCallback(() => {
+    const timestamp = Date.now();
     setIsGameStarted(true);
-    setGameStartTimestamp(Date.now());
+    setGameStartTimestamp(timestamp);
+    setLastSaveTime(0);
+    
+    // Save initial game state
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      isGameStarted: true,
+      gameStartTimestamp: timestamp,
+      isGameEnded: false
+    }));
   }, []);
 
   const endGame = useCallback(() => {
     setIsGameEnded(true);
-  }, []);
+    
+    // Save end game state
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      isGameStarted: true,
+      gameStartTimestamp,
+      isGameEnded: true
+    }));
+  }, [gameStartTimestamp]);
 
   const formatGameTime = useCallback(() => {
     const hours = gameTime.hours.toString().padStart(2, '0');
@@ -65,6 +112,16 @@ export function useGameTime(): UseGameTimeReturn {
       // Check if game should end
       const endTimeInMinutes = GAME_END_TIME.hours * 60 + GAME_END_TIME.minutes;
       const currentTimeInMinutes = currentHours * 60 + currentMinutes;
+      
+      // Save state every half hour of game time
+      if (elapsedRealTimeMs - lastSaveTime >= HALF_HOUR_GAME_MS) {
+        setLastSaveTime(elapsedRealTimeMs);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          isGameStarted: true,
+          gameStartTimestamp,
+          isGameEnded: false
+        }));
+      }
       
       if (currentTimeInMinutes >= endTimeInMinutes) {
         setGameTime(GAME_END_TIME);
