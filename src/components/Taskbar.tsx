@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Search, FileText, Clock, BarChart3, Mail, MessageSquare, Camera } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useGameTime } from "@/hooks/use-game-time";
+import { useGameContext } from "@/contexts/GameContext";
 
 const taskbarItems = [
   {
@@ -44,7 +44,7 @@ const taskbarItems = [
 
 export function Taskbar() {
   const location = useLocation();
-  const { formatGameTime, isGameStarted } = useGameTime();
+  const { formatGameTime, isGameStarted } = useGameContext();
 
   return (
     <div className="fixed bottom-0 left-0 right-0 h-12 bg-background/95 backdrop-blur-sm border-t border-border flex items-center justify-between px-4 z-50">
