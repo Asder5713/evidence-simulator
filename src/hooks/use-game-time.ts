@@ -49,10 +49,11 @@ export function useGameTime(): UseGameTimeReturn {
 
     const interval = setInterval(() => {
       const now = Date.now();
-      const elapsed = now - gameStartTimestamp;
+      const elapsedRealTimeMs = now - gameStartTimestamp;
       
       // Calculate how many game minutes have passed
-      const gameMinutesElapsed = (elapsed / REAL_GAME_DURATION_MS) * TOTAL_GAME_MINUTES;
+      // Each real second = TOTAL_GAME_MINUTES / (12 * 60) game minutes
+      const gameMinutesElapsed = (elapsedRealTimeMs / 1000) * (TOTAL_GAME_MINUTES / (12 * 60));
       
       // Calculate current game time
       const totalMinutesFromStart = GAME_START_TIME.hours * 60 + GAME_START_TIME.minutes + gameMinutesElapsed;
@@ -60,14 +61,18 @@ export function useGameTime(): UseGameTimeReturn {
       const currentMinutes = Math.floor(totalMinutesFromStart % 60);
       
       const newGameTime = { hours: currentHours, minutes: currentMinutes };
-      setGameTime(newGameTime);
       
       // Check if game should end
-      if (currentHours >= GAME_END_TIME.hours && currentMinutes >= GAME_END_TIME.minutes) {
+      const endTimeInMinutes = GAME_END_TIME.hours * 60 + GAME_END_TIME.minutes;
+      const currentTimeInMinutes = currentHours * 60 + currentMinutes;
+      
+      if (currentTimeInMinutes >= endTimeInMinutes) {
         setGameTime(GAME_END_TIME);
         endGame();
+      } else {
+        setGameTime(newGameTime);
       }
-    }, 1000);
+    }, 100); // Update every 100ms for smoother time progression
 
     return () => clearInterval(interval);
   }, [isGameStarted, isGameEnded, gameStartTimestamp, endGame]);
