@@ -1,5 +1,6 @@
-import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
+import React, { createContext, useContext, ReactNode, useState, useEffect, useMemo } from 'react';
 import { useGameTime, GameTime } from '@/hooks/use-game-time';
+import { emailEvidence, textEvidence, visualEvidence } from '@/data/evidence-data';
 
 interface GameContextType {
   gameTime: GameTime;
@@ -28,12 +29,22 @@ export function GameProvider({ children }: GameProviderProps) {
     setVisitedPages(prev => new Set([...prev, page]));
   };
 
-  // Calculate unseen counts based on visited pages
-  const unseenCounts = {
-    emails: visitedPages.has('emails') ? 0 : 3, // Placeholder, will be calculated properly
-    texts: visitedPages.has('texts') ? 0 : 6,
-    visual: visitedPages.has('visual') ? 0 : 6
-  };
+  // Calculate unseen counts based on time-reached evidence and visited pages
+  const unseenCounts = useMemo(() => {
+    if (!gameState.isGameStarted) {
+      return { emails: 0, texts: 0, visual: 0 };
+    }
+
+    const visibleEmails = emailEvidence.filter(email => gameState.isTimeReached(email.date));
+    const visibleTexts = textEvidence.filter(text => gameState.isTimeReached(text.timestamp));
+    const visibleVisual = visualEvidence.filter(visual => gameState.isTimeReached(visual.timestamp));
+
+    return {
+      emails: visitedPages.has('emails') ? 0 : visibleEmails.length,
+      texts: visitedPages.has('texts') ? 0 : visibleTexts.length,
+      visual: visitedPages.has('visual') ? 0 : visibleVisual.length
+    };
+  }, [gameState.isGameStarted, gameState.isTimeReached, visitedPages]);
 
   const contextValue = {
     ...gameState,
