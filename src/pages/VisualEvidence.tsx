@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Camera, Video, Volume2, FileImage, Play, Pause, Download, ZoomIn, Clock, MapPin, Plus, Check, AlertTriangle } from "lucide-react";
+import { Camera, Video, Volume2, FileImage, Play, Pause, Download, ZoomIn, Clock, MapPin, Plus, Check } from "lucide-react";
 import { useState, useMemo, useEffect } from "react";
 import { useEvidence } from "@/hooks/use-evidence";
 import { visualEvidence } from "@/data/evidence-data";
@@ -36,7 +36,7 @@ const getPriorityColor = (priority: string) => {
 };
 
 const VisualEvidence = () => {
-  const { isTimeReached, isGameStarted, markPageAsVisited, isEvidenceUnseen } = useGameContext();
+  const { isTimeReached, isGameStarted, markPageAsVisited } = useGameContext();
   const [selectedEvidence, setSelectedEvidence] = useState(null);
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
   const { addEvidence, isEvidenceSelected } = useEvidence();
@@ -44,10 +44,8 @@ const VisualEvidence = () => {
   
   // Mark page as visited when component mounts
   useEffect(() => {
-    if (isGameStarted) {
-      markPageAsVisited('visual');
-    }
-  }, [markPageAsVisited, isGameStarted]);
+    markPageAsVisited('visual');
+  }, [markPageAsVisited]);
 
   // Filter evidence that should be visible based on game time
   const visibleEvidence = useMemo(() => {
@@ -110,15 +108,10 @@ const VisualEvidence = () => {
                         <div className="p-2 bg-blue-500/20 rounded-lg border border-blue-400/30 shadow-lg shadow-blue-500/10">
                           <TypeIcon className="w-5 h-5 text-blue-300" />
                         </div>
-                         <div>
-                           <CardTitle className="text-blue-100 text-lg flex items-center gap-2">
-                             {evidence.title}
-                             {isEvidenceUnseen(evidence.timestamp, 'visual') && (
-                               <AlertTriangle className="w-4 h-4 text-yellow-400" />
-                             )}
-                           </CardTitle>
-                           <p className="text-blue-300 text-sm">{evidence.source}</p>
-                         </div>
+                        <div>
+                          <CardTitle className="text-blue-100 text-lg">{evidence.title}</CardTitle>
+                          <p className="text-blue-300 text-sm">{evidence.source}</p>
+                        </div>
                       </div>
                       <Badge className={`text-xs border ${getPriorityColor(evidence.priority)}`}>
                         {evidence.priority === 'critical' ? 'קריטי' : 
