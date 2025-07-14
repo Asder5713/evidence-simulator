@@ -5,6 +5,10 @@ export interface GameTime {
   minutes: number;
 }
 
+export interface TimeBasedEvidence {
+  showTime: { hours: number; minutes: number };
+}
+
 interface UseGameTimeReturn {
   gameTime: GameTime;
   isGameStarted: boolean;
@@ -12,6 +16,8 @@ interface UseGameTimeReturn {
   startGame: () => void;
   endGame: () => void;
   formatGameTime: () => string;
+  formatGameDate: () => string;
+  isTimeReached: (targetTime: { hours: number; minutes: number }) => boolean;
 }
 
 const GAME_START_TIME = { hours: 2, minutes: 0 }; // 2:00 AM
@@ -93,6 +99,17 @@ export function useGameTime(): UseGameTimeReturn {
     return `${hours}:${minutes}`;
   }, [gameTime]);
 
+  const formatGameDate = useCallback(() => {
+    return "17.06";
+  }, []);
+
+  const isTimeReached = useCallback((targetTime: { hours: number; minutes: number }) => {
+    if (!isGameStarted) return false;
+    const currentMinutes = gameTime.hours * 60 + gameTime.minutes;
+    const targetMinutes = targetTime.hours * 60 + targetTime.minutes;
+    return currentMinutes >= targetMinutes;
+  }, [gameTime, isGameStarted]);
+
   useEffect(() => {
     if (!isGameStarted || isGameEnded || !gameStartTimestamp) return;
 
@@ -143,5 +160,7 @@ export function useGameTime(): UseGameTimeReturn {
     startGame,
     endGame,
     formatGameTime,
+    formatGameDate,
+    isTimeReached,
   };
 }

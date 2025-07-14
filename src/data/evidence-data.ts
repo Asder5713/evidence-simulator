@@ -7,6 +7,7 @@ export const emailEvidence = [
     to: "danny.levi@outlook.com",
     subject: "לגבי החוב - דחוף!",
     date: "13.1.2024, 21:45",
+    showTime: { hours: 2, minutes: 15 },
     priority: "high",
     content: `שלום דני,
 
@@ -26,6 +27,7 @@ export const emailEvidence = [
     to: "miki.even@secure-mail.net",
     subject: "עדכון תכנית - ינואר",
     date: "10.1.2024, 14:22",
+    showTime: { hours: 2, minutes: 30 },
     priority: "medium",
     content: `מיקי,
 
@@ -46,6 +48,7 @@ export const emailEvidence = [
     to: "police.reports@gov.il",
     subject: "תלונה על איומים - דחוף",
     date: "14.1.2024, 08:15",
+    showTime: { hours: 3, minutes: 0 },
     priority: "high",
     content: `שלום,
 
@@ -69,6 +72,7 @@ export const textEvidence = [
     source: "יחידת מודיעין",
     sender: "סרן דוד אמיר",
     timestamp: "13.1.2024, 20:15",
+    showTime: { hours: 2, minutes: 10 },
     priority: "critical",
     content: "זוהה תנועה חשודה ברחוב הנביאים 12. שני רכבים עם לוחיות מזויפות. יש להכין כוחות מיוחדים.",
     type: "intelligence"
@@ -78,6 +82,7 @@ export const textEvidence = [
     source: "סוכן זהב",
     sender: "מקור חסוי",
     timestamp: "13.1.2024, 21:30",
+    showTime: { hours: 2, minutes: 45 },
     priority: "high",
     content: "יוסי כהן תכנן להעביר את הכסף הלילה. המקום: מחסן נטוש ליד הנמל. זמן משוער: 23:00.",
     type: "informant"
@@ -87,6 +92,7 @@ export const textEvidence = [
     source: "מוקד 100",
     sender: "קצין תורן",
     timestamp: "13.1.2024, 22:45", 
+    showTime: { hours: 3, minutes: 15 },
     priority: "urgent",
     content: "דיווח על ירי באזור הנמל. מספר רב של כוחות נדרש למקום. אמבולנס בדרך.",
     type: "dispatch"
@@ -96,6 +102,7 @@ export const textEvidence = [
     source: "יחידת סמויה",
     sender: "חוקר ראשי משה לוי",
     timestamp: "14.1.2024, 00:20",
+    showTime: { hours: 4, minutes: 0 },
     priority: "critical",
     content: "מצאנו את גופתו של דני לוי במחסן. זירת רצח ברורה. סימני עינויים. צריך לחסום את כל היציאות מהעיר.",
     type: "investigation"
@@ -105,6 +112,7 @@ export const textEvidence = [
     source: "מעבדה פלילית", 
     sender: "ד״ר רחל כהן",
     timestamp: "14.1.2024, 08:45",
+    showTime: { hours: 4, minutes: 30 },
     priority: "medium",
     content: "ניתוח ראשוני מגלה כי הרצח בוצע בין 22:30 ל-23:15. נמצאו שרידי DNA זרים בזירה. דרושים 48 שעות לזיהוי מלא.",
     type: "forensics"
@@ -114,6 +122,7 @@ export const textEvidence = [
     source: "תחנת משטרה מרכז",
     sender: "סגן ניצב אבי דגן", 
     timestamp: "14.1.2024, 09:15",
+    showTime: { hours: 5, minutes: 0 },
     priority: "high",
     content: "אישור מצו מעצר ליוסי כהן וחבריו. כוחות מיוחדים יפעלו בבוקר. צריך לתאם עם יחידת הסמויה.",
     type: "command"
@@ -127,6 +136,7 @@ export const visualEvidence = [
     title: "תמונת מעקב - יוסי כהן",
     location: "רחוב הנביאים 12, תל-אביב",
     timestamp: "13.1.2024, 21:15",
+    showTime: { hours: 2, minutes: 20 },
     priority: "critical",
     source: "מצלמת מעקב עירונית",
     url: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=300&fit=crop",
@@ -138,6 +148,7 @@ export const visualEvidence = [
     title: "סרטון מעקב - כניסה למחסן",
     location: "נמל אשדוד - מחסן 7",
     timestamp: "13.1.2024, 22:30",
+    showTime: { hours: 3, minutes: 30 },
     priority: "critical",
     source: "מצלמת אבטחה פרטית",
     duration: "03:45",
@@ -150,6 +161,7 @@ export const visualEvidence = [
     title: "הקלטת שיחה - איום טלפוני",
     location: "מעקב טלפוני",
     timestamp: "12.1.2024, 19:45",
+    showTime: { hours: 2, minutes: 0 },
     priority: "high",
     source: "מעקב משטרתי מאושר",
     duration: "02:18",
@@ -165,6 +177,7 @@ export const visualEvidence = [
     title: "תמונות זירת הפשע",
     location: "נמל אשדוד - מחסן 7",
     timestamp: "14.1.2024, 00:45",
+    showTime: { hours: 4, minutes: 15 },
     priority: "critical",
     source: "זק״א ומעבדה פלילית",
     url: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=500&h=400&fit=crop",
@@ -176,6 +189,7 @@ export const visualEvidence = [
     title: "חקירת זירה - תיעוד מלא",
     location: "נמל אשדוד - מחסן 7", 
     timestamp: "14.1.2024, 01:30",
+    showTime: { hours: 4, minutes: 45 },
     priority: "high",
     source: "מעבדה פלילית משטרת ישראל",
     duration: "12:33",
@@ -188,6 +202,7 @@ export const visualEvidence = [
     title: "עדות קולית - עד ראייה", 
     location: "תחנת משטרה מרכז",
     timestamp: "14.1.2024, 10:00",
+    showTime: { hours: 5, minutes: 30 },
     priority: "medium",
     source: "חקירה משטרתי",
     duration: "08:12",

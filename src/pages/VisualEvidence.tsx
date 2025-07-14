@@ -3,9 +3,10 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Camera, Video, Volume2, FileImage, Play, Pause, Download, ZoomIn, Clock, MapPin, Plus, Check } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useEvidence } from "@/hooks/use-evidence";
 import { visualEvidence } from "@/data/evidence-data";
+import { useGameContext } from "@/contexts/GameContext";
 
 const getTypeIcon = (type: string) => {
   switch (type) {
@@ -35,9 +36,16 @@ const getPriorityColor = (priority: string) => {
 };
 
 const VisualEvidence = () => {
+  const { isTimeReached, isGameStarted } = useGameContext();
   const [selectedEvidence, setSelectedEvidence] = useState(null);
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
   const { addEvidence, isEvidenceSelected } = useEvidence();
+
+  // Filter evidence that should be visible based on game time
+  const visibleEvidence = useMemo(() => {
+    if (!isGameStarted) return [];
+    return visualEvidence.filter(evidence => isTimeReached(evidence.showTime));
+  }, [isGameStarted, isTimeReached]);
 
   const handlePlay = (id: string) => {
     setPlayingAudio(playingAudio === id ? null : id);
@@ -79,7 +87,7 @@ const VisualEvidence = () => {
       <div className="max-w-7xl mx-auto p-6">
         <ScrollArea className="h-[calc(100vh-200px)]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {visualEvidence.map((evidence, index) => {
+            {visibleEvidence.length > 0 ? visibleEvidence.map((evidence, index) => {
               const TypeIcon = getTypeIcon(evidence.type);
               
               return (
@@ -225,7 +233,11 @@ const VisualEvidence = () => {
                   </CardContent>
                 </Card>
               );
-            })}
+            }) : (
+              <div className="flex items-center justify-center h-64 text-blue-400 col-span-full">
+                <p>אין ראיות ויזואליות זמינות עדיין</p>
+              </div>
+            )}
           </div>
 
           {/* Summary Section */}

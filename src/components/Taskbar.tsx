@@ -2,6 +2,9 @@ import { Link, useLocation } from "react-router-dom";
 import { Search, FileText, Clock, BarChart3, Mail, MessageSquare, Camera } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGameContext } from "@/contexts/GameContext";
+import { Badge } from "@/components/ui/badge";
+import { emailEvidence, textEvidence, visualEvidence } from "@/data/evidence-data";
+import { useMemo } from "react";
 
 const taskbarItems = [
   {
@@ -44,7 +47,18 @@ const taskbarItems = [
 
 export function Taskbar() {
   const location = useLocation();
-  const { formatGameTime, isGameStarted } = useGameContext();
+  const { formatGameTime, formatGameDate, isGameStarted, isTimeReached } = useGameContext();
+
+  // Calculate new evidence count for each app
+  const newEvidenceCounts = useMemo(() => {
+    if (!isGameStarted) return { emails: 0, texts: 0, visual: 0 };
+
+    const newEmails = emailEvidence.filter(email => isTimeReached(email.showTime)).length;
+    const newTexts = textEvidence.filter(text => isTimeReached(text.showTime)).length;
+    const newVisual = visualEvidence.filter(visual => isTimeReached(visual.showTime)).length;
+
+    return { emails: newEmails, texts: newTexts, visual: newVisual };
+  }, [isGameStarted, isTimeReached]);
 
   return (
     <div className="fixed bottom-0 left-0 right-0 h-12 bg-background/95 backdrop-blur-sm border-t border-border flex items-center justify-between px-4 z-50">
@@ -54,17 +68,31 @@ export function Taskbar() {
           const Icon = item.icon;
           const isActive = location.pathname === item.path;
           
+          // Get new evidence count for this app
+          let newCount = 0;
+          if (item.id === "emails") newCount = newEvidenceCounts.emails;
+          else if (item.id === "text-messages") newCount = newEvidenceCounts.texts;
+          else if (item.id === "visual-evidence") newCount = newEvidenceCounts.visual;
+          
           return (
             <Link
               key={item.id}
               to={item.path}
               className={cn(
-                "flex items-center justify-center w-10 h-8 rounded-sm transition-colors hover:bg-muted/50",
+                "relative flex items-center justify-center w-10 h-8 rounded-sm transition-colors hover:bg-muted/50",
                 isActive && "bg-muted border border-border shadow-sm"
               )}
               title={item.label}
             >
               <Icon className="h-4 w-4" />
+              {newCount > 0 && (
+                <Badge 
+                  variant="destructive" 
+                  className="absolute -top-1 -right-1 h-4 w-4 p-0 text-xs flex items-center justify-center"
+                >
+                  {newCount}
+                </Badge>
+              )}
             </Link>
           );
         })}
@@ -75,6 +103,7 @@ export function Taskbar() {
         <Clock className="h-4 w-4" />
         <div className="text-right">
           <div className="font-mono text-lg">{formatGameTime()}</div>
+          <div className="text-xs text-muted-foreground">{formatGameDate()}</div>
           <div className="text-xs text-muted-foreground">
             {isGameStarted ? "במשמרת" : "לא במשמרת"}
           </div>

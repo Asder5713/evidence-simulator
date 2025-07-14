@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -7,10 +7,19 @@ import { Button } from "@/components/ui/button";
 import { Mail, Search, AlertCircle, Clock, Paperclip, Star, Archive, Trash2, Reply, Forward, MoreHorizontal, Plus, Check } from "lucide-react";
 import { useEvidence } from "@/hooks/use-evidence";
 import { emailEvidence } from "@/data/evidence-data";
+import { useGameContext } from "@/contexts/GameContext";
 
 const Emails = () => {
-  const [selectedEmail, setSelectedEmail] = useState(emailEvidence[0]);
+  const { isTimeReached, isGameStarted } = useGameContext();
   const { addEvidence, isEvidenceSelected } = useEvidence();
+
+  // Filter emails that should be visible based on game time
+  const visibleEmails = useMemo(() => {
+    if (!isGameStarted) return [];
+    return emailEvidence.filter(email => isTimeReached(email.showTime));
+  }, [isGameStarted, isTimeReached]);
+
+  const [selectedEmail, setSelectedEmail] = useState(visibleEmails[0] || emailEvidence[0]);
 
   const handleAddEvidence = (email: any) => {
     addEvidence({
@@ -42,7 +51,7 @@ const Emails = () => {
           <div className="w-1/2 border-r border-slate-700">
             <ScrollArea className="h-full">
               <div className="p-4 space-y-2">
-                {emailEvidence.map(email => (
+                {visibleEmails.map(email => (
                   <Card 
                     key={email.id} 
                     className={`border-slate-700 hover:bg-slate-700/50 cursor-pointer ${
@@ -109,6 +118,7 @@ const Emails = () => {
 
           {/* Email Content */}
           <div className="w-1/2 p-6">
+            {selectedEmail ? (
             <Card className="bg-slate-800/50 border-slate-700 h-full">
               <CardHeader className="border-b border-slate-700">
                 <div className="flex items-center justify-between">
@@ -169,6 +179,11 @@ const Emails = () => {
                 </div>
               </CardContent>
             </Card>
+            ) : (
+              <div className="flex items-center justify-center h-full text-slate-400">
+                <p>אין אימיילים זמינים עדיין</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

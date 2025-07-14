@@ -8,6 +8,8 @@ interface GameContextType {
   startGame: () => void;
   endGame: () => void;
   formatGameTime: () => string;
+  formatGameDate: () => string;
+  isTimeReached: (targetTime: { hours: number; minutes: number }) => boolean;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);

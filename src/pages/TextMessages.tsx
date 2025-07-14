@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { MessageSquare, Shield, Eye, Phone, Users, Clock, AlertTriangle, ChevronDown, ChevronRight, Plus, Check } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useEvidence } from "@/hooks/use-evidence";
 import { textEvidence } from "@/data/evidence-data";
+import { useGameContext } from "@/contexts/GameContext";
 
 const getSourceIcon = (type: string) => {
   switch (type) {
@@ -43,8 +44,15 @@ const getPriorityColor = (priority: string) => {
 };
 
 const TextMessages = () => {
+  const { isTimeReached, isGameStarted } = useGameContext();
   const [openEvidence, setOpenEvidence] = useState<string | null>(null);
   const { addEvidence, isEvidenceSelected } = useEvidence();
+
+  // Filter messages that should be visible based on game time
+  const visibleMessages = useMemo(() => {
+    if (!isGameStarted) return [];
+    return textEvidence.filter(message => isTimeReached(message.showTime));
+  }, [isGameStarted, isTimeReached]);
 
   const toggleEvidence = (id: string) => {
     setOpenEvidence(openEvidence === id ? null : id);
@@ -81,7 +89,7 @@ const TextMessages = () => {
       <div className="max-w-4xl mx-auto p-6">
         <ScrollArea className="h-[calc(100vh-200px)]">
           <div className="space-y-4">
-            {textEvidence.map((message, index) => {
+            {visibleMessages.length > 0 ? visibleMessages.map((message, index) => {
               const SourceIcon = getSourceIcon(message.type);
               const isOpen = openEvidence === message.id;
               
@@ -161,7 +169,11 @@ const TextMessages = () => {
                   </Card>
                 </Collapsible>
               );
-            })}
+            }) : (
+              <div className="flex items-center justify-center h-64 text-gray-400">
+                <p>אין הודעות זמינות עדיין</p>
+              </div>
+            )}
           </div>
         </ScrollArea>
 
