@@ -14,7 +14,7 @@ interface UseGameTimeReturn {
   isGameStarted: boolean;
   isGameEnded: boolean;
   startGame: () => void;
-  endGame: () => void;
+  resetGame: () => void;
   formatGameTime: () => string;
   formatGameDate: () => string;
   isTimeReached: (timestampOrDate: string) => boolean;
@@ -93,6 +93,14 @@ export function useGameTime(): UseGameTimeReturn {
     }));
   }, [gameStartTimestamp]);
 
+  const resetGame = useCallback(() => {
+    setIsGameStarted(false);
+    setIsGameEnded(false);
+    setGameStartTimestamp(null);
+    setGameTime(GAME_START_TIME);
+    localStorage.removeItem(STORAGE_KEY);
+  }, []);
+
   const formatGameTime = useCallback(() => {
     const hours = gameTime.hours.toString().padStart(2, '0');
     const minutes = gameTime.minutes.toString().padStart(2, '0');
@@ -166,7 +174,7 @@ export function useGameTime(): UseGameTimeReturn {
     isGameStarted,
     isGameEnded,
     startGame,
-    endGame,
+    resetGame,
     formatGameTime,
     formatGameDate,
     isTimeReached,

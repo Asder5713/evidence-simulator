@@ -6,7 +6,7 @@ interface GameContextType {
   isGameStarted: boolean;
   isGameEnded: boolean;
   startGame: () => void;
-  endGame: () => void;
+  resetGame: () => void;
   formatGameTime: () => string;
   formatGameDate: () => string;
   isTimeReached: (timestampOrDate: string) => boolean;
@@ -24,6 +24,11 @@ export function GameProvider({ children }: GameProviderProps) {
   const gameState = useGameTime();
   const [visitedPages, setVisitedPages] = useState<Set<string>>(new Set());
 
+  const resetGame = () => {
+    gameState.resetGame();
+    setVisitedPages(new Set());
+  };
+
   const markPageAsVisited = (page: 'emails' | 'texts' | 'visual') => {
     setVisitedPages(prev => new Set([...prev, page]));
   };
@@ -37,6 +42,7 @@ export function GameProvider({ children }: GameProviderProps) {
 
   const contextValue = {
     ...gameState,
+    resetGame,
     unseenCounts,
     markPageAsVisited
   };
