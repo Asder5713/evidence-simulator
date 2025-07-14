@@ -6,69 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Mail, Search, AlertCircle, Clock, Paperclip, Star, Archive, Trash2, Reply, Forward, MoreHorizontal, Plus, Check } from "lucide-react";
 import { useEvidence } from "@/hooks/use-evidence";
-
-const emailEvidence = [
-  {
-    id: "email_001",
-    from: "yossi.cohen@gmail.com",
-    to: "danny.levi@outlook.com",
-    subject: "לגבי החוב - דחוף!",
-    date: "13.1.2024, 21:45",
-    priority: "high",
-    content: `שלום דני,
-
-אני יודע איפה אתה גר ואני יודע איפה הילדים שלך לומדים. 
-
-אם לא תחזיר לי את הכסף עד סוף השבוע, אני אדאג שתתחרט על כך שלא פיתחת איתי את העסקה. 
-
-זה לא איום, זו הבטחה.
-
-יוסי`,
-    attachments: 0,
-    threat_level: "critical"
-  },
-  {
-    id: "email_002",
-    from: "sami.cohen.business@protonmail.com",
-    to: "miki.even@secure-mail.net",
-    subject: "עדכון תכנית - ינואר",
-    date: "10.1.2024, 14:22",
-    priority: "medium",
-    content: `מיקי,
-
-המשלוח מקולומביה יגיע ביום רביעי לנמל אשדוד. 
-דאג שהאנשים יהיו מוכנים ב-03:00 בבוקר.
-
-קונטיינר מספר: MSKU-4829671
-
-תיזהר עם המכס, יש לי חשד שהם עלו עלינו.
-
-ס.`,
-    attachments: 1,
-    threat_level: "high"
-  },
-  {
-    id: "email_003",
-    from: "danny.levi@outlook.com",
-    to: "police.reports@gov.il",
-    subject: "תלונה על איומים - דחוף",
-    date: "14.1.2024, 08:15",
-    priority: "high",
-    content: `שלום,
-
-אני דני לוי, בעל חנות תכשיטים ברחוב רוטשילד 45, תל-אביב.
-
-אני מקבל איומים מיוסי כהן כבר שבועיים. הוא דורש ממני לשלם 15,000 שקל "כספי הגנה" כל חודש.
-
-אני מפחד על המשפחה שלי. אנא עזרו לי.
-
-בתודה,
-דני לוי
-054-9876543`,
-    attachments: 0,
-    threat_level: "medium"
-  }
-];
+import { emailEvidence } from "@/data/evidence-data";
 
 const Emails = () => {
   const [selectedEmail, setSelectedEmail] = useState(emailEvidence[0]);

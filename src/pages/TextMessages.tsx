@@ -6,63 +6,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { MessageSquare, Shield, Eye, Phone, Users, Clock, AlertTriangle, ChevronDown, ChevronRight, Plus, Check } from "lucide-react";
 import { useState } from "react";
 import { useEvidence } from "@/hooks/use-evidence";
-
-const textEvidence = [
-  {
-    id: "msg_001",
-    source: "יחידת מודיעין",
-    sender: "סרן דוד אמיר",
-    timestamp: "13.1.2024, 20:15",
-    priority: "critical",
-    content: "זוהה תנועה חשודה ברחוב הנביאים 12. שני רכבים עם לוחיות מזויפות. יש להכין כוחות מיוחדים.",
-    type: "intelligence"
-  },
-  {
-    id: "msg_002", 
-    source: "סוכן זהב",
-    sender: "מקור חסוי",
-    timestamp: "13.1.2024, 21:30",
-    priority: "high",
-    content: "יוסי כהן תכנן להעביר את הכסף הלילה. המקום: מחסן נטוש ליד הנמל. זמן משוער: 23:00.",
-    type: "informant"
-  },
-  {
-    id: "msg_003",
-    source: "מוקד 100",
-    sender: "קצין תורן",
-    timestamp: "13.1.2024, 22:45", 
-    priority: "urgent",
-    content: "דיווח על ירי באזור הנמל. מספר רב של כוחות נדרש למקום. אמבולנס בדרך.",
-    type: "dispatch"
-  },
-  {
-    id: "msg_004",
-    source: "יחידת סמויה",
-    sender: "חוקר ראשי משה לוי",
-    timestamp: "14.1.2024, 00:20",
-    priority: "critical",
-    content: "מצאנו את גופתו של דני לוי במחסן. זירת רצח ברורה. סימני עינויים. צריך לחסום את כל היציאות מהעיר.",
-    type: "investigation"
-  },
-  {
-    id: "msg_005",
-    source: "מעבדה פלילית", 
-    sender: "ד״ר רחל כהן",
-    timestamp: "14.1.2024, 08:45",
-    priority: "medium",
-    content: "ניתוח ראשוני מגלה כי הרצח בוצע בין 22:30 ל-23:15. נמצאו שרידי DNA זרים בזירה. דרושים 48 שעות לזיהוי מלא.",
-    type: "forensics"
-  },
-  {
-    id: "msg_006",
-    source: "תחנת משטרה מרכז",
-    sender: "סגן ניצב אבי דגן", 
-    timestamp: "14.1.2024, 09:15",
-    priority: "high",
-    content: "אישור מצו מעצר ליוסי כהן וחבריו. כוחות מיוחדים יפעלו בבוקר. צריך לתאם עם יחידת הסמויה.",
-    type: "command"
-  }
-];
+import { textEvidence } from "@/data/evidence-data";
 
 const getSourceIcon = (type: string) => {
   switch (type) {
