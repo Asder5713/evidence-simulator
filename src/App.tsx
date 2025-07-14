@@ -19,8 +19,8 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 function AppContent() {
-  const [showStartDialog, setShowStartDialog] = useState(true);
-  const { isGameEnded, startGame } = useGameContext();
+  const { isGameEnded, isGameStarted, startGame } = useGameContext();
+  const [showStartDialog, setShowStartDialog] = useState(!isGameStarted);
 
   const handleStartGame = () => {
     setShowStartDialog(false);
