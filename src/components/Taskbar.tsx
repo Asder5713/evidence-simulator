@@ -3,8 +3,6 @@ import { Search, FileText, Clock, BarChart3, Mail, MessageSquare, Camera } from 
 import { cn } from "@/lib/utils";
 import { useGameContext } from "@/contexts/GameContext";
 import { Badge } from "@/components/ui/badge";
-import { emailEvidence, textEvidence, visualEvidence } from "@/data/evidence-data";
-import { useMemo } from "react";
 
 const taskbarItems = [
   {
@@ -47,18 +45,7 @@ const taskbarItems = [
 
 export function Taskbar() {
   const location = useLocation();
-  const { formatGameTime, formatGameDate, isGameStarted, isTimeReached } = useGameContext();
-
-  // Calculate new evidence count for each app
-  const newEvidenceCounts = useMemo(() => {
-    if (!isGameStarted) return { emails: 0, texts: 0, visual: 0 };
-
-    const newEmails = emailEvidence.filter(email => isTimeReached(email.date)).length;
-    const newTexts = textEvidence.filter(text => isTimeReached(text.timestamp)).length;
-    const newVisual = visualEvidence.filter(visual => isTimeReached(visual.timestamp)).length;
-
-    return { emails: newEmails, texts: newTexts, visual: newVisual };
-  }, [isGameStarted, isTimeReached]);
+  const { formatGameTime, formatGameDate, isGameStarted, unseenCounts } = useGameContext();
 
   return (
     <div className="fixed bottom-0 left-0 right-0 h-12 bg-background/95 backdrop-blur-sm border-t border-border flex items-center justify-between px-4 z-50">
@@ -70,9 +57,9 @@ export function Taskbar() {
           
           // Get new evidence count for this app
           let newCount = 0;
-          if (item.id === "emails") newCount = newEvidenceCounts.emails;
-          else if (item.id === "text-messages") newCount = newEvidenceCounts.texts;
-          else if (item.id === "visual-evidence") newCount = newEvidenceCounts.visual;
+          if (item.id === "emails") newCount = unseenCounts.emails;
+          else if (item.id === "text-messages") newCount = unseenCounts.texts;
+          else if (item.id === "visual-evidence") newCount = unseenCounts.visual;
           
           return (
             <Link
