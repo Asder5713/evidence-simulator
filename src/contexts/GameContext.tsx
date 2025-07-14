@@ -26,7 +26,12 @@ export function GameProvider({ children }: GameProviderProps) {
   const [visitedPages, setVisitedPages] = useState<Set<string>>(new Set());
 
   const markPageAsVisited = (page: 'emails' | 'texts' | 'visual') => {
-    setVisitedPages(prev => new Set([...prev, page]));
+    console.log('Marking page as visited:', page);
+    setVisitedPages(prev => {
+      const newSet = new Set([...prev, page]);
+      console.log('Updated visited pages:', Array.from(newSet));
+      return newSet;
+    });
   };
 
   // Calculate unseen counts based on time-reached evidence and visited pages
@@ -39,11 +44,17 @@ export function GameProvider({ children }: GameProviderProps) {
     const visibleTexts = textEvidence.filter(text => gameState.isTimeReached(text.timestamp));
     const visibleVisual = visualEvidence.filter(visual => gameState.isTimeReached(visual.timestamp));
 
-    return {
+    const counts = {
       emails: visitedPages.has('emails') ? 0 : visibleEmails.length,
       texts: visitedPages.has('texts') ? 0 : visibleTexts.length,
       visual: visitedPages.has('visual') ? 0 : visibleVisual.length
     };
+
+    console.log('Visited pages:', Array.from(visitedPages));
+    console.log('Unseen counts:', counts);
+    console.log('Visible evidence counts:', { emails: visibleEmails.length, texts: visibleTexts.length, visual: visibleVisual.length });
+
+    return counts;
   }, [gameState.isGameStarted, gameState.isTimeReached, visitedPages]);
 
   const contextValue = {
