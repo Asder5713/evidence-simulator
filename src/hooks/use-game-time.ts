@@ -51,8 +51,10 @@ export function useGameTime(): UseGameTimeReturn {
           setGameStartTimestamp(savedGameStartTimestamp);
           setIsGameEnded(false);
         } else if (savedIsGameEnded) {
-          setIsGameEnded(true);
-          setIsGameStarted(true);
+          // If game ended, reset everything on page refresh
+          localStorage.removeItem(STORAGE_KEY);
+          setIsGameEnded(false);
+          setIsGameStarted(false);
         }
       } catch (error) {
         console.error('Failed to load game state:', error);
