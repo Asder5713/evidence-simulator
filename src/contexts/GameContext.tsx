@@ -25,6 +25,7 @@ interface GameProviderProps {
 export function GameProvider({ children }: GameProviderProps) {
   const gameState = useGameTime();
   const [visitedPages, setVisitedPages] = useState<Set<string>>(new Set());
+  const [pageVisitTimes, setPageVisitTimes] = useState<Record<string, number>>({}); // Track visit time in game minutes
 
   const markPageAsVisited = (page: 'emails' | 'texts' | 'visual') => {
     console.log('Marking page as visited:', page);
@@ -33,10 +34,19 @@ export function GameProvider({ children }: GameProviderProps) {
       console.log('Updated visited pages:', Array.from(newSet));
       return newSet;
     });
+    
+    // Track the current game time when page was visited
+    const currentGameMinutes = gameState.gameTime.hours * 60 + gameState.gameTime.minutes;
+    setPageVisitTimes(prev => ({
+      ...prev,
+      [page]: currentGameMinutes
+    }));
+    console.log('Page visit time for', page, ':', currentGameMinutes);
   };
 
   const resetGame = () => {
     setVisitedPages(new Set());
+    setPageVisitTimes({});
     gameState.endGame();
   };
 
@@ -50,20 +60,39 @@ export function GameProvider({ children }: GameProviderProps) {
     const visibleTexts = textEvidence.filter(text => gameState.isTimeReached(text.timestamp));
     const visibleVisual = visualEvidence.filter(visual => gameState.isTimeReached(visual.timestamp));
 
-    // For pages that haven't been visited, show the count of available evidence
-    // For visited pages, only show NEW evidence that appeared after the visit
+    // Helper function to parse time from timestamp and convert to minutes
+    const parseTimeToMinutes = (timestamp: string) => {
+      const timeMatch = timestamp.match(/(\d{2}):(\d{2})/);
+      if (!timeMatch) return 0;
+      return parseInt(timeMatch[1]) * 60 + parseInt(timeMatch[2]);
+    };
+
+    // Count evidence that appeared after the last page visit (or all if never visited)
+    const getUnseenCount = (evidenceList: any[], page: string) => {
+      if (!visitedPages.has(page)) {
+        return evidenceList.length; // Never visited, show all available evidence
+      }
+      
+      const lastVisitTime = pageVisitTimes[page] || 0;
+      return evidenceList.filter(evidence => {
+        const evidenceTime = parseTimeToMinutes(evidence.timestamp || evidence.date);
+        return evidenceTime > lastVisitTime;
+      }).length;
+    };
+
     const counts = {
-      emails: visitedPages.has('emails') ? 0 : visibleEmails.length,
-      texts: visitedPages.has('texts') ? 0 : visibleTexts.length,
-      visual: visitedPages.has('visual') ? 0 : visibleVisual.length
+      emails: getUnseenCount(visibleEmails, 'emails'),
+      texts: getUnseenCount(visibleTexts, 'texts'),
+      visual: getUnseenCount(visibleVisual, 'visual')
     };
 
     console.log('Visited pages:', Array.from(visitedPages));
+    console.log('Page visit times:', pageVisitTimes);
     console.log('Unseen counts:', counts);
-    console.log('Visible evidence counts:', { emails: visibleEmails.length, texts: visibleTexts.length, visual: visibleVisual.length });
+    console.log('Current game time minutes:', gameState.gameTime.hours * 60 + gameState.gameTime.minutes);
 
     return counts;
-  }, [gameState.isGameStarted, gameState.gameTime, visitedPages]); // Use gameTime instead of isTimeReached
+  }, [gameState.isGameStarted, gameState.gameTime, visitedPages, pageVisitTimes]); // Use gameTime instead of isTimeReached
 
   const contextValue = {
     ...gameState,
