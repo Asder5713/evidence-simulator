@@ -1,5 +1,6 @@
 import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import { useGameTime, GameTime } from '@/hooks/use-game-time';
+import { emailEvidence, textEvidence, visualEvidence } from '@/data/evidence-data';
 
 interface GameContextType {
   gameTime: GameTime;
@@ -12,6 +13,7 @@ interface GameContextType {
   isTimeReached: (timestampOrDate: string) => boolean;
   unseenCounts: { emails: number; texts: number; visual: number };
   markPageAsVisited: (page: 'emails' | 'texts' | 'visual') => void;
+  isEvidenceUnseen: (evidenceTime: string, pageType: 'emails' | 'texts' | 'visual') => boolean;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -22,29 +24,60 @@ interface GameProviderProps {
 
 export function GameProvider({ children }: GameProviderProps) {
   const gameState = useGameTime();
-  const [visitedPages, setVisitedPages] = useState<Set<string>>(new Set());
+  const [lastVisitTimes, setLastVisitTimes] = useState<Record<string, string>>({
+    emails: '17.06, 00:00',
+    texts: '17.06, 00:00', 
+    visual: '17.06, 00:00'
+  });
+
+  const parseTimeFromTimestamp = (timestamp: string): number => {
+    const timeMatch = timestamp.match(/(\d{2}):(\d{2})/);
+    if (!timeMatch) return 0;
+    return parseInt(timeMatch[1]) * 60 + parseInt(timeMatch[2]);
+  };
 
   const resetGame = () => {
     gameState.resetGame();
-    setVisitedPages(new Set());
+    setLastVisitTimes({
+      emails: '17.06, 00:00',
+      texts: '17.06, 00:00', 
+      visual: '17.06, 00:00'
+    });
   };
 
   const markPageAsVisited = (page: 'emails' | 'texts' | 'visual') => {
-    setVisitedPages(prev => new Set([...prev, page]));
+    const currentGameTime = `17.06, ${gameState.formatGameTime()}`;
+    setLastVisitTimes(prev => ({
+      ...prev,
+      [page]: currentGameTime
+    }));
   };
 
-  // Calculate unseen counts based on visited pages
+  const isEvidenceUnseen = (evidenceTime: string, pageType: 'emails' | 'texts' | 'visual'): boolean => {
+    const evidenceTimeMinutes = parseTimeFromTimestamp(evidenceTime);
+    const lastVisitTimeMinutes = parseTimeFromTimestamp(lastVisitTimes[pageType]);
+    return evidenceTimeMinutes > lastVisitTimeMinutes;
+  };
+
+  // Calculate unseen counts based on evidence that appeared since last visit
   const unseenCounts = {
-    emails: visitedPages.has('emails') ? 0 : 3, // Placeholder, will be calculated properly
-    texts: visitedPages.has('texts') ? 0 : 6,
-    visual: visitedPages.has('visual') ? 0 : 6
+    emails: gameState.isGameStarted ? emailEvidence.filter(email => 
+      gameState.isTimeReached(email.date) && isEvidenceUnseen(email.date, 'emails')
+    ).length : 0,
+    texts: gameState.isGameStarted ? textEvidence.filter(text => 
+      gameState.isTimeReached(text.timestamp) && isEvidenceUnseen(text.timestamp, 'texts')
+    ).length : 0,
+    visual: gameState.isGameStarted ? visualEvidence.filter(visual => 
+      gameState.isTimeReached(visual.timestamp) && isEvidenceUnseen(visual.timestamp, 'visual')
+    ).length : 0
   };
 
   const contextValue = {
     ...gameState,
     resetGame,
     unseenCounts,
-    markPageAsVisited
+    markPageAsVisited,
+    isEvidenceUnseen
   };
 
   return (

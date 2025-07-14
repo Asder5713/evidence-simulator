@@ -4,13 +4,13 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Mail, Search, AlertCircle, Clock, Paperclip, Star, Archive, Trash2, Reply, Forward, MoreHorizontal, Plus, Check } from "lucide-react";
+import { Mail, Search, AlertCircle, Clock, Paperclip, Star, Archive, Trash2, Reply, Forward, MoreHorizontal, Plus, Check, AlertTriangle } from "lucide-react";
 import { useEvidence } from "@/hooks/use-evidence";
 import { emailEvidence } from "@/data/evidence-data";
 import { useGameContext } from "@/contexts/GameContext";
 
 const Emails = () => {
-  const { isTimeReached, isGameStarted, markPageAsVisited } = useGameContext();
+  const { isTimeReached, isGameStarted, markPageAsVisited, isEvidenceUnseen } = useGameContext();
   const { addEvidence, isEvidenceSelected } = useEvidence();
 
   
@@ -73,6 +73,9 @@ const Emails = () => {
                             email.threat_level === 'high' ? 'bg-orange-500' : 'bg-yellow-500'
                           }`} />
                           <span className="text-sm font-medium text-slate-200">{email.from}</span>
+                          {isEvidenceUnseen(email.date, 'emails') && (
+                            <AlertTriangle className="w-4 h-4 text-yellow-400" />
+                          )}
                         </div>
                         <span className="text-xs text-slate-400">{email.date}</span>
                       </div>
