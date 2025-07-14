@@ -44,8 +44,10 @@ const VisualEvidence = () => {
   
   // Mark page as visited when component mounts
   useEffect(() => {
-    markPageAsVisited('visual');
-  }, [markPageAsVisited]);
+    if (isGameStarted) {
+      markPageAsVisited('visual');
+    }
+  }, [markPageAsVisited, isGameStarted]);
 
   // Filter evidence that should be visible based on game time
   const visibleEvidence = useMemo(() => {

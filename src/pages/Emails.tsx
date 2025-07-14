@@ -16,8 +16,10 @@ const Emails = () => {
   
   // Mark page as visited when component mounts
   useEffect(() => {
-    markPageAsVisited('emails');
-  }, [markPageAsVisited]);
+    if (isGameStarted) {
+      markPageAsVisited('emails');
+    }
+  }, [markPageAsVisited, isGameStarted]);
 
   // Filter emails that should be visible based on game time
   const visibleEmails = useMemo(() => {

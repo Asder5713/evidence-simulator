@@ -51,8 +51,10 @@ const TextMessages = () => {
   
   // Mark page as visited when component mounts
   useEffect(() => {
-    markPageAsVisited('texts');
-  }, [markPageAsVisited]);
+    if (isGameStarted) {
+      markPageAsVisited('texts');
+    }
+  }, [markPageAsVisited, isGameStarted]);
 
   // Filter messages that should be visible based on game time
   const visibleMessages = useMemo(() => {
