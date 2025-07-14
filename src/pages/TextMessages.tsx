@@ -49,12 +49,18 @@ const TextMessages = () => {
   const { addEvidence, isEvidenceSelected } = useEvidence();
 
   
-  // Mark page as visited when component mounts
+  // Mark page as visited when component mounts or when game starts
   useEffect(() => {
     if (isGameStarted) {
+      console.log('Marking texts page as visited');
       markPageAsVisited('texts');
     }
   }, [markPageAsVisited, isGameStarted]);
+
+  // Also mark when component mounts for the first time
+  useEffect(() => {
+    console.log('TextMessages component mounted');
+  }, []);
 
   // Filter messages that should be visible based on game time
   const visibleMessages = useMemo(() => {
@@ -118,12 +124,12 @@ const TextMessages = () => {
                               <SourceIcon className="w-4 h-4 text-white" />
                             </div>
                              <div className="text-right">
-                               <CardTitle className="text-white text-lg font-bold flex items-center gap-2">
-                                 {message.source} - {message.sender}
-                                 {isEvidenceUnseen(message.timestamp, 'texts') && (
-                                   <AlertTriangle className="w-4 h-4 text-yellow-400" />
-                                 )}
-                               </CardTitle>
+                                <CardTitle className="text-white text-lg font-bold flex items-center gap-2">
+                                  {message.source} - {message.sender}
+                                  {isEvidenceUnseen(message.timestamp, 'texts') && (
+                                    <AlertTriangle className="w-4 h-4 text-yellow-400 animate-pulse" />
+                                  )}
+                                </CardTitle>
                                <div className="flex items-center gap-2 text-xs text-gray-300 mt-1">
                                  <Clock className="w-3 h-3" />
                                  <span>{message.timestamp}</span>

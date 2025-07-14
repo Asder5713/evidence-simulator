@@ -51,6 +51,7 @@ export function GameProvider({ children }: GameProviderProps) {
 
   const markPageAsVisited = (page: 'emails' | 'texts' | 'visual') => {
     const currentTimeMinutes = getCurrentGameTimeInMinutes();
+    console.log(`Marking page ${page} as visited at time: ${currentTimeMinutes} minutes`);
     setLastVisitTimes(prev => ({
       ...prev,
       [page]: currentTimeMinutes
@@ -63,8 +64,12 @@ export function GameProvider({ children }: GameProviderProps) {
     const evidenceTimeMinutes = parseTimeFromTimestamp(evidenceTime);
     const lastVisitTimeMinutes = lastVisitTimes[pageType];
     
+    console.log(`Evidence time: ${evidenceTime}, Evidence minutes: ${evidenceTimeMinutes}, Last visit: ${lastVisitTimeMinutes}, Page: ${pageType}`);
+    
     // Evidence is unseen if it appeared after the last visit to this page
-    return evidenceTimeMinutes > lastVisitTimeMinutes;
+    const isUnseen = evidenceTimeMinutes > lastVisitTimeMinutes;
+    console.log(`Is evidence unseen: ${isUnseen}`);
+    return isUnseen;
   };
 
   // Calculate unseen counts based on evidence that appeared since last visit
