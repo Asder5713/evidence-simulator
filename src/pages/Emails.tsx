@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -10,13 +10,19 @@ import { emailEvidence } from "@/data/evidence-data";
 import { useGameContext } from "@/contexts/GameContext";
 
 const Emails = () => {
-  const { isTimeReached, isGameStarted } = useGameContext();
+  const { isTimeReached, isGameStarted, markPageAsVisited } = useGameContext();
   const { addEvidence, isEvidenceSelected } = useEvidence();
+
+  
+  // Mark page as visited when component mounts
+  useEffect(() => {
+    markPageAsVisited('emails');
+  }, [markPageAsVisited]);
 
   // Filter emails that should be visible based on game time
   const visibleEmails = useMemo(() => {
     if (!isGameStarted) return [];
-    return emailEvidence.filter(email => isTimeReached(email.showTime));
+    return emailEvidence.filter(email => isTimeReached(email.date));
   }, [isGameStarted, isTimeReached]);
 
   const [selectedEmail, setSelectedEmail] = useState(visibleEmails[0] || emailEvidence[0]);

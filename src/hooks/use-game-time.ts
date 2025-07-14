@@ -17,7 +17,7 @@ interface UseGameTimeReturn {
   endGame: () => void;
   formatGameTime: () => string;
   formatGameDate: () => string;
-  isTimeReached: (targetTime: { hours: number; minutes: number }) => boolean;
+  isTimeReached: (timestampOrDate: string) => boolean;
 }
 
 const GAME_START_TIME = { hours: 2, minutes: 0 }; // 2:00 AM
@@ -103,11 +103,19 @@ export function useGameTime(): UseGameTimeReturn {
     return "17.06";
   }, []);
 
-  const isTimeReached = useCallback((targetTime: { hours: number; minutes: number }) => {
+  const isTimeReached = useCallback((timestampOrDate: string) => {
     if (!isGameStarted) return false;
+    
+    // Parse time from timestamp/date string (format: "17.06, HH:MM")
+    const timeMatch = timestampOrDate.match(/(\d{2}):(\d{2})/);
+    if (!timeMatch) return false;
+    
+    const targetHours = parseInt(timeMatch[1]);
+    const targetMinutes = parseInt(timeMatch[2]);
+    
     const currentMinutes = gameTime.hours * 60 + gameTime.minutes;
-    const targetMinutes = targetTime.hours * 60 + targetTime.minutes;
-    return currentMinutes >= targetMinutes;
+    const targetTimeInMinutes = targetHours * 60 + targetMinutes;
+    return currentMinutes >= targetTimeInMinutes;
   }, [gameTime, isGameStarted]);
 
   useEffect(() => {

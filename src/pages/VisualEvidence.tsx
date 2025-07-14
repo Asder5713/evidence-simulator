@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Camera, Video, Volume2, FileImage, Play, Pause, Download, ZoomIn, Clock, MapPin, Plus, Check } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useEvidence } from "@/hooks/use-evidence";
 import { visualEvidence } from "@/data/evidence-data";
 import { useGameContext } from "@/contexts/GameContext";
@@ -36,15 +36,21 @@ const getPriorityColor = (priority: string) => {
 };
 
 const VisualEvidence = () => {
-  const { isTimeReached, isGameStarted } = useGameContext();
+  const { isTimeReached, isGameStarted, markPageAsVisited } = useGameContext();
   const [selectedEvidence, setSelectedEvidence] = useState(null);
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
   const { addEvidence, isEvidenceSelected } = useEvidence();
 
+  
+  // Mark page as visited when component mounts
+  useEffect(() => {
+    markPageAsVisited('visual');
+  }, [markPageAsVisited]);
+
   // Filter evidence that should be visible based on game time
   const visibleEvidence = useMemo(() => {
     if (!isGameStarted) return [];
-    return visualEvidence.filter(evidence => isTimeReached(evidence.showTime));
+    return visualEvidence.filter(evidence => isTimeReached(evidence.timestamp));
   }, [isGameStarted, isTimeReached]);
 
   const handlePlay = (id: string) => {

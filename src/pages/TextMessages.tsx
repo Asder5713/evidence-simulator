@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { MessageSquare, Shield, Eye, Phone, Users, Clock, AlertTriangle, ChevronDown, ChevronRight, Plus, Check } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useEvidence } from "@/hooks/use-evidence";
 import { textEvidence } from "@/data/evidence-data";
 import { useGameContext } from "@/contexts/GameContext";
@@ -44,14 +44,20 @@ const getPriorityColor = (priority: string) => {
 };
 
 const TextMessages = () => {
-  const { isTimeReached, isGameStarted } = useGameContext();
+  const { isTimeReached, isGameStarted, markPageAsVisited } = useGameContext();
   const [openEvidence, setOpenEvidence] = useState<string | null>(null);
   const { addEvidence, isEvidenceSelected } = useEvidence();
+
+  
+  // Mark page as visited when component mounts
+  useEffect(() => {
+    markPageAsVisited('texts');
+  }, [markPageAsVisited]);
 
   // Filter messages that should be visible based on game time
   const visibleMessages = useMemo(() => {
     if (!isGameStarted) return [];
-    return textEvidence.filter(message => isTimeReached(message.showTime));
+    return textEvidence.filter(message => isTimeReached(message.timestamp));
   }, [isGameStarted, isTimeReached]);
 
   const toggleEvidence = (id: string) => {

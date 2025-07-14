@@ -53,9 +53,9 @@ export function Taskbar() {
   const newEvidenceCounts = useMemo(() => {
     if (!isGameStarted) return { emails: 0, texts: 0, visual: 0 };
 
-    const newEmails = emailEvidence.filter(email => isTimeReached(email.showTime)).length;
-    const newTexts = textEvidence.filter(text => isTimeReached(text.showTime)).length;
-    const newVisual = visualEvidence.filter(visual => isTimeReached(visual.showTime)).length;
+    const newEmails = emailEvidence.filter(email => isTimeReached(email.date)).length;
+    const newTexts = textEvidence.filter(text => isTimeReached(text.timestamp)).length;
+    const newVisual = visualEvidence.filter(visual => isTimeReached(visual.timestamp)).length;
 
     return { emails: newEmails, texts: newTexts, visual: newVisual };
   }, [isGameStarted, isTimeReached]);
