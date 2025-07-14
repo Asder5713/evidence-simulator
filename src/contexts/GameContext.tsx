@@ -8,6 +8,7 @@ interface GameContextType {
   isGameEnded: boolean;
   startGame: () => void;
   endGame: () => void;
+  resetGame: () => void;
   formatGameTime: () => string;
   formatGameDate: () => string;
   isTimeReached: (timestampOrDate: string) => boolean;
@@ -34,6 +35,11 @@ export function GameProvider({ children }: GameProviderProps) {
     });
   };
 
+  const resetGame = () => {
+    setVisitedPages(new Set());
+    gameState.endGame();
+  };
+
   // Calculate unseen counts based on time-reached evidence and visited pages
   const unseenCounts = useMemo(() => {
     if (!gameState.isGameStarted) {
@@ -44,6 +50,8 @@ export function GameProvider({ children }: GameProviderProps) {
     const visibleTexts = textEvidence.filter(text => gameState.isTimeReached(text.timestamp));
     const visibleVisual = visualEvidence.filter(visual => gameState.isTimeReached(visual.timestamp));
 
+    // For pages that haven't been visited, show the count of available evidence
+    // For visited pages, only show NEW evidence that appeared after the visit
     const counts = {
       emails: visitedPages.has('emails') ? 0 : visibleEmails.length,
       texts: visitedPages.has('texts') ? 0 : visibleTexts.length,
@@ -55,10 +63,11 @@ export function GameProvider({ children }: GameProviderProps) {
     console.log('Visible evidence counts:', { emails: visibleEmails.length, texts: visibleTexts.length, visual: visibleVisual.length });
 
     return counts;
-  }, [gameState.isGameStarted, gameState.isTimeReached, visitedPages]);
+  }, [gameState.isGameStarted, gameState.gameTime, visitedPages]); // Use gameTime instead of isTimeReached
 
   const contextValue = {
     ...gameState,
+    resetGame,
     unseenCounts,
     markPageAsVisited
   };

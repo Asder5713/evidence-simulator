@@ -1,8 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-import { Search, FileText, Clock, BarChart3, Mail, MessageSquare, Camera } from "lucide-react";
+import { Search, FileText, Clock, BarChart3, Mail, MessageSquare, Camera, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGameContext } from "@/contexts/GameContext";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 const taskbarItems = [
   {
@@ -45,10 +46,22 @@ const taskbarItems = [
 
 export function Taskbar() {
   const location = useLocation();
-  const { formatGameTime, formatGameDate, isGameStarted, unseenCounts } = useGameContext();
+  const { formatGameTime, formatGameDate, isGameStarted, unseenCounts, resetGame } = useGameContext();
 
   return (
     <div className="fixed bottom-0 left-0 right-0 h-12 bg-background/95 backdrop-blur-sm border-t border-border flex items-center justify-between px-4 z-50">
+      {/* Reset Game Button */}
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={resetGame}
+        className="gap-2 text-muted-foreground hover:text-foreground"
+        title="אפס משחק"
+      >
+        <RotateCcw className="h-4 w-4" />
+        אפס
+      </Button>
+
       {/* Application Icons */}
       <div className="flex items-center gap-2">
         {taskbarItems.map((item) => {
