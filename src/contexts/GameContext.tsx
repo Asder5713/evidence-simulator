@@ -66,8 +66,10 @@ export function GameProvider({ children }: GameProviderProps) {
     
     console.log(`Evidence time: ${evidenceTime}, Evidence minutes: ${evidenceTimeMinutes}, Last visit: ${lastVisitTimeMinutes}, Page: ${pageType}`);
     
-    // Evidence is unseen if it appeared after the last visit to this page
-    const isUnseen = evidenceTimeMinutes > lastVisitTimeMinutes;
+    // Evidence is unseen if:
+    // 1. This is the first visit to the page (lastVisitTimeMinutes === 0)
+    // 2. OR the evidence appeared after the last visit
+    const isUnseen = lastVisitTimeMinutes === 0 || evidenceTimeMinutes > lastVisitTimeMinutes;
     console.log(`Is evidence unseen: ${isUnseen}`);
     return isUnseen;
   };
