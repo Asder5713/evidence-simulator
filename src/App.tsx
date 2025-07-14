@@ -52,6 +52,8 @@ function AppContent() {
           open={showStartDialog} 
           onStartGame={handleStartGame}
         />
+        
+        <GameEndDialog open={isGameEnded} />
       </div>
     </BrowserRouter>
   );
