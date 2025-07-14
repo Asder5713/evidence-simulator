@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -20,7 +20,12 @@ const queryClient = new QueryClient();
 
 function AppContent() {
   const { isGameEnded, isGameStarted, startGame } = useGameContext();
-  const [showStartDialog, setShowStartDialog] = useState(!isGameStarted);
+  const [showStartDialog, setShowStartDialog] = useState(true);
+
+  // Update dialog state when game state is loaded from localStorage
+  useEffect(() => {
+    setShowStartDialog(!isGameStarted);
+  }, [isGameStarted]);
 
   const handleStartGame = () => {
     setShowStartDialog(false);
