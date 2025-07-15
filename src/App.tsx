@@ -19,12 +19,15 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+// Component that must be inside Router context
+function NotificationManager() {
+  useNotifications();
+  return null;
+}
+
 function AppContent() {
   const { isGameEnded, isGameStarted, startGame } = useGameContext();
   const [showStartDialog, setShowStartDialog] = useState(true);
-
-  // Initialize notifications system
-  useNotifications();
 
   // Update dialog state when game state is loaded from localStorage
   useEffect(() => {
@@ -38,6 +41,7 @@ function AppContent() {
 
   return (
     <BrowserRouter>
+      <NotificationManager />
       <div className="min-h-screen">
         <Routes>
           <Route path="/" element={<Overview />} />
