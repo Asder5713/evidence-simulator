@@ -172,9 +172,15 @@ const TextMessages = () => {
                       </div>
 
                       {/* Timestamp */}
-                      <div className="flex items-center gap-1 mt-2 text-xs text-gray-400">
-                        <Clock className="w-3 h-3" />
-                        <span>{message.production_date} {message.production_time}</span>
+                      <div className="space-y-1 mt-2 text-xs text-gray-400">
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          <span>הופק: {message.production_date} {message.production_time}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-3 h-3 text-red-300" />
+                          <span className="text-red-300">מקרה: {message.incident_date} {message.incident_time}</span>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>

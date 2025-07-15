@@ -182,13 +182,17 @@ const VisualEvidence = () => {
                       <div className="space-y-1 text-xs text-gray-300">
                         <div className="flex items-center gap-1 text-right">
                           <Clock className="w-3 h-3" />
-                          <span>{evidenceItem.production_date} {evidenceItem.production_time}</span>
+                          <span>הופק: {evidenceItem.production_date} {evidenceItem.production_time}</span>
                           {evidenceItem.file_duration && (
                             <>
                               <span>•</span>
                               <span>{evidenceItem.file_duration}</span>
                             </>
                           )}
+                        </div>
+                        <div className="flex items-center gap-1 text-right">
+                          <Clock className="w-3 h-3 text-red-300" />
+                          <span className="text-red-300">מקרה: {evidenceItem.incident_date} {evidenceItem.incident_time}</span>
                         </div>
                         <div className="flex items-center gap-1 text-right">
                           <span className="text-gray-400">מערך:</span>
