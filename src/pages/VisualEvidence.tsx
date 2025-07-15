@@ -48,7 +48,7 @@ const getExceptionColor = (level: number) => {
 };
 
 const VisualEvidence = () => {
-  const { isTimeReached, isGameStarted, markPageAsVisited } = useGameContext();
+  const { isTimeReached, isGameStarted, markPageAsVisited, isItemNew } = useGameContext();
   const [selectedEvidence, setSelectedEvidence] = useState(null);
   const { addEvidence, isEvidenceSelected } = useEvidence();
 
@@ -96,6 +96,7 @@ const VisualEvidence = () => {
             {visibleEvidence.length > 0 ? visibleEvidence.map((evidenceItem, index) => {
               const TypeIcon = getTypeIcon(evidenceItem.news_type);
               const isHistorical = evidenceItem.id.includes('historical');
+              const isNew = isItemNew(`${evidenceItem.production_date} ${evidenceItem.production_time}`, 'visual');
               
               return (
                 <Card 
@@ -136,6 +137,11 @@ const VisualEvidence = () => {
                       <div className="flex items-start justify-between">
                         <div className="flex items-center gap-2">
                           <TypeIcon className={`w-4 h-4 ${getTypeTextColor(evidenceItem.news_type)}`} />
+                          {isNew && (
+                            <Badge className="text-xs bg-red-500/20 text-red-300 border-red-500/30 animate-pulse">
+                              חדש
+                            </Badge>
+                          )}
                           <Badge className={`text-xs border ${getExceptionColor(evidenceItem.exception_level)}`}>
                             רמה {evidenceItem.exception_level}
                           </Badge>
@@ -177,6 +183,18 @@ const VisualEvidence = () => {
                           <span className="text-gray-400">מערך:</span>
                           <span className="line-clamp-1">{evidenceItem.formation}</span>
                         </div>
+                        {evidenceItem.content && (
+                          <div className="text-right">
+                            <span className="text-gray-400">תוכן:</span>
+                            <p className="text-white text-xs line-clamp-2 mt-1">{evidenceItem.content}</p>
+                          </div>
+                        )}
+                        {evidenceItem.comments && (
+                          <div className="text-right">
+                            <span className="text-gray-400">הערה:</span>
+                            <p className="text-white text-xs line-clamp-2 mt-1">{evidenceItem.comments}</p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </CardContent>

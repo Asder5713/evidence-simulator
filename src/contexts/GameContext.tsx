@@ -14,6 +14,7 @@ interface GameContextType {
   isTimeReached: (timestampOrDate: string) => boolean;
   unseenCounts: { emails: number; texts: number; visual: number };
   markPageAsVisited: (page: 'emails' | 'texts' | 'visual') => void;
+  isItemNew: (productionDateTime: string, pageType: string) => boolean;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -103,11 +104,25 @@ export function GameProvider({ children }: GameProviderProps) {
     return counts;
   }, [gameState.isGameStarted, gameState.gameTime, visitedPages, pageVisitTimes]); // Use gameTime instead of isTimeReached
 
+  const isItemNew = (productionDateTime: string, pageType: string) => {
+    if (!gameState.isGameStarted) return false;
+    
+    const visitTime = pageVisitTimes[pageType];
+    if (!visitedPages.has(pageType)) return true; // First visit - everything is new
+    
+    const timeMatch = productionDateTime.match(/(\d{2}):(\d{2})/);
+    if (!timeMatch) return false;
+    const itemTimeMinutes = parseInt(timeMatch[1]) * 60 + parseInt(timeMatch[2]);
+    
+    return itemTimeMinutes > (visitTime || 0);
+  };
+
   const contextValue = {
     ...gameState,
     resetGame,
     unseenCounts,
-    markPageAsVisited
+    markPageAsVisited,
+    isItemNew
   };
 
   return (
