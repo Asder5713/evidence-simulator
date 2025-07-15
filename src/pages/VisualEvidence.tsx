@@ -1,12 +1,13 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Camera, Video, Volume2, FileImage, Play, Pause, Download, ZoomIn, Clock, MapPin, Plus, Check } from "lucide-react";
+import { Camera, Video, Volume2, FileImage, Clock, MapPin, Plus, Check } from "lucide-react";
 import { useState, useMemo, useEffect } from "react";
 import { useEvidence } from "@/hooks/use-evidence";
 import { visualEvidence } from "@/data/evidence-data";
 import { useGameContext } from "@/contexts/GameContext";
+import { EvidenceModal } from "@/components/EvidenceModal";
 
 const getTypeIcon = (type: string) => {
   switch (type) {
@@ -19,29 +20,36 @@ const getTypeIcon = (type: string) => {
 
 const getTypeColor = (type: string) => {
   switch (type) {
-    case "image": return "from-blue-950/70 to-blue-900/50 border-blue-800/60";
-    case "video": return "from-indigo-950/70 to-indigo-900/50 border-indigo-800/60";
-    case "audio": return "from-cyan-950/70 to-cyan-900/50 border-cyan-800/60";
-    default: return "from-slate-950/70 to-slate-900/50 border-slate-800/60";
+    case "image": return "bg-blue-50 border-blue-200";
+    case "video": return "bg-purple-50 border-purple-200";
+    case "audio": return "bg-green-50 border-green-200";
+    default: return "bg-gray-50 border-gray-200";
+  }
+};
+
+const getTypeTextColor = (type: string) => {
+  switch (type) {
+    case "image": return "text-blue-700";
+    case "video": return "text-purple-700";
+    case "audio": return "text-green-700";
+    default: return "text-gray-700";
   }
 };
 
 const getPriorityColor = (priority: string) => {
   switch (priority) {
-    case "critical": return "bg-red-600/30 text-red-300 border-red-500/50";
-    case "high": return "bg-orange-600/30 text-orange-300 border-orange-500/50";
-    case "medium": return "bg-blue-600/30 text-blue-300 border-blue-500/50";
-    default: return "bg-slate-600/30 text-slate-300 border-slate-500/50";
+    case "critical": return "bg-red-100 text-red-800 border-red-300";
+    case "high": return "bg-orange-100 text-orange-800 border-orange-300";
+    case "medium": return "bg-blue-100 text-blue-800 border-blue-300";
+    default: return "bg-gray-100 text-gray-800 border-gray-300";
   }
 };
 
 const VisualEvidence = () => {
   const { isTimeReached, isGameStarted, markPageAsVisited } = useGameContext();
   const [selectedEvidence, setSelectedEvidence] = useState(null);
-  const [playingAudio, setPlayingAudio] = useState<string | null>(null);
   const { addEvidence, isEvidenceSelected } = useEvidence();
 
-  
   // Mark page as visited when component mounts
   useEffect(() => {
     markPageAsVisited('visual');
@@ -52,10 +60,6 @@ const VisualEvidence = () => {
     if (!isGameStarted) return [];
     return visualEvidence.filter(evidence => isTimeReached(evidence.timestamp));
   }, [isGameStarted, isTimeReached]);
-
-  const handlePlay = (id: string) => {
-    setPlayingAudio(playingAudio === id ? null : id);
-  };
 
   const handleAddEvidence = (evidence: any) => {
     addEvidence({
@@ -74,17 +78,21 @@ const VisualEvidence = () => {
     });
   };
 
+  const handleEvidenceClick = (evidence: any) => {
+    setSelectedEvidence(evidence);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-950 via-indigo-950 to-slate-950 pb-20">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-900/80 to-indigo-900/80 border-b border-blue-700/50 p-4 shadow-2xl backdrop-blur-sm">
+      <div className="bg-white border-b border-gray-200 p-4 shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="p-3 bg-blue-500/20 rounded-lg border border-blue-400/30 shadow-lg shadow-blue-500/20">
-            <Camera className="w-6 h-6 text-blue-300" />
+          <div className="p-2 bg-blue-100 rounded-lg">
+            <Camera className="w-6 h-6 text-blue-600" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-blue-100">ראיות ויזואליות</h1>
-            <p className="text-sm text-blue-300">תמונות, וידיאו והקלטות אודיו</p>
+            <h1 className="text-xl font-semibold text-gray-900">ראיות ויזואליות</h1>
+            <p className="text-sm text-gray-600">תמונות, וידיאו והקלטות אודיו</p>
           </div>
         </div>
       </div>
@@ -92,183 +100,127 @@ const VisualEvidence = () => {
       {/* Evidence Grid */}
       <div className="max-w-7xl mx-auto p-6">
         <ScrollArea className="h-[calc(100vh-200px)]">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {visibleEvidence.length > 0 ? visibleEvidence.map((evidence, index) => {
               const TypeIcon = getTypeIcon(evidence.type);
+              const isHistorical = evidence.id.includes('historical');
               
               return (
                 <Card 
                   key={evidence.id}
-                  className={`bg-gradient-to-br ${getTypeColor(evidence.type)} border backdrop-blur-sm shadow-lg shadow-black/20 hover:shadow-xl transition-all duration-300 animate-fade-in`}
-                  style={{ animationDelay: `${index * 0.1}s` }}
+                  className={`${getTypeColor(evidence.type)} shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-105 animate-fade-in ${isHistorical ? 'opacity-75' : ''}`}
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                  onClick={() => handleEvidenceClick(evidence)}
                 >
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 bg-blue-500/20 rounded-lg border border-blue-400/30 shadow-lg shadow-blue-500/10">
-                          <TypeIcon className="w-5 h-5 text-blue-300" />
+                  <CardContent className="p-4">
+                    {/* File Preview */}
+                    <div className="mb-3">
+                      {evidence.type === "image" && evidence.url ? (
+                        <img 
+                          src={evidence.url} 
+                          alt={evidence.title}
+                          className="w-full h-32 object-cover rounded-lg border border-white/50"
+                        />
+                      ) : evidence.type === "video" && evidence.url ? (
+                        <div className="relative">
+                          <img 
+                            src={evidence.url} 
+                            alt={evidence.title}
+                            className="w-full h-32 object-cover rounded-lg border border-white/50"
+                          />
+                          <div className="absolute inset-0 bg-black/30 rounded-lg flex items-center justify-center">
+                            <Video className={`w-8 h-8 ${getTypeTextColor(evidence.type)}`} />
+                          </div>
                         </div>
-                        <div>
-                          <CardTitle className="text-blue-100 text-lg">{evidence.title}</CardTitle>
-                          <p className="text-blue-300 text-sm">{evidence.source}</p>
+                      ) : (
+                        <div className={`w-full h-32 ${getTypeColor(evidence.type)} rounded-lg border border-white/50 flex items-center justify-center`}>
+                          <TypeIcon className={`w-12 h-12 ${getTypeTextColor(evidence.type)}`} />
                         </div>
-                      </div>
-                      <Badge className={`text-xs border ${getPriorityColor(evidence.priority)}`}>
-                        {evidence.priority === 'critical' ? 'קריטי' : 
-                         evidence.priority === 'high' ? 'גבוה' : 'בינוני'}
-                      </Badge>
-                      <Button
-                        variant={isEvidenceSelected(evidence.id) ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => handleAddEvidence(evidence)}
-                        disabled={isEvidenceSelected(evidence.id)}
-                        className="gap-1 text-xs"
-                      >
-                        {isEvidenceSelected(evidence.id) ? (
-                          <>
+                      )}
+                    </div>
+
+                    {/* File Info */}
+                    <div className="space-y-2">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-2">
+                          <TypeIcon className={`w-4 h-4 ${getTypeTextColor(evidence.type)}`} />
+                          <Badge className={`text-xs border ${getPriorityColor(evidence.priority)}`}>
+                            {evidence.priority === 'critical' ? 'קריטי' : 
+                             evidence.priority === 'high' ? 'גבוה' : 'בינוני'}
+                          </Badge>
+                        </div>
+                        <Button
+                          variant={isEvidenceSelected(evidence.id) ? "default" : "outline"}
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddEvidence(evidence);
+                          }}
+                          disabled={isEvidenceSelected(evidence.id)}
+                          className="gap-1 text-xs"
+                        >
+                          {isEvidenceSelected(evidence.id) ? (
                             <Check className="w-3 h-3" />
-                            נוסף
-                          </>
-                        ) : (
-                          <>
+                          ) : (
                             <Plus className="w-3 h-3" />
-                            הוסף
-                          </>
-                        )}
-                      </Button>
+                          )}
+                        </Button>
+                      </div>
+
+                      <h3 className="font-medium text-gray-900 text-sm text-right line-clamp-2">
+                        {evidence.title}
+                      </h3>
+
+                      <div className="space-y-1 text-xs text-gray-600">
+                        <div className="flex items-center gap-1 text-right">
+                          <Clock className="w-3 h-3" />
+                          <span>{evidence.timestamp}</span>
+                          {evidence.duration && (
+                            <>
+                              <span>•</span>
+                              <span>{evidence.duration}</span>
+                            </>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-1 text-right">
+                          <MapPin className="w-3 h-3" />
+                          <span className="line-clamp-1">{evidence.location}</span>
+                        </div>
+                      </div>
                     </div>
-
-                    <div className="space-y-2 text-sm text-blue-200">
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-3 h-3 text-blue-400" />
-                        <span>{evidence.location}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-3 h-3 text-blue-400" />
-                        <span>{evidence.timestamp}</span>
-                        {evidence.duration && (
-                          <>
-                            <span className="text-blue-500">•</span>
-                            <span>משך: {evidence.duration}</span>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </CardHeader>
-
-                  <CardContent className="space-y-4">
-                    {/* Media Preview */}
-                    {evidence.type === "image" && evidence.url && (
-                      <div className="relative group">
-                        <img 
-                          src={evidence.url} 
-                          alt={evidence.title}
-                          className="w-full h-48 object-cover rounded-lg border border-white/10"
-                        />
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-center justify-center">
-                          <Button variant="secondary" size="sm" className="gap-2 bg-blue-600/20 border-blue-500/50 text-blue-100 hover:bg-blue-600/30">
-                            <ZoomIn className="w-4 h-4" />
-                            הגדל
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-
-                    {evidence.type === "video" && evidence.url && (
-                      <div className="relative">
-                        <img 
-                          src={evidence.url} 
-                          alt={evidence.title}
-                          className="w-full h-48 object-cover rounded-lg border border-white/10"
-                        />
-                        <div className="absolute inset-0 bg-black/40 rounded-lg flex items-center justify-center">
-                          <Button variant="secondary" size="lg" className="gap-2 bg-blue-600/20 border-blue-500/50 text-blue-100 hover:bg-blue-600/30">
-                            <Play className="w-5 h-5" />
-                            נגן וידיאו
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-
-                    {evidence.type === "audio" && (
-                      <div className="bg-black/20 rounded-lg p-4 border border-white/10">
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center gap-3">
-                            <Button
-                              onClick={() => handlePlay(evidence.id)}
-                              variant="secondary" 
-                              size="sm"
-                              className="gap-2"
-                            >
-                              {playingAudio === evidence.id ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                              {playingAudio === evidence.id ? 'עצור' : 'נגן'}
-                            </Button>
-                            <span className="text-gray-300 text-sm">הקלטת אודיו</span>
-                          </div>
-                          <Button variant="ghost" size="sm">
-                            <Download className="w-4 h-4" />
-                          </Button>
-                        </div>
-                        
-                        {/* Call Details */}
-                        {evidence.caller && evidence.receiver && (
-                          <div className="flex items-center gap-4 text-sm text-blue-200">
-                            <div className="flex items-center gap-2">
-                              <span className="text-blue-400">מ:</span>
-                              <span>{evidence.caller}</span>
-                            </div>
-                            <span className="text-blue-500">→</span>
-                            <div className="flex items-center gap-2">
-                              <span className="text-blue-400">אל:</span>
-                              <span>{evidence.receiver}</span>
-                            </div>
-                            <Badge className={`text-xs ${
-                              evidence.call_type === 'outgoing' ? 'bg-green-600/30 text-green-300 border-green-500/50' :
-                              evidence.call_type === 'incoming' ? 'bg-blue-600/30 text-blue-300 border-blue-500/50' :
-                              'bg-purple-600/30 text-purple-300 border-purple-500/50'
-                            }`}>
-                              {evidence.call_type === 'outgoing' ? 'יוצאת' : 
-                               evidence.call_type === 'incoming' ? 'נכנסת' : 'חקירה'}
-                            </Badge>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-
                   </CardContent>
                 </Card>
               );
             }) : (
-              <div className="flex items-center justify-center h-64 text-blue-400 col-span-full">
+              <div className="flex items-center justify-center h-64 text-gray-500 col-span-full">
                 <p>אין ראיות ויזואליות זמינות עדיין</p>
               </div>
             )}
           </div>
 
           {/* Summary Section */}
-          <div className="mt-8 p-6 bg-gradient-to-r from-zinc-900/40 to-neutral-900/40 border border-zinc-700/40 rounded-xl backdrop-blur-sm shadow-lg">
+          <div className="mt-8 p-6 bg-white border border-gray-200 rounded-xl shadow-sm">
             <div className="flex items-start gap-4">
-              <div className="p-2 bg-zinc-800/40 rounded-lg border border-zinc-700/30">
-                <FileImage className="w-6 h-6 text-zinc-300 flex-shrink-0" />
+              <div className="p-2 bg-gray-100 rounded-lg">
+                <FileImage className="w-6 h-6 text-gray-600" />
               </div>
               <div>
-                <h3 className="text-zinc-200 font-bold text-lg mb-3">סיכום ראיות ויזואליות</h3>
+                <h3 className="text-gray-900 font-semibold text-lg mb-3">סיכום ראיות ויזואליות</h3>
                 <div className="grid md:grid-cols-3 gap-4 text-sm">
-                  <div className="bg-black/20 rounded-lg p-3 border border-zinc-700/30">
-                    <p className="text-zinc-300 font-medium mb-1">תמונות: 2</p>
-                    <p className="text-zinc-400">מעקב ותיעוד זירה</p>
+                  <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                    <p className="text-gray-700 font-medium mb-1">תמונות: {visibleEvidence.filter(e => e.type === 'image').length}</p>
+                    <p className="text-gray-600">מעקב ותיעוד זירה</p>
                   </div>
-                  <div className="bg-black/20 rounded-lg p-3 border border-zinc-700/30">
-                    <p className="text-zinc-300 font-medium mb-1">סרטונים: 2</p>
-                    <p className="text-zinc-400">מעקב וחקירה</p>
+                  <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                    <p className="text-gray-700 font-medium mb-1">סרטונים: {visibleEvidence.filter(e => e.type === 'video').length}</p>
+                    <p className="text-gray-600">מעקב וחקירה</p>
                   </div>
-                  <div className="bg-black/20 rounded-lg p-3 border border-zinc-700/30">
-                    <p className="text-zinc-300 font-medium mb-1">הקלטות: 2</p>
-                    <p className="text-zinc-400">איומים ועדויות</p>
+                  <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                    <p className="text-gray-700 font-medium mb-1">הקלטות: {visibleEvidence.filter(e => e.type === 'audio').length}</p>
+                    <p className="text-gray-600">איומים ועדויות</p>
                   </div>
                 </div>
-                <p className="text-zinc-300 text-sm leading-relaxed mt-4">
+                <p className="text-gray-700 text-sm leading-relaxed mt-4">
                   הראיות הויזואליות מספקות תמונה מלאה של רצף האירועים מהאיומים הראשוניים ועד לגילוי הרצח. 
                   כל ראיה תומכת ומחזקת את השרשרת הראייתית נגד החשודים.
                 </p>
@@ -277,6 +229,15 @@ const VisualEvidence = () => {
           </div>
         </ScrollArea>
       </div>
+
+      {/* Evidence Modal */}
+      <EvidenceModal
+        evidence={selectedEvidence}
+        isOpen={!!selectedEvidence}
+        onClose={() => setSelectedEvidence(null)}
+        onAddEvidence={handleAddEvidence}
+        isEvidenceSelected={isEvidenceSelected}
+      />
     </div>
   );
 };

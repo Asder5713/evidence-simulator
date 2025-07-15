@@ -67,6 +67,57 @@ export const emailEvidence = [
 ];
 
 export const textEvidence = [
+  // ידיעות מתאריכים קודמים - יופיעו מיד עם פתיחת הסימולציה
+  {
+    id: "msg_historical_001",
+    source: "מחלקת חקירות",
+    sender: "חוקר בכיר אילן רוז",
+    timestamp: "15.06, 09:30",
+    
+    priority: "medium",
+    content: "נפתח תיק חקירה נגד יוסי כהן בעקבות תלונות על הפעלת לחץ ואיומים על בעלי עסקים באזור.",
+    type: "investigation"
+  },
+  {
+    id: "msg_historical_002",
+    source: "יחידת מעקב",
+    sender: "סמל ראשון טל לוי",
+    timestamp: "15.06, 14:20",
+    
+    priority: "medium",
+    content: "החל מעקב סמוי אחר יוסי כהן ושותפיו. זוהו 3 נקודות מפגש קבועות והרגלי תנועה.",
+    type: "intelligence"
+  },
+  {
+    id: "msg_historical_003",
+    source: "מוקד תלונות הציבור",
+    sender: "קצינת תורנית",
+    timestamp: "16.06, 11:45",
+    
+    priority: "high",
+    content: "התקבלה תלונה נוספת מדני לוי על החמרה באיומים. המתלונן דיווח על מעקב חשוד אחריו.",
+    type: "dispatch"
+  },
+  {
+    id: "msg_historical_004",
+    source: "מודיעין פלילי",
+    sender: "ניצב משנה שרון אבנר",
+    timestamp: "16.06, 16:10",
+    
+    priority: "high",
+    content: "מידע מהימן מצביע על תכנון פעילות איומים מוגברת לקראת סוף השבוע. יש להעלות כוננות.",
+    type: "intelligence"
+  },
+  {
+    id: "msg_historical_005",
+    source: "מחלקת טכנולוגיות",
+    sender: "רס״ן עמית כהן",
+    timestamp: "16.06, 20:30",
+    
+    priority: "medium",
+    content: "הושלמה התקנת מערכת האזנה מאושרת על קו הטלפון של יוסי כהן. המערכת פעילה ומתעדת.",
+    type: "command"
+  },
   {
     id: "msg_001",
     source: "יחידת מודיעין",
@@ -130,6 +181,48 @@ export const textEvidence = [
 ];
 
 export const visualEvidence = [
+  // ראיות מתאריכים קודמים - יופיעו מיד עם פתיחת הסימולציה
+  {
+    id: "img_historical_001",
+    type: "image",
+    title: "תמונת זיהוי - יוסי כהן",
+    location: "דרך בן גוריון, תל-אביב",
+    timestamp: "15.06, 08:20",
+    
+    priority: "medium",
+    source: "מצלמת מעקב עירונית",
+    url: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=300&fit=crop",
+    evidence_notes: "תמונת זיהוי ראשונית של החשוד המרכזי"
+  },
+  {
+    id: "vid_historical_001",
+    type: "video",
+    title: "סרטון מעקב - ישיבה חשודה",
+    location: "בית קפה קפריסין, תל-אביב",
+    timestamp: "15.06, 14:45",
+    
+    priority: "medium",
+    source: "מצלמת אבטחה פרטית",
+    duration: "08:30",
+    url: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=400&fit=crop",
+    evidence_notes: "פגישה בין החשודים לתכנון הפעילות"
+  },
+  {
+    id: "aud_historical_001",
+    type: "audio",
+    title: "הקלטת שיחה - תכנון ראשוני",
+    location: "מעקב טלפוני",
+    timestamp: "16.06, 19:30",
+    
+    priority: "high",
+    source: "מעקב משטרתי מאושר",
+    duration: "04:22",
+    url: "",
+    call_type: "outgoing",
+    caller: "יוסי כהן",
+    receiver: "שותף לא מזוהה",
+    evidence_notes: "שיחת תכנון המעידה על הכנות לפעילות פלילית"
+  },
   {
     id: "img_001",
     type: "image",
