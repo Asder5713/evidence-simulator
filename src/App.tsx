@@ -8,6 +8,7 @@ import { Taskbar } from "@/components/Taskbar";
 import { GameStartDialog } from "@/components/GameStartDialog";
 import { GameEndDialog } from "@/components/GameEndDialog";
 import { GameProvider, useGameContext } from "@/contexts/GameContext";
+import { useNotifications } from "@/hooks/use-notifications";
 import Index from "./pages/Index";
 
 import Overview from "./pages/Overview";
@@ -21,6 +22,9 @@ const queryClient = new QueryClient();
 function AppContent() {
   const { isGameEnded, isGameStarted, startGame } = useGameContext();
   const [showStartDialog, setShowStartDialog] = useState(true);
+
+  // Initialize notifications system
+  useNotifications();
 
   // Update dialog state when game state is loaded from localStorage
   useEffect(() => {
