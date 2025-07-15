@@ -55,6 +55,12 @@ const getExceptionColor = (level: number) => {
 const TextMessages = () => {
   const { isTimeReached, isGameStarted, markPageAsVisited } = useGameContext();
   const { addEvidence, isEvidenceSelected } = useEvidence();
+  
+  // Load viewed messages from localStorage
+  const [viewedMessages, setViewedMessages] = useState<Set<string>>(() => {
+    const stored = localStorage.getItem('viewed-messages');
+    return stored ? new Set(JSON.parse(stored)) : new Set();
+  });
 
   // Mark page as visited when component mounts
   useEffect(() => {
@@ -72,6 +78,10 @@ const TextMessages = () => {
 
   const handleAddEvidence = (message: any) => {
     addEvidence(message);
+    // Mark as viewed when adding to evidence
+    const newViewedMessages = new Set([...viewedMessages, message.id]);
+    setViewedMessages(newViewedMessages);
+    localStorage.setItem('viewed-messages', JSON.stringify(Array.from(newViewedMessages)));
   };
 
   return (
@@ -111,6 +121,9 @@ const TextMessages = () => {
                           <div className={`p-1.5 ${getSourceColor(message.news_type)} rounded-lg border`}>
                             <SourceIcon className={`w-4 h-4 ${getSourceTextColor(message.news_type)}`} />
                           </div>
+                          {!viewedMessages.has(message.id) && (
+                            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" title="לא נקרא" />
+                          )}
                           <div>
                             <p className={`font-medium text-sm ${getSourceTextColor(message.news_type)}`}>
                               {message.formation}

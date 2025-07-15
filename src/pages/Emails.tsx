@@ -12,7 +12,12 @@ import { useGameContext } from "@/contexts/GameContext";
 const Emails = () => {
   const { isTimeReached, isGameStarted, markPageAsVisited } = useGameContext();
   const { addEvidence, isEvidenceSelected } = useEvidence();
-  const [viewedEmails, setViewedEmails] = useState<Set<string>>(new Set());
+  
+  // Load viewed emails from localStorage
+  const [viewedEmails, setViewedEmails] = useState<Set<string>>(() => {
+    const stored = localStorage.getItem('viewed-emails');
+    return stored ? new Set(JSON.parse(stored)) : new Set();
+  });
 
   
   // Mark page as visited when component mounts
@@ -33,7 +38,9 @@ const Emails = () => {
 
   const handleEmailClick = (email: any) => {
     setSelectedEmail(email);
-    setViewedEmails(prev => new Set([...prev, email.id]));
+    const newViewedEmails = new Set([...viewedEmails, email.id]);
+    setViewedEmails(newViewedEmails);
+    localStorage.setItem('viewed-emails', JSON.stringify(Array.from(newViewedEmails)));
   };
 
   const handleAddEvidence = (email: any) => {

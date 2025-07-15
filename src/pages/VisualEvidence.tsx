@@ -51,6 +51,12 @@ const VisualEvidence = () => {
   const { isTimeReached, isGameStarted, markPageAsVisited } = useGameContext();
   const [selectedEvidence, setSelectedEvidence] = useState(null);
   const { addEvidence, isEvidenceSelected } = useEvidence();
+  
+  // Load viewed evidence from localStorage
+  const [viewedEvidence, setViewedEvidence] = useState<Set<string>>(() => {
+    const stored = localStorage.getItem('viewed-visual-evidence');
+    return stored ? new Set(JSON.parse(stored)) : new Set();
+  });
 
   // Mark page as visited when component mounts
   useEffect(() => {
@@ -68,10 +74,18 @@ const VisualEvidence = () => {
 
   const handleAddEvidence = (evidenceItem: any) => {
     addEvidence(evidenceItem);
+    // Mark as viewed when adding to evidence
+    const newViewedEvidence = new Set([...viewedEvidence, evidenceItem.id]);
+    setViewedEvidence(newViewedEvidence);
+    localStorage.setItem('viewed-visual-evidence', JSON.stringify(Array.from(newViewedEvidence)));
   };
 
   const handleEvidenceClick = (evidence: any) => {
     setSelectedEvidence(evidence);
+    // Mark as viewed when clicking
+    const newViewedEvidence = new Set([...viewedEvidence, evidence.id]);
+    setViewedEvidence(newViewedEvidence);
+    localStorage.setItem('viewed-visual-evidence', JSON.stringify(Array.from(newViewedEvidence)));
   };
 
   return (
@@ -136,6 +150,9 @@ const VisualEvidence = () => {
                       <div className="flex items-start justify-between">
                         <div className="flex items-center gap-2">
                           <TypeIcon className={`w-4 h-4 ${getTypeTextColor(evidenceItem.news_type)}`} />
+                          {!viewedEvidence.has(evidenceItem.id) && (
+                            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" title="לא נקרא" />
+                          )}
                           <Badge className={`text-xs border ${getExceptionColor(evidenceItem.exception_level)}`}>
                             רמה {evidenceItem.exception_level}
                           </Badge>
