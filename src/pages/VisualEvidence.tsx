@@ -48,7 +48,7 @@ const getExceptionColor = (level: number) => {
 };
 
 const VisualEvidence = () => {
-  const { isTimeReached, isGameStarted, markPageAsVisited, isItemNew } = useGameContext();
+  const { isTimeReached, isGameStarted, markPageAsVisited } = useGameContext();
   const [selectedEvidence, setSelectedEvidence] = useState(null);
   const { addEvidence, isEvidenceSelected } = useEvidence();
 
@@ -96,7 +96,6 @@ const VisualEvidence = () => {
             {visibleEvidence.length > 0 ? visibleEvidence.map((evidenceItem, index) => {
               const TypeIcon = getTypeIcon(evidenceItem.news_type);
               const isHistorical = evidenceItem.id.includes('historical');
-              const isNew = isItemNew(`${evidenceItem.production_date} ${evidenceItem.production_time}`, 'visual');
               
               return (
                 <Card 
@@ -137,11 +136,6 @@ const VisualEvidence = () => {
                       <div className="flex items-start justify-between">
                         <div className="flex items-center gap-2">
                           <TypeIcon className={`w-4 h-4 ${getTypeTextColor(evidenceItem.news_type)}`} />
-                          {isNew && (
-                            <Badge className="text-xs bg-red-500/20 text-red-300 border-red-500/30 animate-pulse">
-                              חדש
-                            </Badge>
-                          )}
                           <Badge className={`text-xs border ${getExceptionColor(evidenceItem.exception_level)}`}>
                             רמה {evidenceItem.exception_level}
                           </Badge>

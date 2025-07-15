@@ -12,6 +12,7 @@ import { useGameContext } from "@/contexts/GameContext";
 const Emails = () => {
   const { isTimeReached, isGameStarted, markPageAsVisited } = useGameContext();
   const { addEvidence, isEvidenceSelected } = useEvidence();
+  const [viewedEmails, setViewedEmails] = useState<Set<string>>(new Set());
 
   
   // Mark page as visited when component mounts
@@ -29,6 +30,11 @@ const Emails = () => {
   }, [isGameStarted, isTimeReached]);
 
   const [selectedEmail, setSelectedEmail] = useState(visibleEmails[0] || evidence.find(e => e.news_type === 'email'));
+
+  const handleEmailClick = (email: any) => {
+    setSelectedEmail(email);
+    setViewedEmails(prev => new Set([...prev, email.id]));
+  };
 
   const handleAddEvidence = (email: any) => {
     addEvidence(email);
@@ -58,7 +64,7 @@ const Emails = () => {
                     className={`border-slate-700 hover:bg-slate-700/50 cursor-pointer ${
                       selectedEmail.id === email.id ? 'bg-slate-700/70 border-blue-500' : 'bg-slate-800/50'
                     }`}
-                    onClick={() => setSelectedEmail(email)}
+                    onClick={() => handleEmailClick(email)}
                   >
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-2">
@@ -67,6 +73,9 @@ const Emails = () => {
                             email.exception_level >= 4 ? 'bg-red-500' : 
                             email.exception_level === 3 ? 'bg-orange-500' : 'bg-yellow-500'
                           }`} />
+                          {!viewedEmails.has(email.id) && (
+                            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" title="לא נקרא" />
+                          )}
                           <span className="text-sm font-medium text-slate-200">{email.source}</span>
                         </div>
                         <span className="text-xs text-slate-400">{email.production_date} {email.production_time}</span>

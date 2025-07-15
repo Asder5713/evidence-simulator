@@ -53,7 +53,7 @@ const getExceptionColor = (level: number) => {
 };
 
 const TextMessages = () => {
-  const { isTimeReached, isGameStarted, markPageAsVisited, isItemNew } = useGameContext();
+  const { isTimeReached, isGameStarted, markPageAsVisited } = useGameContext();
   const { addEvidence, isEvidenceSelected } = useEvidence();
 
   // Mark page as visited when component mounts
@@ -96,7 +96,6 @@ const TextMessages = () => {
             {visibleMessages.length > 0 ? visibleMessages.map((message, index) => {
               const SourceIcon = getSourceIcon(message.news_type);
               const isHistorical = message.id.includes('historical');
-              const isNew = isItemNew(`${message.production_date} ${message.production_time}`, 'texts');
               
               return (
                 <div 
@@ -120,11 +119,6 @@ const TextMessages = () => {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          {isNew && (
-                            <Badge className="text-xs bg-red-500/20 text-red-300 border-red-500/30 animate-pulse">
-                              חדש
-                            </Badge>
-                          )}
                           <Badge className={`text-xs border ${getExceptionColor(message.exception_level)}`}>
                             רמה {message.exception_level}
                           </Badge>
