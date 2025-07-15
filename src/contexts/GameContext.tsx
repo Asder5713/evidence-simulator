@@ -1,6 +1,6 @@
 import React, { createContext, useContext, ReactNode, useState, useEffect, useMemo } from 'react';
 import { useGameTime, GameTime } from '@/hooks/use-game-time';
-import { emailEvidence, textEvidence, visualEvidence } from '@/data/evidence-data';
+import { evidence } from '@/data/evidence-data';
 
 interface GameContextType {
   gameTime: GameTime;
@@ -56,9 +56,18 @@ export function GameProvider({ children }: GameProviderProps) {
       return { emails: 0, texts: 0, visual: 0 };
     }
 
-    const visibleEmails = emailEvidence.filter(email => gameState.isTimeReached(email.date));
-    const visibleTexts = textEvidence.filter(text => gameState.isTimeReached(text.timestamp));
-    const visibleVisual = visualEvidence.filter(visual => gameState.isTimeReached(visual.timestamp));
+    const visibleEmails = evidence.filter(item => 
+      item.news_type === 'email' && 
+      gameState.isTimeReached(`${item.production_date} ${item.production_time}`)
+    );
+    const visibleTexts = evidence.filter(item => 
+      ['intelligence', 'dispatch', 'investigation', 'forensics', 'command'].includes(item.news_type) &&
+      gameState.isTimeReached(`${item.production_date} ${item.production_time}`)
+    );
+    const visibleVisual = evidence.filter(item => 
+      ['image', 'video', 'audio'].includes(item.news_type) &&
+      gameState.isTimeReached(`${item.production_date} ${item.production_time}`)
+    );
 
     // Helper function to parse time from timestamp and convert to minutes
     const parseTimeToMinutes = (timestamp: string) => {
@@ -74,8 +83,8 @@ export function GameProvider({ children }: GameProviderProps) {
       }
       
       const lastVisitTime = pageVisitTimes[page] || 0;
-      return evidenceList.filter(evidence => {
-        const evidenceTime = parseTimeToMinutes(evidence.timestamp || evidence.date);
+      return evidenceList.filter(evidenceItem => {
+        const evidenceTime = parseTimeToMinutes(evidenceItem.production_time);
         return evidenceTime > lastVisitTime;
       }).length;
     };

@@ -5,13 +5,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageSquare, Shield, Eye, Phone, Users, Clock, AlertTriangle, Plus, Check } from "lucide-react";
 import { useState, useMemo, useEffect } from "react";
 import { useEvidence } from "@/hooks/use-evidence";
-import { textEvidence } from "@/data/evidence-data";
+import { evidence } from "@/data/evidence-data";
 import { useGameContext } from "@/contexts/GameContext";
 
-const getSourceIcon = (type: string) => {
-  switch (type) {
+const getSourceIcon = (news_type: string) => {
+  switch (news_type) {
     case "intelligence": return Shield;
-    case "informant": return Eye;
     case "dispatch": return Phone;
     case "investigation": return Users;
     case "forensics": return AlertTriangle;
@@ -20,10 +19,9 @@ const getSourceIcon = (type: string) => {
   }
 };
 
-const getSourceColor = (type: string) => {
-  switch (type) {
+const getSourceColor = (news_type: string) => {
+  switch (news_type) {
     case "intelligence": return "bg-blue-900/20 border-blue-700/50";
-    case "informant": return "bg-purple-900/20 border-purple-700/50";
     case "dispatch": return "bg-red-900/20 border-red-700/50";
     case "investigation": return "bg-amber-900/20 border-amber-700/50";
     case "forensics": return "bg-green-900/20 border-green-700/50";
@@ -32,10 +30,9 @@ const getSourceColor = (type: string) => {
   }
 };
 
-const getSourceTextColor = (type: string) => {
-  switch (type) {
+const getSourceTextColor = (news_type: string) => {
+  switch (news_type) {
     case "intelligence": return "text-blue-300";
-    case "informant": return "text-purple-300";
     case "dispatch": return "text-red-300";
     case "investigation": return "text-amber-300";
     case "forensics": return "text-green-300";
@@ -44,12 +41,13 @@ const getSourceTextColor = (type: string) => {
   }
 };
 
-const getPriorityColor = (priority: string) => {
-  switch (priority) {
-    case "critical": return "bg-red-500/20 text-red-300 border-red-500/30";
-    case "urgent": return "bg-orange-500/20 text-orange-300 border-orange-500/30";
-    case "high": return "bg-yellow-500/20 text-yellow-300 border-yellow-500/30";
-    case "medium": return "bg-blue-500/20 text-blue-300 border-blue-500/30";
+const getExceptionColor = (level: number) => {
+  switch (level) {
+    case 5: return "bg-red-500/20 text-red-300 border-red-500/30";
+    case 4: return "bg-orange-500/20 text-orange-300 border-orange-500/30";
+    case 3: return "bg-yellow-500/20 text-yellow-300 border-yellow-500/30";
+    case 2: return "bg-blue-500/20 text-blue-300 border-blue-500/30";
+    case 1: return "bg-green-500/20 text-green-300 border-green-500/30";
     default: return "bg-gray-500/20 text-gray-300 border-gray-500/30";
   }
 };
@@ -66,19 +64,14 @@ const TextMessages = () => {
   // Filter messages that should be visible based on game time
   const visibleMessages = useMemo(() => {
     if (!isGameStarted) return [];
-    return textEvidence.filter(message => isTimeReached(message.timestamp));
+    return evidence.filter(item => 
+      ['intelligence', 'dispatch', 'investigation', 'forensics', 'command'].includes(item.news_type) &&
+      isTimeReached(`${item.production_date} ${item.production_time}`)
+    );
   }, [isGameStarted, isTimeReached]);
 
   const handleAddEvidence = (message: any) => {
-    addEvidence({
-      id: message.id,
-      type: 'text',
-      title: `${message.source} - ${message.sender}`,
-      source: message.source,
-      timestamp: message.timestamp,
-      priority: message.priority,
-      content: message.content
-    });
+    addEvidence(message);
   };
 
   return (
@@ -101,7 +94,7 @@ const TextMessages = () => {
         <ScrollArea className="h-[calc(100vh-200px)]">
           <div className="space-y-3">
             {visibleMessages.length > 0 ? visibleMessages.map((message, index) => {
-              const SourceIcon = getSourceIcon(message.type);
+              const SourceIcon = getSourceIcon(message.news_type);
               const isHistorical = message.id.includes('historical');
               
               return (
@@ -110,26 +103,24 @@ const TextMessages = () => {
                   className={`flex ${index % 2 === 0 ? 'justify-end' : 'justify-start'} animate-fade-in`}
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <Card className={`max-w-[80%] ${getSourceColor(message.type)} shadow-lg hover:shadow-xl transition-all duration-200 backdrop-blur-sm ${isHistorical ? 'opacity-80' : ''}`}>
+                  <Card className={`max-w-[80%] ${getSourceColor(message.news_type)} shadow-lg hover:shadow-xl transition-all duration-200 backdrop-blur-sm ${isHistorical ? 'opacity-80' : ''}`}>
                     <CardContent className="p-4">
                       {/* Message Header */}
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <div className={`p-1.5 ${getSourceColor(message.type)} rounded-lg border`}>
-                            <SourceIcon className={`w-4 h-4 ${getSourceTextColor(message.type)}`} />
+                          <div className={`p-1.5 ${getSourceColor(message.news_type)} rounded-lg border`}>
+                            <SourceIcon className={`w-4 h-4 ${getSourceTextColor(message.news_type)}`} />
                           </div>
                           <div>
-                            <p className={`font-medium text-sm ${getSourceTextColor(message.type)}`}>
-                              {message.source}
+                            <p className={`font-medium text-sm ${getSourceTextColor(message.news_type)}`}>
+                              {message.formation}
                             </p>
-                            <p className="text-xs text-gray-400">{message.sender}</p>
+                            <p className="text-xs text-gray-400">{message.source}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Badge className={`text-xs border ${getPriorityColor(message.priority)}`}>
-                            {message.priority === 'critical' ? 'קריטי' : 
-                             message.priority === 'urgent' ? 'דחוף' :
-                             message.priority === 'high' ? 'גבוה' : 'בינוני'}
+                          <Badge className={`text-xs border ${getExceptionColor(message.exception_level)}`}>
+                            רמה {message.exception_level}
                           </Badge>
                           <Button
                             variant={isEvidenceSelected(message.id) ? "default" : "outline"}
@@ -155,6 +146,7 @@ const TextMessages = () => {
 
                       {/* Message Content */}
                       <div className="bg-black/30 rounded-lg p-3 border border-white/10">
+                        <h4 className="text-white font-medium text-sm mb-2 text-right">{message.title}</h4>
                         <p className="text-gray-100 leading-relaxed text-sm text-right">
                           {message.content}
                         </p>
@@ -163,7 +155,7 @@ const TextMessages = () => {
                       {/* Timestamp */}
                       <div className="flex items-center gap-1 mt-2 text-xs text-gray-400">
                         <Clock className="w-3 h-3" />
-                        <span>{message.timestamp}</span>
+                        <span>{message.production_date} {message.production_time}</span>
                       </div>
                     </CardContent>
                   </Card>

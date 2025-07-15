@@ -1,20 +1,5 @@
 import { useState, useEffect } from 'react';
-
-export interface Evidence {
-  id: string;
-  type: 'email' | 'text' | 'image' | 'video' | 'audio';
-  title: string;
-  source: string;
-  timestamp: string;
-  location?: string;
-  priority?: string;
-  content?: string;
-  caller?: string;
-  receiver?: string;
-  call_type?: string;
-  duration?: string;
-  url?: string;
-}
+import { Evidence } from '@/data/evidence-data';
 
 const STORAGE_KEY = 'selected-evidence';
 
