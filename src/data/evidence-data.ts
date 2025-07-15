@@ -72,7 +72,7 @@ export const textEvidence = [
     id: "msg_historical_001",
     source: "מחלקת חקירות",
     sender: "חוקר בכיר אילן רוז",
-    timestamp: "15.06, 09:30",
+    timestamp: "17.06, 00:30",
     
     priority: "medium",
     content: "נפתח תיק חקירה נגד יוסי כהן בעקבות תלונות על הפעלת לחץ ואיומים על בעלי עסקים באזור.",
@@ -82,7 +82,7 @@ export const textEvidence = [
     id: "msg_historical_002",
     source: "יחידת מעקב",
     sender: "סמל ראשון טל לוי",
-    timestamp: "15.06, 14:20",
+    timestamp: "17.06, 00:45",
     
     priority: "medium",
     content: "החל מעקב סמוי אחר יוסי כהן ושותפיו. זוהו 3 נקודות מפגש קבועות והרגלי תנועה.",
@@ -92,7 +92,7 @@ export const textEvidence = [
     id: "msg_historical_003",
     source: "מוקד תלונות הציבור",
     sender: "קצינת תורנית",
-    timestamp: "16.06, 11:45",
+    timestamp: "17.06, 01:15",
     
     priority: "high",
     content: "התקבלה תלונה נוספת מדני לוי על החמרה באיומים. המתלונן דיווח על מעקב חשוד אחריו.",
@@ -102,7 +102,7 @@ export const textEvidence = [
     id: "msg_historical_004",
     source: "מודיעין פלילי",
     sender: "ניצב משנה שרון אבנר",
-    timestamp: "16.06, 16:10",
+    timestamp: "17.06, 01:30",
     
     priority: "high",
     content: "מידע מהימן מצביע על תכנון פעילות איומים מוגברת לקראת סוף השבוע. יש להעלות כוננות.",
@@ -112,7 +112,7 @@ export const textEvidence = [
     id: "msg_historical_005",
     source: "מחלקת טכנולוגיות",
     sender: "רס״ן עמית כהן",
-    timestamp: "16.06, 20:30",
+    timestamp: "17.06, 01:45",
     
     priority: "medium",
     content: "הושלמה התקנת מערכת האזנה מאושרת על קו הטלפון של יוסי כהן. המערכת פעילה ומתעדת.",
@@ -187,7 +187,7 @@ export const visualEvidence = [
     type: "image",
     title: "תמונת זיהוי - יוסי כהן",
     location: "דרך בן גוריון, תל-אביב",
-    timestamp: "15.06, 08:20",
+    timestamp: "17.06, 00:20",
     
     priority: "medium",
     source: "מצלמת מעקב עירונית",
@@ -199,7 +199,7 @@ export const visualEvidence = [
     type: "video",
     title: "סרטון מעקב - ישיבה חשודה",
     location: "בית קפה קפריסין, תל-אביב",
-    timestamp: "15.06, 14:45",
+    timestamp: "17.06, 00:45",
     
     priority: "medium",
     source: "מצלמת אבטחה פרטית",
@@ -212,7 +212,7 @@ export const visualEvidence = [
     type: "audio",
     title: "הקלטת שיחה - תכנון ראשוני",
     location: "מעקב טלפוני",
-    timestamp: "16.06, 19:30",
+    timestamp: "17.06, 01:30",
     
     priority: "high",
     source: "מעקב משטרתי מאושר",

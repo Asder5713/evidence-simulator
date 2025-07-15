@@ -23,10 +23,10 @@ const getTypeIcon = (type: string) => {
 
 const getPriorityColor = (priority: string) => {
   switch (priority) {
-    case "critical": return "bg-red-100 text-red-800 border-red-300";
-    case "high": return "bg-orange-100 text-orange-800 border-orange-300";
-    case "medium": return "bg-blue-100 text-blue-800 border-blue-300";
-    default: return "bg-gray-100 text-gray-800 border-gray-300";
+    case "critical": return "bg-red-500/20 text-red-300 border-red-500/30";
+    case "high": return "bg-orange-500/20 text-orange-300 border-orange-500/30";
+    case "medium": return "bg-blue-500/20 text-blue-300 border-blue-500/30";
+    default: return "bg-gray-500/20 text-gray-300 border-gray-500/30";
   }
 };
 
@@ -43,16 +43,16 @@ export const EvidenceModal = ({ evidence, isOpen, onClose, onAddEvidence, isEvid
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-gray-900 border-gray-700">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <TypeIcon className="w-6 h-6 text-blue-600" />
+              <div className="p-2 bg-blue-500/20 rounded-lg border border-blue-400/30">
+                <TypeIcon className="w-6 h-6 text-blue-400" />
               </div>
               <div>
-                <DialogTitle className="text-xl text-right">{evidence.title}</DialogTitle>
-                <p className="text-sm text-gray-600">{evidence.source}</p>
+                <DialogTitle className="text-xl text-right text-white">{evidence.title}</DialogTitle>
+                <p className="text-sm text-gray-300">{evidence.source}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -90,16 +90,16 @@ export const EvidenceModal = ({ evidence, isOpen, onClose, onAddEvidence, isEvid
           {/* Evidence Details */}
           <div className="space-y-3 text-sm">
             <div className="flex items-center gap-2 text-right">
-              <MapPin className="w-4 h-4 text-gray-500" />
-              <span className="text-gray-700">{evidence.location}</span>
+              <MapPin className="w-4 h-4 text-gray-400" />
+              <span className="text-gray-300">{evidence.location}</span>
             </div>
             <div className="flex items-center gap-2 text-right">
-              <Clock className="w-4 h-4 text-gray-500" />
-              <span className="text-gray-700">{evidence.timestamp}</span>
+              <Clock className="w-4 h-4 text-gray-400" />
+              <span className="text-gray-300">{evidence.timestamp}</span>
               {evidence.duration && (
                 <>
                   <span className="text-gray-500">•</span>
-                  <span className="text-gray-700">משך: {evidence.duration}</span>
+                  <span className="text-gray-300">משך: {evidence.duration}</span>
                 </>
               )}
             </div>
@@ -111,7 +111,7 @@ export const EvidenceModal = ({ evidence, isOpen, onClose, onAddEvidence, isEvid
               <img 
                 src={evidence.url} 
                 alt={evidence.title}
-                className="w-full max-h-96 object-contain rounded-lg border border-gray-200"
+                className="w-full max-h-96 object-contain rounded-lg border border-gray-700"
               />
             </div>
           )}
@@ -121,7 +121,7 @@ export const EvidenceModal = ({ evidence, isOpen, onClose, onAddEvidence, isEvid
               <img 
                 src={evidence.url} 
                 alt={evidence.title}
-                className="w-full max-h-96 object-contain rounded-lg border border-gray-200"
+                className="w-full max-h-96 object-contain rounded-lg border border-gray-700"
               />
               <div className="absolute inset-0 bg-black/40 rounded-lg flex items-center justify-center">
                 <Button size="lg" className="gap-2">
@@ -133,7 +133,7 @@ export const EvidenceModal = ({ evidence, isOpen, onClose, onAddEvidence, isEvid
           )}
 
           {evidence.type === "audio" && (
-            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+            <div className="bg-gray-800/50 rounded-lg p-6 border border-gray-700">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <Button
@@ -144,7 +144,7 @@ export const EvidenceModal = ({ evidence, isOpen, onClose, onAddEvidence, isEvid
                     {playingAudio ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
                     {playingAudio ? 'עצור' : 'נגן'}
                   </Button>
-                  <span className="text-gray-700">הקלטת אודיו</span>
+                  <span className="text-gray-300">הקלטת אודיו</span>
                 </div>
                 <Button variant="outline" size="sm">
                   <Download className="w-4 h-4" />
@@ -153,20 +153,20 @@ export const EvidenceModal = ({ evidence, isOpen, onClose, onAddEvidence, isEvid
               
               {/* Call Details */}
               {evidence.caller && evidence.receiver && (
-                <div className="flex items-center gap-4 text-sm text-gray-600">
+                <div className="flex items-center gap-4 text-sm text-gray-300">
                   <div className="flex items-center gap-2">
-                    <span className="text-gray-500">מ:</span>
+                    <span className="text-gray-400">מ:</span>
                     <span>{evidence.caller}</span>
                   </div>
-                  <span className="text-gray-400">→</span>
+                  <span className="text-gray-500">→</span>
                   <div className="flex items-center gap-2">
-                    <span className="text-gray-500">אל:</span>
+                    <span className="text-gray-400">אל:</span>
                     <span>{evidence.receiver}</span>
                   </div>
                   <Badge className={`text-xs ${
-                    evidence.call_type === 'outgoing' ? 'bg-green-100 text-green-800 border-green-300' :
-                    evidence.call_type === 'incoming' ? 'bg-blue-100 text-blue-800 border-blue-300' :
-                    'bg-purple-100 text-purple-800 border-purple-300'
+                    evidence.call_type === 'outgoing' ? 'bg-green-500/20 text-green-300 border-green-500/30' :
+                    evidence.call_type === 'incoming' ? 'bg-blue-500/20 text-blue-300 border-blue-500/30' :
+                    'bg-purple-500/20 text-purple-300 border-purple-500/30'
                   }`}>
                     {evidence.call_type === 'outgoing' ? 'יוצאת' : 
                      evidence.call_type === 'incoming' ? 'נכנסת' : 'חקירה'}
@@ -178,9 +178,9 @@ export const EvidenceModal = ({ evidence, isOpen, onClose, onAddEvidence, isEvid
 
           {/* Evidence Notes */}
           {evidence.evidence_notes && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <h4 className="font-medium text-yellow-800 mb-2 text-right">הערות חקירה:</h4>
-              <p className="text-yellow-700 text-sm text-right leading-relaxed">
+            <div className="bg-yellow-900/30 border border-yellow-700/50 rounded-lg p-4">
+              <h4 className="font-medium text-yellow-300 mb-2 text-right">הערות חקירה:</h4>
+              <p className="text-yellow-200 text-sm text-right leading-relaxed">
                 {evidence.evidence_notes}
               </p>
             </div>

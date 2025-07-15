@@ -22,35 +22,35 @@ const getSourceIcon = (type: string) => {
 
 const getSourceColor = (type: string) => {
   switch (type) {
-    case "intelligence": return "bg-blue-50 border-blue-200";
-    case "informant": return "bg-purple-50 border-purple-200";
-    case "dispatch": return "bg-red-50 border-red-200";
-    case "investigation": return "bg-amber-50 border-amber-200";
-    case "forensics": return "bg-green-50 border-green-200";
-    case "command": return "bg-cyan-50 border-cyan-200";
-    default: return "bg-gray-50 border-gray-200";
+    case "intelligence": return "bg-blue-900/20 border-blue-700/50";
+    case "informant": return "bg-purple-900/20 border-purple-700/50";
+    case "dispatch": return "bg-red-900/20 border-red-700/50";
+    case "investigation": return "bg-amber-900/20 border-amber-700/50";
+    case "forensics": return "bg-green-900/20 border-green-700/50";
+    case "command": return "bg-cyan-900/20 border-cyan-700/50";
+    default: return "bg-gray-900/20 border-gray-700/50";
   }
 };
 
 const getSourceTextColor = (type: string) => {
   switch (type) {
-    case "intelligence": return "text-blue-700";
-    case "informant": return "text-purple-700";
-    case "dispatch": return "text-red-700";
-    case "investigation": return "text-amber-700";
-    case "forensics": return "text-green-700";
-    case "command": return "text-cyan-700";
-    default: return "text-gray-700";
+    case "intelligence": return "text-blue-300";
+    case "informant": return "text-purple-300";
+    case "dispatch": return "text-red-300";
+    case "investigation": return "text-amber-300";
+    case "forensics": return "text-green-300";
+    case "command": return "text-cyan-300";
+    default: return "text-gray-300";
   }
 };
 
 const getPriorityColor = (priority: string) => {
   switch (priority) {
-    case "critical": return "bg-red-100 text-red-800 border-red-300";
-    case "urgent": return "bg-orange-100 text-orange-800 border-orange-300";
-    case "high": return "bg-yellow-100 text-yellow-800 border-yellow-300";
-    case "medium": return "bg-blue-100 text-blue-800 border-blue-300";
-    default: return "bg-gray-100 text-gray-800 border-gray-300";
+    case "critical": return "bg-red-500/20 text-red-300 border-red-500/30";
+    case "urgent": return "bg-orange-500/20 text-orange-300 border-orange-500/30";
+    case "high": return "bg-yellow-500/20 text-yellow-300 border-yellow-500/30";
+    case "medium": return "bg-blue-500/20 text-blue-300 border-blue-500/30";
+    default: return "bg-gray-500/20 text-gray-300 border-gray-500/30";
   }
 };
 
@@ -82,16 +82,16 @@ const TextMessages = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-black">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 p-4 shadow-sm">
+      <div className="bg-gradient-to-r from-gray-800/90 to-slate-800/90 border-b border-gray-700/50 p-4 shadow-lg backdrop-blur-sm">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-100 rounded-lg">
-            <MessageSquare className="w-6 h-6 text-blue-600" />
+          <div className="p-2 bg-cyan-500/20 rounded-lg border border-cyan-400/30">
+            <MessageSquare className="w-6 h-6 text-cyan-400" />
           </div>
           <div>
-            <h1 className="text-xl font-semibold text-gray-900">ראיות טקסטואליות</h1>
-            <p className="text-sm text-gray-600">תקשורת מבצעית - חקירה פלילית</p>
+            <h1 className="text-xl font-semibold text-white">ראיות טקסטואליות</h1>
+            <p className="text-sm text-gray-300">תקשורת מבצעית - חקירה פלילית</p>
           </div>
         </div>
       </div>
@@ -110,7 +110,7 @@ const TextMessages = () => {
                   className={`flex ${index % 2 === 0 ? 'justify-end' : 'justify-start'} animate-fade-in`}
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <Card className={`max-w-[80%] ${getSourceColor(message.type)} shadow-sm hover:shadow-md transition-all duration-200 ${isHistorical ? 'opacity-75' : ''}`}>
+                  <Card className={`max-w-[80%] ${getSourceColor(message.type)} shadow-lg hover:shadow-xl transition-all duration-200 backdrop-blur-sm ${isHistorical ? 'opacity-80' : ''}`}>
                     <CardContent className="p-4">
                       {/* Message Header */}
                       <div className="flex items-center justify-between mb-3">
@@ -122,7 +122,7 @@ const TextMessages = () => {
                             <p className={`font-medium text-sm ${getSourceTextColor(message.type)}`}>
                               {message.source}
                             </p>
-                            <p className="text-xs text-gray-500">{message.sender}</p>
+                            <p className="text-xs text-gray-400">{message.sender}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
@@ -154,14 +154,14 @@ const TextMessages = () => {
                       </div>
 
                       {/* Message Content */}
-                      <div className="bg-white/80 rounded-lg p-3 border border-white/50">
-                        <p className="text-gray-800 leading-relaxed text-sm text-right">
+                      <div className="bg-black/30 rounded-lg p-3 border border-white/10">
+                        <p className="text-gray-100 leading-relaxed text-sm text-right">
                           {message.content}
                         </p>
                       </div>
 
                       {/* Timestamp */}
-                      <div className="flex items-center gap-1 mt-2 text-xs text-gray-500">
+                      <div className="flex items-center gap-1 mt-2 text-xs text-gray-400">
                         <Clock className="w-3 h-3" />
                         <span>{message.timestamp}</span>
                       </div>
@@ -170,7 +170,7 @@ const TextMessages = () => {
                 </div>
               );
             }) : (
-              <div className="flex items-center justify-center h-64 text-gray-500">
+              <div className="flex items-center justify-center h-64 text-gray-400">
                 <p>אין הודעות זמינות עדיין</p>
               </div>
             )}
