@@ -35,6 +35,9 @@ export const useNotifications = () => {
   useEffect(() => {
     if (!isGameStarted) return;
 
+    // Clear notifications on game start to prevent old notifications
+    notifiedItems.current.clear();
+
     const checkForNewEvidence = () => {
       evidence.forEach(item => {
         if (

@@ -8,6 +8,7 @@ import { Mail, Search, AlertCircle, Clock, Paperclip, Star, Archive, Trash2, Rep
 import { useEvidence } from "@/hooks/use-evidence";
 import { evidence } from "@/data/evidence-data";
 import { useGameContext } from "@/contexts/GameContext";
+import { GlossaryEnhancer } from "@/components/GlossaryEnhancer";
 
 const Emails = () => {
   const { isTimeReached, isGameStarted, markPageAsVisited } = useGameContext();
@@ -62,6 +63,8 @@ const Emails = () => {
       <div className="flex h-screen">
         {/* Email List */}
         <div className="flex-1 flex">
+          {visibleEmails.length > 0 ? (
+          <>
           <div className="w-1/2 border-r border-slate-700">
             <ScrollArea className="h-full">
               <div className="p-4 space-y-2">
@@ -181,7 +184,11 @@ const Emails = () => {
                   </div>
                   <div className="flex items-center gap-2">
                     <Clock className="w-3 h-3 text-slate-400" />
-                    <span className="text-slate-400">{selectedEmail.production_date} {selectedEmail.production_time}</span>
+                    <span className="text-slate-400">תאריך ייצור: {selectedEmail.production_date} {selectedEmail.production_time}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-3 h-3 text-blue-400" />
+                    <span className="text-slate-400">תאריך המקרה: {selectedEmail.incident_date} {selectedEmail.incident_time}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-slate-400">רמת חריגות:</span>
@@ -204,9 +211,9 @@ const Emails = () => {
               
               <CardContent className="p-6">
                 <div className="bg-slate-900/60 border border-slate-600/30 rounded-lg p-4">
-                  <pre className="text-slate-300 text-sm whitespace-pre-wrap font-sans leading-relaxed">
-                    {selectedEmail.content}
-                  </pre>
+                  <div className="text-slate-300 text-sm whitespace-pre-wrap font-sans leading-relaxed">
+                    <GlossaryEnhancer content={selectedEmail.content} />
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -216,6 +223,28 @@ const Emails = () => {
               </div>
             )}
           </div>
+          </>
+          ) : (
+            /* Empty State Design */
+            <div className="flex-1 flex items-center justify-center">
+              <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur-sm p-12 max-w-md">
+                <div className="text-center space-y-4">
+                  <div className="w-16 h-16 bg-slate-700/50 rounded-full flex items-center justify-center mx-auto">
+                    <Mail className="w-8 h-8 text-slate-400" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-200">אין אימיילים זמינים</h3>
+                  <p className="text-slate-400 leading-relaxed">
+                    טרם הגיעו אימיילים למערכת.<br />
+                    האימיילים יופיעו כאשר יגיע זמנם במהלך החקירה.
+                  </p>
+                  <div className="flex items-center justify-center gap-2 text-sm text-slate-500">
+                    <Clock className="w-4 h-4" />
+                    <span>ממתין לעדכונים...</span>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          )}
         </div>
       </div>
     </div>

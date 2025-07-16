@@ -7,6 +7,7 @@ import { useState, useMemo, useEffect } from "react";
 import { useEvidence } from "@/hooks/use-evidence";
 import { evidence } from "@/data/evidence-data";
 import { useGameContext } from "@/contexts/GameContext";
+import { GlossaryEnhancer } from "@/components/GlossaryEnhancer";
 
 const getSourceIcon = (news_type: string) => {
   switch (news_type) {
@@ -159,10 +160,12 @@ const TextMessages = () => {
 
                       {/* Message Content */}
                       <div className="bg-black/30 rounded-lg p-3 border border-white/10">
-                        <h4 className="text-white font-medium text-sm mb-2 text-right">{message.title}</h4>
-                        <p className="text-gray-100 leading-relaxed text-sm text-right">
-                          {message.content}
-                        </p>
+                        <h4 className="text-white font-medium text-sm mb-2 text-right">
+                          <GlossaryEnhancer content={message.title} />
+                        </h4>
+                        <div className="text-gray-100 leading-relaxed text-sm text-right">
+                          <GlossaryEnhancer content={message.content} />
+                        </div>
                         {message.comments && (
                           <div className="mt-2 pt-2 border-t border-gray-600/30">
                             <span className="text-gray-400 text-xs">הערה:</span>
