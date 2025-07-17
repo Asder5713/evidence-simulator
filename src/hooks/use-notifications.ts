@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useGameContext } from '@/contexts/GameContext';
 import { evidence } from '@/data/evidence-data';
 import { useToast } from '@/hooks/use-toast';
@@ -46,15 +46,15 @@ export const useNotifications = () => {
         ) {
           notifiedItems.current.add(item.id);
           
-          const handleClick = () => {
+          const handleNavigate = () => {
             navigate(getPageRoute(item.news_type));
           };
 
           toast({
             title: `${getTypeLabel(item.news_type)} חדש`,
-            description: item.title,
+            description: `${item.title} - לחץ לצפייה`,
             duration: 10000,
-            onClick: handleClick,
+            onClick: handleNavigate,
             className: "cursor-pointer hover:bg-accent/50 transition-colors"
           });
         }

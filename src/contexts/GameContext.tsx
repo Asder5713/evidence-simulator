@@ -50,6 +50,14 @@ export function GameProvider({ children }: GameProviderProps) {
     gameState.endGame();
   };
 
+  // Reset visited pages when game starts to reset unseen counts
+  useEffect(() => {
+    if (gameState.isGameStarted) {
+      setVisitedPages(new Set());
+      setPageVisitTimes({});
+    }
+  }, [gameState.isGameStarted]);
+
   // Calculate unseen counts based on time-reached evidence and visited pages
   const unseenCounts = useMemo(() => {
     if (!gameState.isGameStarted) {
