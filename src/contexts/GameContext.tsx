@@ -33,6 +33,11 @@ export function GameProvider({ children }: GameProviderProps) {
     return saved ? JSON.parse(saved) : {};
   });
 
+  const [savedUnseenCounts, setSavedUnseenCounts] = useState<{emails: number, texts: number, visual: number}>(() => {
+    const saved = localStorage.getItem('game-unseen-counts');
+    return saved ? JSON.parse(saved) : { emails: 0, texts: 0, visual: 0 };
+  });
+
   const markPageAsVisited = (page: 'emails' | 'texts' | 'visual') => {
     console.log('Marking page as visited:', page);
     setVisitedPages(prev => {
@@ -58,25 +63,29 @@ export function GameProvider({ children }: GameProviderProps) {
   const resetGame = () => {
     setVisitedPages(new Set());
     setPageVisitTimes({});
+    setSavedUnseenCounts({ emails: 0, texts: 0, visual: 0 });
     localStorage.removeItem('game-visited-pages');
     localStorage.removeItem('game-page-visit-times');
+    localStorage.removeItem('game-unseen-counts');
     gameState.endGame();
   };
 
-  // Reset visited pages when game starts to reset unseen counts
+  // Reset visited pages and unseen counts when game starts to reset unseen counts
   useEffect(() => {
     if (gameState.isGameStarted) {
       setVisitedPages(new Set());
       setPageVisitTimes({});
+      setSavedUnseenCounts({ emails: 0, texts: 0, visual: 0 });
       localStorage.removeItem('game-visited-pages');
       localStorage.removeItem('game-page-visit-times');
+      localStorage.removeItem('game-unseen-counts');
     }
   }, [gameState.isGameStarted]);
 
   // Calculate unseen counts based on time-reached evidence and visited pages
   const unseenCounts = useMemo(() => {
     if (!gameState.isGameStarted) {
-      return { emails: 0, texts: 0, visual: 0 };
+      return savedUnseenCounts;
     }
 
     const visibleEmails = evidence.filter(item => 
@@ -122,6 +131,10 @@ export function GameProvider({ children }: GameProviderProps) {
     console.log('Page visit times:', pageVisitTimes);
     console.log('Unseen counts:', counts);
     console.log('Current game time minutes:', gameState.gameTime.hours * 60 + gameState.gameTime.minutes);
+
+    // Save counts to localStorage
+    setSavedUnseenCounts(counts);
+    localStorage.setItem('game-unseen-counts', JSON.stringify(counts));
 
     return counts;
   }, [gameState.isGameStarted, gameState.gameTime, visitedPages, pageVisitTimes]);
