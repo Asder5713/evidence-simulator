@@ -51,10 +51,20 @@ export const useNotifications = () => {
           console.log('Showing notification for:', item.id, item.title);
           notifiedItems.current.add(item.id);
           
+          const handleClick = () => {
+            navigate(getPageRoute(item.news_type));
+          };
+
+          const toastElement = document.createElement('div');
+          toastElement.style.cursor = 'pointer';
+          toastElement.onclick = handleClick;
+          
           toast({
             title: `${getTypeLabel(item.news_type)} חדש`,
-            description: `${item.title} - לחץ על ההתראה לצפייה`,
-            duration: 5000
+            description: `${item.title} - לחץ לניווט`,
+            duration: 8000,
+            onClick: handleClick,
+            className: "cursor-pointer hover:bg-accent/80 transition-colors"
           });
         }
       });
