@@ -39,18 +39,18 @@ export const useNotifications = () => {
     // Clear notifications on game start to prevent old notifications
     notifiedItems.current.clear();
 
+    console.log('Setting up notifications effect');
+
     const checkForNewEvidence = () => {
+      console.log('Checking for new evidence, notified items:', notifiedItems.current.size);
       evidence.forEach(item => {
-        if (
-          isTimeReached(`${item.production_date} ${item.production_time}`) &&
-          !notifiedItems.current.has(item.id)
-        ) {
+        const timeReached = isTimeReached(`${item.production_date} ${item.production_time}`);
+        const alreadyNotified = notifiedItems.current.has(item.id);
+        
+        if (timeReached && !alreadyNotified) {
+          console.log('Showing notification for:', item.id, item.title);
           notifiedItems.current.add(item.id);
           
-          const handleNavigate = () => {
-            navigate(getPageRoute(item.news_type));
-          };
-
           toast({
             title: `${getTypeLabel(item.news_type)} חדש`,
             description: `${item.title} - לחץ על ההתראה לצפייה`,
@@ -64,6 +64,9 @@ export const useNotifications = () => {
     checkForNewEvidence();
     const interval = setInterval(checkForNewEvidence, 30000);
 
-    return () => clearInterval(interval);
-  }, [isGameStarted, isTimeReached, toast, navigate]);
+    return () => {
+      console.log('Cleaning up notifications effect');
+      clearInterval(interval);
+    };
+  }, [isGameStarted]); // Removed dependencies that change frequently
 };
