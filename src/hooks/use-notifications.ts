@@ -34,31 +34,44 @@ export const useNotifications = () => {
   };
 
   useEffect(() => {
-    if (!isGameStarted) return;
+    console.log('Notifications effect triggered. Game started:', isGameStarted);
+    if (!isGameStarted) {
+      console.log('Game not started, returning early');
+      return;
+    }
 
     // Clear notifications on game start to prevent old notifications
     notifiedItems.current.clear();
-
-    console.log('Setting up notifications effect');
+    console.log('Cleared notified items on game start');
 
     const checkForNewEvidence = () => {
-      console.log('Checking for new evidence, notified items:', notifiedItems.current.size);
+      console.log('=== Checking for new evidence ===');
+      console.log('Current notified items count:', notifiedItems.current.size);
+      console.log('Current notified items:', Array.from(notifiedItems.current));
+      
+      let newEvidenceFound = 0;
+      
       evidence.forEach(item => {
         const timeReached = isTimeReached(`${item.production_date} ${item.production_time}`);
         const alreadyNotified = notifiedItems.current.has(item.id);
         
+        console.log(`Evidence ${item.id}:`, {
+          title: item.title,
+          time: `${item.production_date} ${item.production_time}`,
+          timeReached,
+          alreadyNotified
+        });
+        
         if (timeReached && !alreadyNotified) {
-          console.log('Showing notification for:', item.id, item.title);
+          console.log('🚨 SHOWING NOTIFICATION FOR:', item.id, item.title);
           notifiedItems.current.add(item.id);
+          newEvidenceFound++;
           
           const handleClick = () => {
+            console.log('Toast clicked, navigating to:', getPageRoute(item.news_type));
             navigate(getPageRoute(item.news_type));
           };
 
-          const toastElement = document.createElement('div');
-          toastElement.style.cursor = 'pointer';
-          toastElement.onclick = handleClick;
-          
           toast({
             title: `${getTypeLabel(item.news_type)} חדש`,
             description: `${item.title} - לחץ לניווט`,
@@ -68,11 +81,15 @@ export const useNotifications = () => {
           });
         }
       });
+      
+      console.log(`Found ${newEvidenceFound} new evidence items`);
+      console.log('Updated notified items count:', notifiedItems.current.size);
     };
 
-    // Check immediately and then every 30 seconds
+    // Check immediately and then every 10 seconds for more frequent updates
+    console.log('Starting evidence checking...');
     checkForNewEvidence();
-    const interval = setInterval(checkForNewEvidence, 30000);
+    const interval = setInterval(checkForNewEvidence, 10000);
 
     return () => {
       console.log('Cleaning up notifications effect');
