@@ -3,6 +3,7 @@ import { useGameContext } from '@/contexts/GameContext';
 import { evidence } from '@/data/evidence-data';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
+import { ToastAction } from '@/components/ui/toast';
 
 export const useNotifications = () => {
   const { isGameStarted, isTimeReached } = useGameContext();
@@ -52,10 +53,8 @@ export const useNotifications = () => {
 
           toast({
             title: `${getTypeLabel(item.news_type)} חדש`,
-            description: `${item.title} - לחץ לצפייה`,
-            duration: 10000,
-            onClick: handleNavigate,
-            className: "cursor-pointer hover:bg-accent/50 transition-colors"
+            description: `${item.title} - לחץ על ההתראה לצפייה`,
+            duration: 5000
           });
         }
       });

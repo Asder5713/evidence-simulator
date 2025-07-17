@@ -24,29 +24,42 @@ interface GameProviderProps {
 
 export function GameProvider({ children }: GameProviderProps) {
   const gameState = useGameTime();
-  const [visitedPages, setVisitedPages] = useState<Set<string>>(new Set());
-  const [pageVisitTimes, setPageVisitTimes] = useState<Record<string, number>>({}); // Track visit time in game minutes
+  const [visitedPages, setVisitedPages] = useState<Set<string>>(() => {
+    const saved = localStorage.getItem('game-visited-pages');
+    return saved ? new Set(JSON.parse(saved)) : new Set();
+  });
+  const [pageVisitTimes, setPageVisitTimes] = useState<Record<string, number>>(() => {
+    const saved = localStorage.getItem('game-page-visit-times');
+    return saved ? JSON.parse(saved) : {};
+  });
 
   const markPageAsVisited = (page: 'emails' | 'texts' | 'visual') => {
     console.log('Marking page as visited:', page);
     setVisitedPages(prev => {
       const newSet = new Set([...prev, page]);
       console.log('Updated visited pages:', Array.from(newSet));
+      localStorage.setItem('game-visited-pages', JSON.stringify(Array.from(newSet)));
       return newSet;
     });
     
     // Track the current game time when page was visited
     const currentGameMinutes = gameState.gameTime.hours * 60 + gameState.gameTime.minutes;
-    setPageVisitTimes(prev => ({
-      ...prev,
-      [page]: currentGameMinutes
-    }));
+    setPageVisitTimes(prev => {
+      const newTimes = {
+        ...prev,
+        [page]: currentGameMinutes
+      };
+      localStorage.setItem('game-page-visit-times', JSON.stringify(newTimes));
+      return newTimes;
+    });
     console.log('Page visit time for', page, ':', currentGameMinutes);
   };
 
   const resetGame = () => {
     setVisitedPages(new Set());
     setPageVisitTimes({});
+    localStorage.removeItem('game-visited-pages');
+    localStorage.removeItem('game-page-visit-times');
     gameState.endGame();
   };
 
@@ -55,6 +68,8 @@ export function GameProvider({ children }: GameProviderProps) {
     if (gameState.isGameStarted) {
       setVisitedPages(new Set());
       setPageVisitTimes({});
+      localStorage.removeItem('game-visited-pages');
+      localStorage.removeItem('game-page-visit-times');
     }
   }, [gameState.isGameStarted]);
 
