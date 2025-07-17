@@ -1,9 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useGameContext } from '@/contexts/GameContext';
 import { evidence } from '@/data/evidence-data';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
-import { ToastAction } from '@/components/ui/toast';
 
 export const useNotifications = () => {
   const { isGameStarted, isTimeReached } = useGameContext();
@@ -34,66 +33,35 @@ export const useNotifications = () => {
   };
 
   useEffect(() => {
-    console.log('Notifications effect triggered. Game started:', isGameStarted);
-    if (!isGameStarted) {
-      console.log('Game not started, returning early');
-      return;
-    }
-
-    // Clear notifications on game start to prevent old notifications
-    notifiedItems.current.clear();
-    console.log('Cleared notified items on game start');
+    if (!isGameStarted) return;
 
     const checkForNewEvidence = () => {
-      console.log('=== Checking for new evidence ===');
-      console.log('Current notified items count:', notifiedItems.current.size);
-      console.log('Current notified items:', Array.from(notifiedItems.current));
-      
-      let newEvidenceFound = 0;
-      
       evidence.forEach(item => {
-        const timeReached = isTimeReached(`${item.production_date} ${item.production_time}`);
-        const alreadyNotified = notifiedItems.current.has(item.id);
-        
-        console.log(`Evidence ${item.id}:`, {
-          title: item.title,
-          time: `${item.production_date} ${item.production_time}`,
-          timeReached,
-          alreadyNotified
-        });
-        
-        if (timeReached && !alreadyNotified) {
-          console.log('🚨 SHOWING NOTIFICATION FOR:', item.id, item.title);
+        if (
+          isTimeReached(`${item.production_date} ${item.production_time}`) &&
+          !notifiedItems.current.has(item.id)
+        ) {
           notifiedItems.current.add(item.id);
-          newEvidenceFound++;
           
           const handleClick = () => {
-            console.log('Toast clicked, navigating to:', getPageRoute(item.news_type));
             navigate(getPageRoute(item.news_type));
           };
 
           toast({
             title: `${getTypeLabel(item.news_type)} חדש`,
-            description: `${item.title} - לחץ לניווט`,
-            duration: 8000,
+            description: item.title,
+            duration: 10000,
             onClick: handleClick,
-            className: "cursor-pointer hover:bg-accent/80 transition-colors"
+            className: "cursor-pointer hover:bg-accent/50 transition-colors"
           });
         }
       });
-      
-      console.log(`Found ${newEvidenceFound} new evidence items`);
-      console.log('Updated notified items count:', notifiedItems.current.size);
     };
 
-    // Check immediately and then every 10 seconds for more frequent updates
-    console.log('Starting evidence checking...');
+    // Check immediately and then every 30 seconds
     checkForNewEvidence();
-    const interval = setInterval(checkForNewEvidence, 10000);
+    const interval = setInterval(checkForNewEvidence, 30000);
 
-    return () => {
-      console.log('Cleaning up notifications effect');
-      clearInterval(interval);
-    };
-  }, [isGameStarted]); // Removed dependencies that change frequently
+    return () => clearInterval(interval);
+  }, [isGameStarted, isTimeReached, toast, navigate]);
 };

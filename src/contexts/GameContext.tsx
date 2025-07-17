@@ -24,68 +24,36 @@ interface GameProviderProps {
 
 export function GameProvider({ children }: GameProviderProps) {
   const gameState = useGameTime();
-  const [visitedPages, setVisitedPages] = useState<Set<string>>(() => {
-    const saved = localStorage.getItem('game-visited-pages');
-    return saved ? new Set(JSON.parse(saved)) : new Set();
-  });
-  const [pageVisitTimes, setPageVisitTimes] = useState<Record<string, number>>(() => {
-    const saved = localStorage.getItem('game-page-visit-times');
-    return saved ? JSON.parse(saved) : {};
-  });
-
-  const [savedUnseenCounts, setSavedUnseenCounts] = useState<{emails: number, texts: number, visual: number}>(() => {
-    const saved = localStorage.getItem('game-unseen-counts');
-    return saved ? JSON.parse(saved) : { emails: 0, texts: 0, visual: 0 };
-  });
+  const [visitedPages, setVisitedPages] = useState<Set<string>>(new Set());
+  const [pageVisitTimes, setPageVisitTimes] = useState<Record<string, number>>({}); // Track visit time in game minutes
 
   const markPageAsVisited = (page: 'emails' | 'texts' | 'visual') => {
     console.log('Marking page as visited:', page);
     setVisitedPages(prev => {
       const newSet = new Set([...prev, page]);
       console.log('Updated visited pages:', Array.from(newSet));
-      localStorage.setItem('game-visited-pages', JSON.stringify(Array.from(newSet)));
       return newSet;
     });
     
     // Track the current game time when page was visited
     const currentGameMinutes = gameState.gameTime.hours * 60 + gameState.gameTime.minutes;
-    setPageVisitTimes(prev => {
-      const newTimes = {
-        ...prev,
-        [page]: currentGameMinutes
-      };
-      localStorage.setItem('game-page-visit-times', JSON.stringify(newTimes));
-      return newTimes;
-    });
+    setPageVisitTimes(prev => ({
+      ...prev,
+      [page]: currentGameMinutes
+    }));
     console.log('Page visit time for', page, ':', currentGameMinutes);
   };
 
   const resetGame = () => {
     setVisitedPages(new Set());
     setPageVisitTimes({});
-    setSavedUnseenCounts({ emails: 0, texts: 0, visual: 0 });
-    localStorage.removeItem('game-visited-pages');
-    localStorage.removeItem('game-page-visit-times');
-    localStorage.removeItem('game-unseen-counts');
     gameState.endGame();
   };
-
-  // Reset visited pages and unseen counts when game starts to reset unseen counts
-  useEffect(() => {
-    if (gameState.isGameStarted) {
-      setVisitedPages(new Set());
-      setPageVisitTimes({});
-      setSavedUnseenCounts({ emails: 0, texts: 0, visual: 0 });
-      localStorage.removeItem('game-visited-pages');
-      localStorage.removeItem('game-page-visit-times');
-      localStorage.removeItem('game-unseen-counts');
-    }
-  }, [gameState.isGameStarted]);
 
   // Calculate unseen counts based on time-reached evidence and visited pages
   const unseenCounts = useMemo(() => {
     if (!gameState.isGameStarted) {
-      return savedUnseenCounts;
+      return { emails: 0, texts: 0, visual: 0 };
     }
 
     const visibleEmails = evidence.filter(item => 
@@ -131,10 +99,6 @@ export function GameProvider({ children }: GameProviderProps) {
     console.log('Page visit times:', pageVisitTimes);
     console.log('Unseen counts:', counts);
     console.log('Current game time minutes:', gameState.gameTime.hours * 60 + gameState.gameTime.minutes);
-
-    // Save counts to localStorage
-    setSavedUnseenCounts(counts);
-    localStorage.setItem('game-unseen-counts', JSON.stringify(counts));
 
     return counts;
   }, [gameState.isGameStarted, gameState.gameTime, visitedPages, pageVisitTimes]);

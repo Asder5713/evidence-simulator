@@ -313,14 +313,14 @@ const Overview = () => {
               </div>
 
               {/* Surveillance Unit */}
-              <div className="bg-gradient-to-br from-red-900/30 to-red-800/20 border border-red-700/30 rounded-xl p-5">
+              <div className="bg-gradient-to-br from-yellow-900/30 to-yellow-800/20 border border-yellow-700/30 rounded-xl p-5">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-red-900/60 rounded-lg flex items-center justify-center">
-                    <Camera className="w-5 h-5 text-red-300" />
+                  <div className="w-10 h-10 bg-yellow-900/60 rounded-lg flex items-center justify-center">
+                    <Camera className="w-5 h-5 text-yellow-300" />
                   </div>
                   <div>
-                    <h3 className="text-red-200 font-bold">יחידת המעקב</h3>
-                    <div className="flex items-center gap-2 text-xs text-red-400">
+                    <h3 className="text-yellow-200 font-bold">יחידת המעקבים</h3>
+                    <div className="flex items-center gap-2 text-xs text-yellow-400">
                       <Clock className="w-3 h-3" />
                       <span>עודכן: 16.1.2024, 11:20</span>
                     </div>
@@ -328,118 +328,15 @@ const Overview = () => {
                 </div>
                 <ScrollArea className="h-32">
                   <p className="text-slate-300 text-sm leading-relaxed">
-                    "מעקב פיזי מתמשך מגלה שהארגון משתמש בנקודות מפגש קבועות ובלוחות זמנים מדויקים. 
-                    זוהו דפוסי תנועה ברורים בין חברי הארגון ונקודות חלוקת סמים. הארגון מגלה יכולת 
-                    זיהוי מעקב ומשנה שגרות בהתאם. יש צורך במעקב רחוק יותר ובשימוש בטכנולוגיות חבויות."
+                    "חברי הארגון מפגינים מודעות גבוהה לנוכחות כוחות הביטחון ומשנים מסלולי תנועה באופן תדיר. 
+                    המפגשים מתקיימים במקומות ציבוריים צפופים או במתקנים פרטיים עם מערכות אבטחה מתקדמות. 
+                    זוהה שימוש ברכבים גנובים ובהחלפת לוחיות זיהוי. המעקב הפיזי מסובך עקב שימוש בטכניקות 
+                    נגד-מעקב מקצועיות."
                   </p>
                 </ScrollArea>
                 <Badge className="mt-3 bg-yellow-900/60 text-yellow-200 border-yellow-700">
-                  מורכבות: גבוהה
+                  קושי מעקב: גבוה
                 </Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Main Action Points Section */}
-        <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur-sm">
-          <CardHeader className="bg-gradient-to-r from-red-900/60 to-red-800/40">
-            <CardTitle className="flex items-center gap-3 text-red-100">
-              <Target className="w-6 h-6" />
-              נקודות פעולה עיקריות - הנשרים השחורים
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              
-              <div className="bg-gradient-to-br from-red-900/40 to-red-800/20 border border-red-700/40 rounded-lg p-4">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 bg-red-900/60 rounded-lg flex items-center justify-center">
-                    <Globe className="w-4 h-4 text-red-300" />
-                  </div>
-                  <h4 className="text-red-200 font-bold text-sm">סחר בינלאומי</h4>
-                </div>
-                <ul className="text-slate-300 text-xs space-y-1">
-                  <li>• ייבוא קוקאין מקולומביה</li>
-                  <li>• משלוחים של 200-500 קג</li>
-                  <li>• דרך נמל אשדוד</li>
-                  <li>• קשרים עם קרטלים</li>
-                </ul>
-              </div>
-
-              <div className="bg-gradient-to-br from-orange-900/40 to-orange-800/20 border border-orange-700/40 rounded-lg p-4">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 bg-orange-900/60 rounded-lg flex items-center justify-center">
-                    <Building className="w-4 h-4 text-orange-300" />
-                  </div>
-                  <h4 className="text-orange-200 font-bold text-sm">ייצור מקומי</h4>
-                </div>
-                <ul className="text-slate-300 text-xs space-y-1">
-                  <li>• 4 מעבדות סמים סינתטיים</li>
-                  <li>• באזור התעשייה</li>
-                  <li>• ייצור אמפטמינים</li>
-                  <li>• הפצה ארצית</li>
-                </ul>
-              </div>
-
-              <div className="bg-gradient-to-br from-purple-900/40 to-purple-800/20 border border-purple-700/40 rounded-lg p-4">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 bg-purple-900/60 rounded-lg flex items-center justify-center">
-                    <Users className="w-4 h-4 text-purple-300" />
-                  </div>
-                  <h4 className="text-purple-200 font-bold text-sm">הימורים בלתי חוקיים</h4>
-                </div>
-                <ul className="text-slate-300 text-xs space-y-1">
-                  <li>• 12 אתרי הימורים פעילים</li>
-                  <li>• ברחבי הארץ</li>
-                  <li>• הימורי ספורט וקזינו</li>
-                  <li>• הלבנת הון</li>
-                </ul>
-              </div>
-
-              <div className="bg-gradient-to-br from-yellow-900/40 to-yellow-800/20 border border-yellow-700/40 rounded-lg p-4">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 bg-yellow-900/60 rounded-lg flex items-center justify-center">
-                    <Shield className="w-4 h-4 text-yellow-300" />
-                  </div>
-                  <h4 className="text-yellow-200 font-bold text-sm">כספי הגנה</h4>
-                </div>
-                <ul className="text-slate-300 text-xs space-y-1">
-                  <li>• 85 עסקים תחת הגנה</li>
-                  <li>• תל-אביב וחיפה</li>
-                  <li>• גביית כספים חודשית</li>
-                  <li>• איומים ואלימות</li>
-                </ul>
-              </div>
-
-              <div className="bg-gradient-to-br from-green-900/40 to-green-800/20 border border-green-700/40 rounded-lg p-4">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 bg-green-900/60 rounded-lg flex items-center justify-center">
-                    <Target className="w-4 h-4 text-green-300" />
-                  </div>
-                  <h4 className="text-green-200 font-bold text-sm">סחר בנשק</h4>
-                </div>
-                <ul className="text-slate-300 text-xs space-y-1">
-                  <li>• יבוא מגרוזיה ואוקראינה</li>
-                  <li>• כלי נשק מתקדמים</li>
-                  <li>• מכירה לארגונים אחרים</li>
-                  <li>• שוק השחור</li>
-                </ul>
-              </div>
-
-              <div className="bg-gradient-to-br from-blue-900/40 to-blue-800/20 border border-blue-700/40 rounded-lg p-4">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-8 h-8 bg-blue-900/60 rounded-lg flex items-center justify-center">
-                    <Phone className="w-4 h-4 text-blue-300" />
-                  </div>
-                  <h4 className="text-blue-200 font-bold text-sm">פעילות דיגיטלית</h4>
-                </div>
-                <ul className="text-slate-300 text-xs space-y-1">
-                  <li>• תא סייבר מיוחד</li>
-                  <li>• הצפנות מתקדמות</li>
-                  <li>• הלבנת הון דיגיטלית</li>
-                  <li>• VPN ואנונימיות</li>
-                </ul>
               </div>
 
             </div>
