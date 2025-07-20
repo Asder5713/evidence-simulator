@@ -34,7 +34,7 @@ const Emails = () => {
     );
   }, [isGameStarted, isTimeReached]);
 
-  const [selectedEmail, setSelectedEmail] = useState(visibleEmails[0] || evidence.find(e => e.news_type === 'email'));
+  const [selectedEmail, setSelectedEmail] = useState(null);
 
   const handleEmailClick = (email: any) => {
     setSelectedEmail(email);
@@ -68,9 +68,9 @@ const Emails = () => {
                 {visibleEmails.map(email => (
                   <Card 
                     key={email.id} 
-                    className={`border-slate-700 hover:bg-slate-700/50 cursor-pointer ${
-                      selectedEmail.id === email.id ? 'bg-slate-700/70 border-blue-500' : 'bg-slate-800/50'
-                    }`}
+                     className={`border-slate-700 hover:bg-slate-700/50 cursor-pointer ${
+                       selectedEmail?.id === email.id ? 'bg-slate-700/70 border-blue-500' : 'bg-slate-800/50'
+                     }`}
                     onClick={() => handleEmailClick(email)}
                   >
                     <CardContent className="p-4">
@@ -212,7 +212,7 @@ const Emails = () => {
             </Card>
             ) : (
               <div className="flex items-center justify-center h-full text-slate-400">
-                <p>אין אימיילים זמינים עדיין</p>
+                <p>בחר אימייל כדי לצפות בתוכן</p>
               </div>
             )}
           </div>
