@@ -20,8 +20,8 @@ export function VerticalThreatMeter({ suspiciousCount, calmingCount, totalEviden
   // בדיקה אם יש וודאות של 80% לאחד מהצדדים
   const hasHighConfidence = suspiciousRatio >= 80 || calmingRatio >= 80;
   
-  // הכפתור מופעל רק אם כל הראיות מוינו (ללא תלות בוודאות)
-  const canReport = allEvidenceSorted;
+  // הכפתור מופעל רק אם כל הראיות מוינו)
+  const canReport = allEvidenceSorted && hasHighConfidence ;
 
   // חישוב מיקום המד (0 = מרכז, חיובי = מרגיע, שלילי = חשוד)
   const meterPosition = calmingRatio - suspiciousRatio; // -100 עד 100 (מרגיע חיובי, חשוד שלילי)
@@ -49,11 +49,7 @@ export function VerticalThreatMeter({ suspiciousCount, calmingCount, totalEviden
   };
 
   return (
-    <div className="w-16 h-full flex flex-col items-center py-4 bg-card border-l border-border">
-      {/* כותרת */}
-      <div className="text-xs font-medium text-center mb-2">
-        מד איום
-      </div>
+    <div className="w-16 h-[82vh] flex flex-col items-center mr-4">
 
       {/* תווית עליונה */}
       <div className="text-xs text-evidence-calming font-medium mb-2">מרגיע</div>

@@ -35,13 +35,7 @@ const taskbarItems = [
     label: "ראיות ויזואליות",
     icon: Camera,
     path: "/visual-evidence",
-  },
-  {
-    id: "reports",
-    label: "דוחות",
-    icon: FileText,
-    path: "/reports",
-  },
+  }
 ];
 
 export function Taskbar() {
@@ -49,7 +43,7 @@ export function Taskbar() {
   const { formatGameTime, formatGameDate, isGameStarted, unseenCounts, resetGame } = useGameContext();
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-12 bg-background/95 backdrop-blur-sm border-t border-border flex items-center justify-between px-4 z-50">
+    <div className="fixed bottom-0 left-0 right-0 h-16 bg-background/95 backdrop-blur-sm border-t border-border flex items-center justify-between px-4 z-50">
       {/* Reset Game Button */}
       <Button
         variant="ghost"

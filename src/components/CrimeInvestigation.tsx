@@ -1,116 +1,136 @@
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import { Search, Filter, Eye, Trash2 } from "lucide-react";
-import { EvidenceCard, Evidence } from "./EvidenceCard";
-import { EvidenceDropZone } from "./EvidenceDropZone";
-import { VerticalThreatMeter } from "./VerticalThreatMeter";
-import { useEvidence } from "@/hooks/use-evidence";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
+import { Search, Filter, Eye, Trash2 } from 'lucide-react';
+import { EvidenceCard } from './EvidenceCard';
+import { Evidence } from '../data/evidence-data';
+import { EvidenceDropZone } from './EvidenceDropZone';
+import { VerticalThreatMeter } from './VerticalThreatMeter';
+import { useEvidence } from '@/hooks/use-evidence';
+import { Button } from '@/components/ui/button';
 
 const sampleEvidence: Evidence[] = [];
 
+// localStorage keys
+const SORTING_STATE_KEY = 'crime-investigation-sorting-state';
+
+// Interface for sorting state
+interface SortingState {
+  availableEvidence: Evidence[];
+  suspiciousEvidence: Evidence[];
+  calmingEvidence: Evidence[];
+}
+
+// Helper functions for localStorage
+const saveSortingState = (
+  availableEvidence: Evidence[],
+  suspiciousEvidence: Evidence[],
+  calmingEvidence: Evidence[]
+) => {
+  try {
+    const sortingState: SortingState = {
+      availableEvidence,
+      suspiciousEvidence,
+      calmingEvidence,
+    };
+    localStorage.setItem(SORTING_STATE_KEY, JSON.stringify(sortingState));
+    console.log('Saved sorting state:', sortingState);
+  } catch (error) {
+    console.error('Failed to save sorting state to localStorage:', error);
+  }
+};
+
+const loadSortingState = (): SortingState | null => {
+  try {
+    const savedState = localStorage.getItem(SORTING_STATE_KEY);
+    if (savedState) {
+      const parsedState = JSON.parse(savedState);
+      console.log('Loaded sorting state from localStorage:', parsedState);
+      return parsedState;
+    }
+  } catch (error) {
+    console.error('Failed to load sorting state from localStorage:', error);
+  }
+  return null;
+};
+
+const clearSortingState = () => {
+  try {
+    localStorage.removeItem(SORTING_STATE_KEY);
+    console.log('Sorting state cleared from localStorage');
+  } catch (error) {
+    console.error('Failed to clear sorting state from localStorage:', error);
+  }
+};
+
 export function CrimeInvestigation() {
-  const [availableEvidence, setAvailableEvidence] = useState<Evidence[]>(sampleEvidence);
+  const [availableEvidence, setAvailableEvidence] =
+    useState<Evidence[]>(sampleEvidence);
   const [suspiciousEvidence, setSuspiciousEvidence] = useState<Evidence[]>([]);
   const [calmingEvidence, setCalmingEvidence] = useState<Evidence[]>([]);
   const [draggedEvidence, setDraggedEvidence] = useState<Evidence | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
   const { selectedEvidence, removeEvidence } = useEvidence();
+
+  // Load sorting state from localStorage on component mount
+  useEffect(() => {
+    const savedSortingState = loadSortingState();
+    if (savedSortingState) {
+      setAvailableEvidence(savedSortingState.availableEvidence);
+      setSuspiciousEvidence(savedSortingState.suspiciousEvidence);
+      setCalmingEvidence(savedSortingState.calmingEvidence);
+    }
+    setIsInitialized(true);
+  }, []);
+
+  // Save sorting state to localStorage whenever it changes
+  useEffect(() => {
+    if (isInitialized) {
+      saveSortingState(availableEvidence, suspiciousEvidence, calmingEvidence);
+    }
+  }, [availableEvidence, suspiciousEvidence, calmingEvidence, isInitialized]);
 
   // המרת ראיות נבחרות לפורמט המעבדה
   const convertToLabEvidence = (evidence: any): Evidence => {
-    // המרת תוכן הראיה לפורמט הנכון
-    let content: string | { 
-      type: 'text' | 'image' | 'audio' | 'video' | 'email'; 
-      data: string;
-      callOriginator?: string;
-      callReceiver?: string;
-      emailFrom?: string;
-      emailTo?: string;
-      emailSubject?: string;
-    } = evidence.content || `${evidence.type}: ${evidence.title}`;
-    
-    // אם יש תוכן מפורט, המר אותו לפורמט הנכון
-    if (evidence.type === 'email' && evidence.content) {
-      content = {
-        type: 'email' as const,
-        data: evidence.content,
-        emailFrom: evidence.caller || "לא ידוע",
-        emailTo: evidence.receiver || "לא ידוע",
-        emailSubject: evidence.title
-      };
-    } else if (evidence.type === 'audio' && evidence.url) {
-      content = {
-        type: 'audio' as const,
-        data: evidence.url,
-        callOriginator: evidence.caller || "לא ידוע",
-        callReceiver: evidence.receiver || "לא ידוע"
-      };
-    } else if (evidence.type === 'image' && evidence.url) {
-      content = {
-        type: 'image' as const,
-        data: evidence.url
-      };
-    } else if (evidence.type === 'video' && evidence.url) {
-      content = {
-        type: 'video' as const,
-        data: evidence.url
-      };
-    } else if (evidence.type === 'text') {
-      content = {
-        type: 'text' as const,
-        data: evidence.content || evidence.title
-      };
-    }
-
-    return {
-      id: evidence.id,
-      title: evidence.title,
-      content: content,
-      type: evidence.type === 'email' ? 'digital' : 
-            evidence.type === 'text' ? 'digital' :
-            evidence.type === 'audio' ? 'digital' :
-            evidence.type === 'video' ? 'digital' :
-            evidence.type === 'image' ? 'digital' : 'document',
-      issueDate: new Date().toISOString().replace('T', ' ').substring(0, 16),
-      incidentDate: evidence.timestamp || new Date().toISOString().replace('T', ' ').substring(0, 16),
-      system: evidence.source || "מערכת ראיות",
-      anomalyLevel: evidence.priority === 'critical' ? 'critical' :
-                   evidence.priority === 'high' ? 'high' : 'medium',
-      issuingUnit: evidence.source || "יחידת חקירות",
-      source: evidence.location || evidence.source || "מקור לא ידוע"
-    };
+    // החזר את הראיה כפי שהיא, ללא שינוי פורמט
+    return evidence;
   };
 
   // עדכון הראיות הזמינות כאשר ראיות נבחרות מתעדכנות
   useEffect(() => {
-    const convertedEvidence = selectedEvidence.map(convertToLabEvidence);
-    
-    setAvailableEvidence(prev => {
-      // שמור על הראיות הקיימות שלא נמחקו
-      const currentIds = prev.map(e => e.id);
-      const selectedIds = selectedEvidence.map(e => e.id);
-      
-      // סנן ראיות שנמחקו מה-selectedEvidence
-      const filteredExisting = prev.filter(evidence => {
-        // אם זו ראיה מקורית (מ-sampleEvidence), שמור אותה
-        if (sampleEvidence.some(sample => sample.id === evidence.id)) {
-          return true;
-        }
-        // אם זו ראיה שנוספה ועדיין נבחרת, שמור אותה
-        return selectedIds.includes(evidence.id);
-      });
-      
-      // הוסף ראיות חדשות שלא קיימות עדיין
-      const newEvidence = convertedEvidence.filter(e => !currentIds.includes(e.id));
-      
-      return [...filteredExisting, ...newEvidence];
-    });
-  }, [selectedEvidence]);
+    if (!isInitialized) return; // Don't run until localStorage is loaded
 
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, evidence: Evidence) => {
+    const convertedEvidence = selectedEvidence.map(convertToLabEvidence);
+
+    setAvailableEvidence(prev => {
+      // Get all evidence IDs that are currently categorized
+      const categorizedIds = [
+        ...suspiciousEvidence.map(e => e.id),
+        ...calmingEvidence.map(e => e.id),
+      ];
+
+      // Filter out evidence that's already categorized
+      const availableFromSelected = convertedEvidence.filter(
+        e => !categorizedIds.includes(e.id)
+      );
+
+      // Combine with existing available evidence that's not in selectedEvidence
+      const existingAvailable = prev.filter(evidence => {
+        const isInSelected = selectedEvidence.some(e => e.id === evidence.id);
+        const isCategorized = categorizedIds.includes(evidence.id);
+        return !isInSelected && !isCategorized;
+      });
+
+      return [...existingAvailable, ...availableFromSelected];
+    });
+  }, [selectedEvidence, isInitialized, suspiciousEvidence, calmingEvidence]);
+
+  const handleDragStart = (
+    e: React.DragEvent<HTMLDivElement>,
+    evidence: Evidence
+  ) => {
     setDraggedEvidence(evidence);
     e.dataTransfer.setData('evidence', JSON.stringify(evidence));
   };
@@ -118,25 +138,36 @@ export function CrimeInvestigation() {
   const handleDrop = (evidence: Evidence, type: 'suspicious' | 'calming') => {
     // הסר את הראיה מהרשימה הזמינה
     setAvailableEvidence(prev => prev.filter(item => item.id !== evidence.id));
-    
+
     // הוסף את הראיה לקטגוריה המתאימה
     if (type === 'suspicious') {
-      setSuspiciousEvidence(prev => [...prev, { ...evidence, category: 'suspicious' }]);
+      setSuspiciousEvidence(prev => [
+        ...prev,
+        { ...evidence, category: 'suspicious' },
+      ]);
     } else {
-      setCalmingEvidence(prev => [...prev, { ...evidence, category: 'calming' }]);
+      setCalmingEvidence(prev => [
+        ...prev,
+        { ...evidence, category: 'calming' },
+      ]);
     }
-    
+
     setDraggedEvidence(null);
   };
 
-  const handleReturn = (evidence: Evidence, fromType: 'suspicious' | 'calming') => {
+  const handleReturn = (
+    evidence: Evidence,
+    fromType: 'suspicious' | 'calming'
+  ) => {
     // הסר את הראיה מהקטגוריה הנוכחית
     if (fromType === 'suspicious') {
-      setSuspiciousEvidence(prev => prev.filter(item => item.id !== evidence.id));
+      setSuspiciousEvidence(prev =>
+        prev.filter(item => item.id !== evidence.id)
+      );
     } else {
       setCalmingEvidence(prev => prev.filter(item => item.id !== evidence.id));
     }
-    
+
     // החזר את הראיה לרשימה הזמינה (רק אם היא לא נמחקה מ-selectedEvidence)
     setAvailableEvidence(prev => {
       const alreadyExists = prev.some(item => item.id === evidence.id);
@@ -146,97 +177,83 @@ export function CrimeInvestigation() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      <div className="flex h-screen">
-        {/* Vertical Threat Meter - Far Left */}
-        <VerticalThreatMeter
-          suspiciousCount={suspiciousEvidence.length}
-          calmingCount={calmingEvidence.length}
-          totalEvidenceCount={sampleEvidence.length}
-        />
-
+    <div className='min-h-screen bg-gradient-to-br from-background via-background to-muted/20'>
+      <div className='flex h-screen flex flex-col items-center'>
         {/* Main Content */}
-        <div className="flex-1 p-6">
+        <div className='flex-1 p-6'>
           {/* Header */}
-          <div className="text-center space-y-2 mb-6">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          <div className='text-center space-y-2 mb-6'>
+            <h1 className='text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent'>
               חקירת פשע - מעבדת ראיות
             </h1>
-            <p className="text-muted-foreground">
-              סווג את הראיות על מנת לקבוע את רמת החשד בפשע. ראיות שנוספו מהעמודים השונים יופיעו כאן.
-            </p>
-            {selectedEvidence.length > 0 && (
-              <p className="text-sm text-primary">
-                נוספו {selectedEvidence.length} ראיות חדשות מהעמודים השונים
-              </p>
-            )}
           </div>
-
-          <div className="grid grid-cols-3 gap-6 h-[calc(100vh-180px)]">
-            {/* Drop Zones - Left Side */}
-            <div className="col-span-2 space-y-6">
-              <EvidenceDropZone
-                type="calming"
-                evidence={calmingEvidence}
-                onDrop={handleDrop}
-                onReturn={(evidence) => handleReturn(evidence, 'calming')}
-                title="ראיות מרגיעות"
-              />
-              
-              <EvidenceDropZone
-                type="suspicious"
-                evidence={suspiciousEvidence}
-                onDrop={handleDrop}
-                onReturn={(evidence) => handleReturn(evidence, 'suspicious')}
-                title="ראיות חשודות"
-              />
-            </div>
-
-            {/* Available Evidence - Right Side */}
-            <Card className="col-span-1">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Eye className="w-5 h-5" />
-                  ראיות זמינות
-                  <Badge variant="outline" className="ml-auto">
-                    {availableEvidence.length}
-                  </Badge>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ScrollArea className="h-[calc(100vh-280px)] pl-4">
-                  <div className="space-y-3">
-                    {availableEvidence.map((evidence) => (
-                      <div key={evidence.id}>
+          <div className='flex flex-row h-[40vh]'>
+            <div className='grid grid-cols-2 gap-6 h-[40vh] w-[80vw]'>
+              {/* Available Evidence - Right Side */}
+              <Card className='col-span-1'>
+                <CardHeader>
+                  <CardTitle className='flex items-center gap-2'>
+                    <Eye className='w-5 h-5' />
+                    ראיות זמינות
+                    <Badge variant='outline' className='ml-auto'>
+                      {availableEvidence.length}
+                    </Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ScrollArea className='h-[60vh] pl-4'>
+                    <div className='space-y-3'>
+                      {availableEvidence.map(evidence => (
                         <EvidenceCard
+                          key={evidence.id}
                           evidence={evidence}
                           onDragStart={handleDragStart}
+                          onDelete={
+                            selectedEvidence.some(e => e.id === evidence.id)
+                              ? removeEvidence
+                              : undefined
+                          }
+                          showDeleteButton={selectedEvidence.some(
+                            e => e.id === evidence.id
+                          )}
                         />
-                        {/* הוסף כפתור מחיקה לראיות שנוספו מהעמודים */}
-                        {selectedEvidence.some(e => e.id === evidence.id) && (
-                          <div className="mt-2">
-                            <Button 
-                              variant="destructive"
-                              size="sm"
-                              onClick={() => removeEvidence(evidence.id)}
-                              className="gap-1 text-xs w-full"
-                            >
-                              <Trash2 className="w-3 h-3" />
-                              הסר מהראיות
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                    {availableEvidence.length === 0 && (
-                      <div className="text-center py-8">
-                        <p className="text-muted-foreground">כל הראיות סווגו</p>
-                      </div>
-                    )}
-                  </div>
-                </ScrollArea>
-              </CardContent>
-            </Card>
+                      ))}
+                      {availableEvidence.length === 0 && (
+                        <div className='text-center py-8'>
+                          <p className='text-muted-foreground'>
+                            כל הראיות סווגו
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </ScrollArea>
+                </CardContent>
+              </Card>
+              {/* Drop Zones - Left Side */}
+              <div className='col-span-1 space-y-6'>
+                <EvidenceDropZone
+                  type='calming'
+                  evidence={calmingEvidence}
+                  onDrop={handleDrop}
+                  onReturn={evidence => handleReturn(evidence, 'calming')}
+                  title='ראיות מרגיעות'
+                />
+
+                <EvidenceDropZone
+                  type='suspicious'
+                  evidence={suspiciousEvidence}
+                  onDrop={handleDrop}
+                  onReturn={evidence => handleReturn(evidence, 'suspicious')}
+                  title='ראיות חשודות'
+                />
+              </div>
+            </div>
+            {/* Vertical Threat Meter - Far Left */}
+            <VerticalThreatMeter
+              suspiciousCount={suspiciousEvidence.length}
+              calmingCount={calmingEvidence.length}
+              totalEvidenceCount={sampleEvidence.length}
+            />
           </div>
         </div>
       </div>

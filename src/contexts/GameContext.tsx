@@ -28,10 +28,8 @@ export function GameProvider({ children }: GameProviderProps) {
   const [pageVisitTimes, setPageVisitTimes] = useState<Record<string, number>>({}); // Track visit time in game minutes
 
   const markPageAsVisited = (page: 'emails' | 'texts' | 'visual') => {
-    console.log('Marking page as visited:', page);
     setVisitedPages(prev => {
       const newSet = new Set([...prev, page]);
-      console.log('Updated visited pages:', Array.from(newSet));
       return newSet;
     });
     
@@ -41,7 +39,6 @@ export function GameProvider({ children }: GameProviderProps) {
       ...prev,
       [page]: currentGameMinutes
     }));
-    console.log('Page visit time for', page, ':', currentGameMinutes);
   };
 
   const resetGame = () => {
@@ -95,10 +92,6 @@ export function GameProvider({ children }: GameProviderProps) {
       visual: getUnseenCount(visibleVisual, 'visual')
     };
 
-    console.log('Visited pages:', Array.from(visitedPages));
-    console.log('Page visit times:', pageVisitTimes);
-    console.log('Unseen counts:', counts);
-    console.log('Current game time minutes:', gameState.gameTime.hours * 60 + gameState.gameTime.minutes);
 
     return counts;
   }, [gameState.isGameStarted, gameState.gameTime, visitedPages, pageVisitTimes]);

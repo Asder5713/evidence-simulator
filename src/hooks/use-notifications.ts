@@ -12,23 +12,43 @@ export const useNotifications = () => {
 
   const getPageRoute = (newsType: string) => {
     if (newsType === 'email') return '/emails';
-    if (['intelligence', 'dispatch', 'investigation', 'forensics', 'command'].includes(newsType)) return '/text-messages';
-    if (['image', 'video', 'audio'].includes(newsType)) return '/visual-evidence';
+    if (
+      [
+        'intelligence',
+        'dispatch',
+        'investigation',
+        'forensics',
+        'command',
+      ].includes(newsType)
+    )
+      return '/text-messages';
+    if (['image', 'video', 'audio'].includes(newsType))
+      return '/visual-evidence';
     return '/';
   };
 
   const getTypeLabel = (newsType: string) => {
     switch (newsType) {
-      case 'email': return 'אימייל';
-      case 'intelligence': return 'מודיעין';
-      case 'dispatch': return 'מוקד';
-      case 'investigation': return 'חקירה';
-      case 'forensics': return 'זיהוי פלילי';
-      case 'command': return 'פיקוד';
-      case 'image': return 'תמונה';
-      case 'video': return 'וידיאו';
-      case 'audio': return 'הקלטה';
-      default: return 'ידיעה';
+      case 'email':
+        return 'אימייל';
+      case 'intelligence':
+        return 'מודיעין';
+      case 'dispatch':
+        return 'מוקד';
+      case 'investigation':
+        return 'חקירה';
+      case 'forensics':
+        return 'זיהוי פלילי';
+      case 'command':
+        return 'פיקוד';
+      case 'image':
+        return 'תמונה';
+      case 'video':
+        return 'וידיאו';
+      case 'audio':
+        return 'הקלטה';
+      default:
+        return 'ידיעה';
     }
   };
 
@@ -42,7 +62,7 @@ export const useNotifications = () => {
           !notifiedItems.current.has(item.id)
         ) {
           notifiedItems.current.add(item.id);
-          
+
           const handleClick = () => {
             navigate(getPageRoute(item.news_type));
           };
@@ -50,9 +70,9 @@ export const useNotifications = () => {
           toast({
             title: `${getTypeLabel(item.news_type)} חדש`,
             description: item.title,
-            duration: 10000,
+            duration: 4000,
             onClick: handleClick,
-            className: "cursor-pointer hover:bg-accent/50 transition-colors"
+            className: 'cursor-pointer hover:bg-accent transition-colors',
           });
         }
       });
