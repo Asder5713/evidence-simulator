@@ -17,6 +17,7 @@ import { useEvidence } from '@/hooks/use-evidence';
 import { evidence } from '@/data/evidence-data';
 import { useGameContext } from '@/contexts/GameContext';
 import { EvidenceModal } from '@/components/EvidenceModal';
+import { GlossaryText } from '@/components/GlossaryText';
 
 const getTypeIcon = (news_type: string) => {
   switch (news_type) {
@@ -193,7 +194,7 @@ const VisualEvidence = () => {
                             </div>
                             {/* Title */}
                             <h3 className='font-semibold text-white text-lg line-clamp-2 leading-tight'>
-                              {evidenceItem.title}
+                              <GlossaryText text={evidenceItem.title} />
                             </h3>
                             {!viewedEvidence.has(evidenceItem.id) && (
                               <div

@@ -17,6 +17,7 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import { useEvidence } from '@/hooks/use-evidence';
 import { evidence } from '@/data/evidence-data';
 import { useGameContext } from '@/contexts/GameContext';
+import { GlossaryText } from '@/components/GlossaryText';
 
 const getSourceIcon = (news_type: string) => {
   switch (news_type) {
@@ -214,10 +215,10 @@ const TextMessages = () => {
                                     message.news_type
                                   )}`}
                                 >
-                                  {message.formation}
+                                  <GlossaryText text={message.formation} />
                                 </p>
                                 <p className='text-xs text-gray-400'>
-                                  {message.source}
+                                  <GlossaryText text={message.source} />
                                 </p>
                               </div>
                             </div>
@@ -258,10 +259,10 @@ const TextMessages = () => {
                           {/* Message Content */}
                           <div className='bg-black/30 rounded-lg p-3 border border-white/10'>
                             <h4 className='text-white font-medium text-sm mb-2 text-right'>
-                              {message.title}
+                              <GlossaryText text={message.title} />
                             </h4>
                             <p className='text-gray-100 leading-relaxed text-sm text-right'>
-                              {message.content}
+                              <GlossaryText text={message.content} />
                             </p>
                             {message.comments && (
                               <div className='mt-2 pt-2 border-t border-gray-600/30'>
@@ -269,7 +270,7 @@ const TextMessages = () => {
                                   הערה:
                                 </span>
                                 <p className='text-gray-200 text-xs mt-1 text-right'>
-                                  {message.comments}
+                                  <GlossaryText text={message.comments} />
                                 </p>
                               </div>
                             )}
@@ -353,10 +354,10 @@ const TextMessages = () => {
                                     message.news_type
                                   )}`}
                                 >
-                                  {message.formation}
+                                  <GlossaryText text={message.formation} />
                                 </p>
                                 <p className='text-xs text-gray-400'>
-                                  {message.source}
+                                  <GlossaryText text={message.source} />
                                 </p>
                               </div>
                             </div>
@@ -397,10 +398,10 @@ const TextMessages = () => {
                           {/* Message Content */}
                           <div className='bg-black/30 rounded-lg p-3 border border-white/10'>
                             <h4 className='text-white font-medium text-sm mb-2 text-right'>
-                              {message.title}
+                              <GlossaryText text={message.title} />
                             </h4>
                             <p className='text-gray-100 leading-relaxed text-sm text-right'>
-                              {message.content}
+                              <GlossaryText text={message.content} />
                             </p>
                             {message.comments && (
                               <div className='mt-2 pt-2 border-t border-gray-600/30'>
@@ -408,7 +409,7 @@ const TextMessages = () => {
                                   הערה:
                                 </span>
                                 <p className='text-gray-200 text-xs mt-1 text-right'>
-                                  {message.comments}
+                                  <GlossaryText text={message.comments} />
                                 </p>
                               </div>
                             )}

@@ -1,4 +1,5 @@
 import { useGlossary } from '../hooks/use-glossary';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
 interface GlossaryTextProps {
   text: string;
@@ -10,21 +11,29 @@ export function GlossaryText({ text, className = '' }: GlossaryTextProps) {
   const words = processText(text);
   
   return (
-    <span className={className}>
-      {words.map(({ text: wordText, term, key }) => {
-        if (term) {
-          return (
-            <span
-              key={key}
-              className="bg-primary/20 text-primary font-medium rounded px-1 cursor-help border-b border-primary/30 hover:bg-primary/30 transition-colors"
-              title={`${term.term}: ${term.definition}`}
-            >
-              {wordText}
-            </span>
-          );
-        }
-        return <span key={key}>{wordText}</span>;
-      })}
-    </span>
+    <TooltipProvider>
+      <span className={className}>
+        {words.map(({ text: wordText, term, key }) => {
+          if (term) {
+            return (
+              <Tooltip key={key}>
+                <TooltipTrigger asChild>
+                  <span className="bg-primary/20 text-primary font-medium rounded-sm px-1 cursor-help border-b border-primary/40 hover:bg-primary/30 hover:border-primary/60 transition-all duration-200 underline decoration-dotted decoration-primary/50 underline-offset-2">
+                    {wordText}
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-xs p-3 bg-gradient-to-br from-slate-800 to-slate-900 border border-primary/30 shadow-xl">
+                  <div className="space-y-1">
+                    <p className="font-semibold text-primary text-sm">{term.term}</p>
+                    <p className="text-slate-200 text-xs leading-relaxed">{term.definition}</p>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            );
+          }
+          return <span key={key}>{wordText}</span>;
+        })}
+      </span>
+    </TooltipProvider>
   );
 }
