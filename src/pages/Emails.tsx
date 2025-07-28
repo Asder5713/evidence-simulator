@@ -22,6 +22,7 @@ import {
 import { useEvidence } from '@/hooks/use-evidence';
 import { evidence } from '@/data/evidence-data';
 import { useGameContext } from '@/contexts/GameContext';
+import { GlossaryText } from '@/components/GlossaryText';
 
 const Emails = () => {
   const { isTimeReached, isGameStarted, markPageAsVisited } = useGameContext();
@@ -118,10 +119,10 @@ const Emails = () => {
                       </div>
 
                       <h3 className='text-sm font-medium text-slate-100 mb-1'>
-                        {email.title}
+                        <GlossaryText text={email.title} />
                       </h3>
                       <p className='text-xs text-slate-400 line-clamp-2'>
-                        {email.content.substring(0, 100)}...
+                        <GlossaryText text={email.content.substring(0, 100) + "..."} />
                       </p>
 
                       <div className='flex items-center justify-between mt-3'>
@@ -177,7 +178,7 @@ const Emails = () => {
                 <CardHeader className='border-b border-slate-700'>
                   <div className='flex items-center justify-between'>
                     <CardTitle className='text-slate-100'>
-                      {selectedEmail.title}
+                      <GlossaryText text={selectedEmail.title} />
                     </CardTitle>
                     <div className='flex items-center gap-2'>
                       <Button
@@ -210,13 +211,13 @@ const Emails = () => {
                     <div className='flex items-center gap-2'>
                       <span className='text-slate-400'>מקור:</span>
                       <span className='text-slate-200'>
-                        {selectedEmail.source}
+                        <GlossaryText text={selectedEmail.source} />
                       </span>
                     </div>
                     <div className='flex items-center gap-2'>
                       <span className='text-slate-400'>מערך:</span>
                       <span className='text-slate-200'>
-                        {selectedEmail.formation}
+                        <GlossaryText text={selectedEmail.formation} />
                       </span>
                     </div>
                     <div className='flex items-center gap-2'>
@@ -244,7 +245,7 @@ const Emails = () => {
                       <div className='flex items-center gap-2'>
                         <span className='text-slate-400'>הערות:</span>
                         <span className='text-slate-200'>
-                          {selectedEmail.comments}
+                          <GlossaryText text={selectedEmail.comments} />
                         </span>
                       </div>
                     )}
@@ -253,9 +254,9 @@ const Emails = () => {
 
                 <CardContent className='p-6'>
                   <div className='bg-slate-900/60 border border-slate-600/30 rounded-lg p-4'>
-                    <pre className='text-slate-300 text-sm whitespace-pre-wrap font-sans leading-relaxed'>
-                      {selectedEmail.content}
-                    </pre>
+                    <div className='text-slate-300 text-sm whitespace-pre-wrap font-sans leading-relaxed'>
+                      <GlossaryText text={selectedEmail.content} />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
