@@ -20,6 +20,7 @@ import {
   X,
 } from 'lucide-react';
 import { Evidence } from '../data/evidence-data';
+import { GlossaryText } from './GlossaryText';
 
 interface EvidenceCardProps {
   evidence: Evidence;
@@ -79,7 +80,7 @@ export function EvidenceCard({
           </div>
           <div className='flex-1 min-w-0'>
             <h3 className='text-sm font-semibold truncate text-foreground'>
-              {evidence.title}
+              <GlossaryText text={evidence.title} />
             </h3>
             <div className='flex items-center gap-2 text-xs text-muted-foreground mt-1'>
               <Calendar className='w-3 h-3' />
@@ -140,7 +141,7 @@ export function EvidenceCard({
             </div>
             <div className='flex flex-col gap-1'>
               <CardTitle className='text-base font-semibold text-foreground leading-tight'>
-                {evidence.title}
+                <GlossaryText text={evidence.title} />
               </CardTitle>
               <div className='flex items-center gap-3'>
                 <Badge
@@ -184,9 +185,10 @@ export function EvidenceCard({
             <span>תוכן הראיה</span>
           </div>
           <div className='bg-muted/30 p-3 rounded-lg'>
-            <p className='text-sm text-foreground leading-relaxed'>
-              {evidence.content}
-            </p>
+            <GlossaryText 
+              text={evidence.content} 
+              className='text-sm text-foreground leading-relaxed block'
+            />
           </div>
         </div>
 
@@ -235,9 +237,10 @@ export function EvidenceCard({
               <span>הערות חשובות</span>
             </div>
             <div className='bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 p-3 rounded-lg'>
-              <p className='text-sm text-amber-800 dark:text-amber-200'>
-                {evidence.comments}
-              </p>
+              <GlossaryText 
+                text={evidence.comments} 
+                className='text-sm text-amber-800 dark:text-amber-200 block'
+              />
             </div>
           </div>
         )}
@@ -269,7 +272,7 @@ export function EvidenceCard({
               <Building className='w-4 h-4' />
               <span className='font-medium'>מערך</span>
             </div>
-            <p className='text-foreground font-medium'>{evidence.formation}</p>
+            <GlossaryText text={evidence.formation} className='text-foreground font-medium' />
           </div>
 
           <div className='space-y-2'>
@@ -277,7 +280,7 @@ export function EvidenceCard({
               <User className='w-4 h-4' />
               <span className='font-medium'>מקור</span>
             </div>
-            <p className='text-foreground font-medium'>{evidence.source}</p>
+            <GlossaryText text={evidence.source} className='text-foreground font-medium' />
           </div>
 
           <div className='space-y-2'>
