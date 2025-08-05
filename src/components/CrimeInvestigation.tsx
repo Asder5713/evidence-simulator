@@ -5,7 +5,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Search, Filter, Eye, Trash2 } from 'lucide-react';
 import { EvidenceCard } from './EvidenceCard';
-import { Evidence } from '../data/evidence-data';
+import { Evidence } from '@/types/evidence';
 import { EvidenceDropZone } from './EvidenceDropZone';
 import { VerticalThreatMeter } from './VerticalThreatMeter';
 import { useEvidence } from '@/hooks/use-evidence';

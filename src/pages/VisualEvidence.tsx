@@ -8,27 +8,25 @@ import {
   Volume2,
   FileImage,
   Clock,
-  MapPin,
   Plus,
   Check,
+  Building,
 } from 'lucide-react';
 import { useState, useMemo, useEffect } from 'react';
-import { useEvidence } from '@/hooks/use-evidence';
-import { evidence } from '@/data/evidence-data';
+import { useFiles } from '@/hooks/use-files';
+import { filesData } from '@/data/files-data';
 import { useGameContext } from '@/contexts/GameContext';
-import { EvidenceModal } from '@/components/EvidenceModal';
 import { GlossaryText } from '@/components/GlossaryText';
 
-const getTypeIcon = (news_type: string) => {
-  switch (news_type) {
-    case 'image':
-      return Camera;
-    case 'video':
-      return Video;
-    case 'audio':
-      return Volume2;
-    default:
-      return FileImage;
+const getTypeIcon = (mimeType: string) => {
+  if (mimeType.startsWith('image/')) {
+    return Camera;
+  } else if (mimeType.startsWith('video/')) {
+    return Video;
+  } else if (mimeType.startsWith('audio/')) {
+    return Volume2;
+  } else {
+    return FileImage;
   }
 };
 
@@ -40,27 +38,10 @@ const getTypeTextColor = () => {
   return 'text-gray-300';
 };
 
-const getExceptionColor = (level: number) => {
-  switch (level) {
-    case 5:
-      return 'bg-red-500/20 text-red-300 border-red-500/30';
-    case 4:
-      return 'bg-orange-500/20 text-orange-300 border-orange-500/30';
-    case 3:
-      return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
-    case 2:
-      return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
-    case 1:
-      return 'bg-green-500/20 text-green-300 border-green-500/30';
-    default:
-      return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
-  }
-};
-
 const VisualEvidence = () => {
-  const { isTimeReached, isGameStarted, markPageAsVisited } = useGameContext();
+  const { markPageAsVisited } = useGameContext();
   const [selectedEvidence, setSelectedEvidence] = useState(null);
-  const { addEvidence, isEvidenceSelected } = useEvidence();
+  const { addFile, isFileSelected } = useFiles();
 
   // Load viewed evidence from localStorage
   const [viewedEvidence, setViewedEvidence] = useState<Set<string>>(() => {
@@ -73,19 +54,14 @@ const VisualEvidence = () => {
     markPageAsVisited('visual');
   }, [markPageAsVisited]);
 
-  // Filter evidence that should be visible based on game time
+  // Show all files
   const visibleEvidence = useMemo(() => {
-    if (!isGameStarted) return [];
-    return evidence.filter(
-      item =>
-        ['image', 'video', 'audio'].includes(item.news_type) &&
-        isTimeReached(`${item.production_date} ${item.production_time}`)
-    );
-  }, [isGameStarted, isTimeReached]);
+    return filesData;
+  }, []);
 
   const handleAddEvidence = (evidenceItem: any) => {
     console.log('Adding evidence:', evidenceItem.id);
-    addEvidence(evidenceItem);
+    addFile(evidenceItem);
     // Mark as viewed when adding to evidence
     const newViewedEvidence = new Set([...viewedEvidence, evidenceItem.id]);
     setViewedEvidence(newViewedEvidence);
@@ -134,46 +110,37 @@ const VisualEvidence = () => {
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
             {visibleEvidence.length > 0 ? (
               visibleEvidence.map((evidenceItem, index) => {
-                const TypeIcon = getTypeIcon(evidenceItem.news_type);
-                const isHistorical = evidenceItem.id.includes('historical');
+                const TypeIcon = getTypeIcon(evidenceItem.mimeType);
 
                 return (
                   <div
                     key={evidenceItem.id}
-                    className={`relative group cursor-pointer hover:scale-105 transition-all duration-300 ${
-                      isHistorical ? 'opacity-80' : ''
-                    }`}
+                    className={`relative group cursor-pointer hover:scale-105 transition-all duration-300`}
                     style={{ animationDelay: `${index * 0.05}s` }}
                     dir='rtl'
                     onClick={() => handleEvidenceClick(evidenceItem)}
                   >
                     {/* Card Background Image */}
                     <div className='relative h-64 rounded-xl overflow-hidden shadow-lg'>
-                      {evidenceItem.news_type === 'image' &&
-                      evidenceItem.file_url ? (
+                      {evidenceItem.mimeType.startsWith('image/') ? (
                         <img
-                          src={evidenceItem.file_url}
+                          src={evidenceItem.fileKey}
                           alt={evidenceItem.title}
                           className='w-full h-full object-cover'
                         />
-                      ) : evidenceItem.news_type === 'video' &&
-                        evidenceItem.file_url ? (
+                      ) : evidenceItem.mimeType.startsWith('video/') ? (
                         <div className='relative w-full h-full'>
-                          <img
-                            src={evidenceItem.file_url}
-                            alt={evidenceItem.title}
-                            className='w-full h-full object-cover'
-                          />
+                          <div
+                            className={`w-full h-full ${getTypeColor()} flex items-center justify-center`}
+                          >
+                            <TypeIcon className={`w-16 h-16 ${getTypeTextColor()}`} />
+                          </div>
                         </div>
                       ) : (
                         <div
-                          className={`w-full h-full ${getTypeColor(
-                          )} flex items-center justify-center`}
+                          className={`w-full h-full ${getTypeColor()} flex items-center justify-center`}
                         >
-                          <TypeIcon
-                            className={`w-16 h-16 ${getTypeTextColor(
-                            )}`}
-                          />
+                          <TypeIcon className={`w-16 h-16 ${getTypeTextColor()}`} />
                         </div>
                       )}
 
@@ -207,7 +174,7 @@ const VisualEvidence = () => {
                           </div>
                           <Button
                             variant={
-                              isEvidenceSelected(evidenceItem.id)
+                              isFileSelected(evidenceItem.id)
                                 ? 'default'
                                 : 'outline'
                             }
@@ -217,10 +184,10 @@ const VisualEvidence = () => {
                               e.stopPropagation();
                               handleAddEvidence(evidenceItem);
                             }}
-                            disabled={isEvidenceSelected(evidenceItem.id)}
+                            disabled={isFileSelected(evidenceItem.id)}
                             className='gap-1 text-xs bg-black/50 backdrop-blur-sm border-white/20 hover:bg-black/70 relative z-10 flex-shrink-0'
                           >
-                            {isEvidenceSelected(evidenceItem.id) ? (
+                            {isFileSelected(evidenceItem.id) ? (
                               <Check className='w-3 h-3' />
                             ) : (
                               <Plus className='w-3 h-3' />
@@ -228,21 +195,22 @@ const VisualEvidence = () => {
                           </Button>
                         </div>
 
-                        {/* Production Date/Time and Exception Level */}
+                        {/* Production Date/Time and Severity Level */}
                         <div className='flex items-center justify-between'>
                           <div className='flex items-center gap-2 text-white/90 text-sm'>
                             <Clock className='w-4 h-4' />
                             <span>
-                              הופק: {evidenceItem.production_date},{' '}
-                              {evidenceItem.production_time}
+                              הופק: {evidenceItem.productionDate.toLocaleDateString('he-IL')}
                             </span>
                           </div>
                           <Badge
-                            className={`text-xs border ${getExceptionColor(
-                              evidenceItem.exception_level
-                            )} bg-black/50 backdrop-blur-sm`}
+                            className={`text-xs border ${
+                              evidenceItem.severityLevel === 'קריטי' ? 'bg-red-500/20 text-red-300 border-red-500/30' :
+                              evidenceItem.severityLevel === 'גבוה' ? 'bg-orange-500/20 text-orange-300 border-orange-500/30' :
+                              'bg-yellow-500/20 text-yellow-300 border-yellow-500/30'
+                            } bg-black/50 backdrop-blur-sm`}
                           >
-                            רמה {evidenceItem.exception_level}
+                            {evidenceItem.severityLevel}
                           </Badge>
                         </div>
                       </div>
@@ -261,15 +229,6 @@ const VisualEvidence = () => {
           </div>
         </ScrollArea>
       </div>
-
-      {/* Evidence Modal */}
-      <EvidenceModal
-        evidence={selectedEvidence}
-        isOpen={!!selectedEvidence}
-        onClose={() => setSelectedEvidence(null)}
-        onAddEvidence={handleAddEvidence}
-        isEvidenceSelected={isEvidenceSelected}
-      />
     </div>
   );
 };

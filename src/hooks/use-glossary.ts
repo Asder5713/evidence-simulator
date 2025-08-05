@@ -1,17 +1,17 @@
 import { useMemo } from 'react';
-import { glossaryData, GlossaryTerm } from '../data/glossary-data';
+import { termsData, Term } from '../data/terms-data';
 
 export interface HighlightedWord {
   text: string;
-  term?: GlossaryTerm;
+  term?: Term;
   key: string;
 }
 
 export function useGlossary() {
   const termMap = useMemo(() => {
-    const map = new Map<string, GlossaryTerm>();
+    const map = new Map<string, Term>();
     
-    glossaryData.forEach(term => {
+    termsData.forEach(term => {
       // Add the main term
       map.set(term.term.toLowerCase(), term);
       
@@ -47,6 +47,6 @@ export function useGlossary() {
   return {
     termMap,
     processText,
-    glossaryData
+    termsData
   };
 }

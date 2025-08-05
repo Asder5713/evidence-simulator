@@ -1,55 +1,55 @@
-export interface GlossaryTerm {
+export interface Term {
   id: string;
   term: string;
   definition: string;
   synonyms: string[];
 }
 
-export const glossaryData: GlossaryTerm[] = [
+export const termsData: Term[] = [
   {
-    id: 'terrorist',
+    id: '1',
     term: 'מחבל',
     definition: 'אדם המבצע פעולות טרור נגד אוכלוסייה אזרחית',
     synonyms: ['טרוריסט', 'פעיל טרור', 'חמוש', 'פח"ע']
   },
   {
-    id: 'intelligence',
+    id: '2',
     term: 'מודיעין',
     definition: 'מידע חשוב המתקבל מכלי ריגול או מקורות מידע',
     synonyms: ['מידע מודיעיני', 'מחקר', 'איסוף מידע', 'מודע']
   },
   {
-    id: 'threat',
+    id: '3',
     term: 'איום',
     definition: 'סכנה פוטנציאלית או ממשית לביטחון',
     synonyms: ['סכנה', 'סיכון', 'חשש', 'סיכון ביטחוני']
   },
   {
-    id: 'operation',
+    id: '4',
     term: 'מבצע',
     definition: 'פעילות צבאית או ביטחונית מתוכננת',
     synonyms: ['פעילות', 'משימה', 'מהלך', 'פעולה']
   },
   {
-    id: 'weapon',
+    id: '5',
     term: 'נשק',
     definition: 'כלי המיועד לפגיעה או הרג',
     synonyms: ['אמצעי לחימה', 'כלי נשק', 'חמ"ר', 'תחמושת']
   },
   {
-    id: 'explosive',
+    id: '6',
     term: 'חומר נפץ',
     definition: 'חומר כימי המסוגל לפרוק אנרגיה בצורה מפוצצת',
     synonyms: ['נפצים', 'חבלה', 'מטען', 'פצצה']
   },
   {
-    id: 'surveillance',
+    id: '7',
     term: 'מעקב',
     definition: 'צפייה וניטור מתמשך אחר אדם או מקום',
     synonyms: ['ניטור', 'רגילה', 'מעקב חשאי', 'צפיה']
   },
   {
-    id: 'target',
+    id: '8',
     term: 'מטרה',
     definition: 'אובייקט או אדם המיועד לפגיעה או מעקב',
     synonyms: ['יעד', 'נושא', 'נעדר', 'חשוד']

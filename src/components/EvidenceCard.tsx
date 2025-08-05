@@ -19,7 +19,7 @@ import {
   Trash2,
   X,
 } from 'lucide-react';
-import { Evidence } from '../data/evidence-data';
+import { Evidence } from '@/types/evidence';
 import { GlossaryText } from './GlossaryText';
 
 interface EvidenceCardProps {

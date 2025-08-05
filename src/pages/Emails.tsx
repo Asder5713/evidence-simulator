@@ -2,31 +2,22 @@ import { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
   Mail,
-  Search,
-  AlertCircle,
   Clock,
-  Paperclip,
-  Star,
-  Archive,
-  Trash2,
-  Reply,
-  Forward,
-  MoreHorizontal,
+  Building,
   Plus,
   Check,
 } from 'lucide-react';
-import { useEvidence } from '@/hooks/use-evidence';
-import { evidence } from '@/data/evidence-data';
+import { useEmails } from '@/hooks/use-emails';
+import { emailsData } from '@/data/emails-data';
 import { useGameContext } from '@/contexts/GameContext';
 import { GlossaryText } from '@/components/GlossaryText';
 
 const Emails = () => {
   const { isTimeReached, isGameStarted, markPageAsVisited } = useGameContext();
-  const { addEvidence, isEvidenceSelected } = useEvidence();
+  const { addEmail, isEmailSelected } = useEmails();
 
   // Load viewed emails from localStorage
   const [viewedEmails, setViewedEmails] = useState<Set<string>>(() => {
@@ -39,15 +30,10 @@ const Emails = () => {
     markPageAsVisited('emails');
   }, [markPageAsVisited]);
 
-  // Filter emails that should be visible based on game time
+  // For now, show all emails (game time logic can be added later)
   const visibleEmails = useMemo(() => {
-    if (!isGameStarted) return [];
-    return evidence.filter(
-      item =>
-        item.news_type === 'email' &&
-        isTimeReached(`${item.production_date} ${item.production_time}`)
-    );
-  }, [isGameStarted, isTimeReached]);
+    return emailsData;
+  }, []);
 
   const [selectedEmail, setSelectedEmail] = useState(null);
 
@@ -62,7 +48,7 @@ const Emails = () => {
   };
 
   const handleAddEvidence = (email: any) => {
-    addEvidence(email);
+    addEmail(email);
   };
 
   return (
@@ -100,21 +86,12 @@ const Emails = () => {
                     <CardContent className='p-4 text-right' dir='rtl'>
                       <div className='flex items-start justify-between mb-2'>
                         <div className='flex items-center gap-2'>
-                          <div
-                            className={`w-2 h-2 rounded-full ${
-                              email.exception_level >= 4
-                                ? 'bg-red-500'
-                                : email.exception_level === 3
-                                ? 'bg-orange-500'
-                                : 'bg-yellow-500'
-                            }`}
-                          />
                           <span className='text-sm font-medium text-slate-200'>
-                            {email.source}
+                            {email.productionUnit}
                           </span>
                         </div>
                         <span className='text-xs text-slate-400'>
-                          {email.production_date} {email.production_time}
+                          {email.productionDate.toLocaleDateString('he-IL')}
                         </span>
                       </div>
 
@@ -122,36 +99,25 @@ const Emails = () => {
                         <GlossaryText text={email.title} />
                       </h3>
                       <p className='text-xs text-slate-400 line-clamp-2'>
-                        <GlossaryText text={email.content.substring(0, 100) + "..."} />
+                        <GlossaryText text={email.description.substring(0, 100) + "..."} />
                       </p>
 
                       <div className='flex items-center justify-between mt-3'>
                         <div className='flex items-center gap-2'>
-                          <Badge
-                            className={`text-xs ${
-                              email.exception_level === 5
-                                ? 'bg-red-900 text-red-200'
-                                : email.exception_level === 4
-                                ? 'bg-orange-900 text-orange-200'
-                                : 'bg-yellow-900 text-yellow-200'
-                            }`}
-                          >
-                            רמה {email.exception_level}
-                          </Badge>
                         </div>
                         <Button
                           variant={
-                            isEvidenceSelected(email.id) ? 'default' : 'outline'
+                            isEmailSelected(email.id) ? 'default' : 'outline'
                           }
                           size='sm'
                           onClick={e => {
                             e.stopPropagation();
                             handleAddEvidence(email);
                           }}
-                          disabled={isEvidenceSelected(email.id)}
+                          disabled={isEmailSelected(email.id)}
                           className='gap-1 text-xs'
                         >
-                          {isEvidenceSelected(email.id) ? (
+                          {isEmailSelected(email.id) ? (
                             <>
                               <Check className='w-3 h-3' />
                               נוסף
@@ -183,16 +149,16 @@ const Emails = () => {
                     <div className='flex items-center gap-2'>
                       <Button
                         variant={
-                          isEvidenceSelected(selectedEmail.id)
+                          isEmailSelected(selectedEmail.id)
                             ? 'default'
                             : 'outline'
                         }
                         size='sm'
                         onClick={() => handleAddEvidence(selectedEmail)}
-                        disabled={isEvidenceSelected(selectedEmail.id)}
+                        disabled={isEmailSelected(selectedEmail.id)}
                         className='gap-2'
                       >
-                        {isEvidenceSelected(selectedEmail.id) ? (
+                        {isEmailSelected(selectedEmail.id) ? (
                           <>
                             נוסף לראיות
                             <Check className='w-4 h-4' />
@@ -209,53 +175,24 @@ const Emails = () => {
 
                   <div className='space-y-2 text-sm'>
                     <div className='flex items-center gap-2'>
-                      <span className='text-slate-400'>מקור:</span>
+                      <span className='text-slate-400'>יחידת הפקה:</span>
                       <span className='text-slate-200'>
-                        <GlossaryText text={selectedEmail.source} />
-                      </span>
-                    </div>
-                    <div className='flex items-center gap-2'>
-                      <span className='text-slate-400'>מערך:</span>
-                      <span className='text-slate-200'>
-                        <GlossaryText text={selectedEmail.formation} />
+                        <GlossaryText text={selectedEmail.productionUnit} />
                       </span>
                     </div>
                     <div className='flex items-center gap-2'>
                       <Clock className='w-3 h-3 text-slate-400' />
                       <span className='text-slate-400'>
-                        {selectedEmail.production_date}{' '}
-                        {selectedEmail.production_time}
+                        {selectedEmail.productionDate.toLocaleDateString('he-IL')}
                       </span>
                     </div>
-                    <div className='flex items-center gap-2'>
-                      <span className='text-slate-400'>רמת חריגות:</span>
-                      <Badge
-                        className={`text-xs ${
-                          selectedEmail.exception_level === 5
-                            ? 'bg-red-900 text-red-200'
-                            : selectedEmail.exception_level === 4
-                            ? 'bg-orange-900 text-orange-200'
-                            : 'bg-yellow-900 text-yellow-200'
-                        }`}
-                      >
-                        {selectedEmail.exception_level}
-                      </Badge>
-                    </div>
-                    {selectedEmail.comments && (
-                      <div className='flex items-center gap-2'>
-                        <span className='text-slate-400'>הערות:</span>
-                        <span className='text-slate-200'>
-                          <GlossaryText text={selectedEmail.comments} />
-                        </span>
-                      </div>
-                    )}
                   </div>
                 </CardHeader>
 
                 <CardContent className='p-6'>
                   <div className='bg-slate-900/60 border border-slate-600/30 rounded-lg p-4'>
                     <div className='text-slate-300 text-sm whitespace-pre-wrap font-sans leading-relaxed'>
-                      <GlossaryText text={selectedEmail.content} />
+                      <GlossaryText text={selectedEmail.description} />
                     </div>
                   </div>
                 </CardContent>

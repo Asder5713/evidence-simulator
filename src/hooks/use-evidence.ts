@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Evidence } from '@/data/evidence-data';
+import { Evidence } from '@/types/evidence';
 
 const STORAGE_KEY = 'selected-evidence';
 
