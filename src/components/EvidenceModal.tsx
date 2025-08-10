@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 
-import { Evidence } from '@/data/evidence-data';
+import { Evidence } from '@/types/evidence';
 
 interface EvidenceModalProps {
   evidence: Evidence | null;

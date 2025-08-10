@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AlertTriangle, Shield } from 'lucide-react';
 import { EvidenceCard } from './EvidenceCard';
-import { Evidence } from '../data/evidence-data';
+import { Evidence } from '@/types/evidence';
 
 interface EvidenceDropZoneProps {
   type: 'suspicious' | 'calming';

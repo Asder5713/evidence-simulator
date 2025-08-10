@@ -1,6 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { useGameContext } from '@/contexts/GameContext';
-import { evidence } from '@/data/evidence-data';
+import { emailsData } from '@/data/emails-data';
+import { textsData } from '@/data/texts-data';
+import { filesData } from '@/data/files-data';
+import { emailToEvidence, textToEvidence, fileToEvidence } from '@/types/evidence';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,43 +13,21 @@ export const useNotifications = () => {
   const navigate = useNavigate();
   const notifiedItems = useRef<Set<string>>(new Set());
 
-  const getPageRoute = (newsType: string) => {
-    if (newsType === 'email') return '/emails';
-    if (
-      [
-        'intelligence',
-        'dispatch',
-        'investigation',
-        'forensics',
-        'command',
-      ].includes(newsType)
-    )
-      return '/text-messages';
-    if (['image', 'video', 'audio'].includes(newsType))
-      return '/visual-evidence';
+  const getPageRoute = (type: 'email' | 'text' | 'file') => {
+    if (type === 'email') return '/emails';
+    if (type === 'text') return '/text-messages';
+    if (type === 'file') return '/visual-evidence';
     return '/';
   };
 
-  const getTypeLabel = (newsType: string) => {
-    switch (newsType) {
+  const getTypeLabel = (type: 'email' | 'text' | 'file') => {
+    switch (type) {
       case 'email':
         return 'אימייל';
-      case 'intelligence':
-        return 'מודיעין';
-      case 'dispatch':
-        return 'מוקד';
-      case 'investigation':
-        return 'חקירה';
-      case 'forensics':
-        return 'זיהוי פלילי';
-      case 'command':
-        return 'פיקוד';
-      case 'image':
-        return 'תמונה';
-      case 'video':
-        return 'וידיאו';
-      case 'audio':
-        return 'הקלטה';
+      case 'text':
+        return 'הודעה';
+      case 'file':
+        return 'קובץ';
       default:
         return 'ידיעה';
     }
@@ -56,19 +37,64 @@ export const useNotifications = () => {
     if (!isGameStarted) return;
 
     const checkForNewEvidence = () => {
-      evidence.forEach(item => {
+      // Check emails
+      emailsData.forEach(item => {
         if (
-          isTimeReached(`${item.production_date} ${item.production_time}`) &&
+          isTimeReached(item.productionDate.toLocaleString('he-IL')) &&
           !notifiedItems.current.has(item.id)
         ) {
           notifiedItems.current.add(item.id);
 
           const handleClick = () => {
-            navigate(getPageRoute(item.news_type));
+            navigate(getPageRoute('email'));
           };
 
           toast({
-            title: `${getTypeLabel(item.news_type)} חדש`,
+            title: `${getTypeLabel('email')} חדש`,
+            description: item.title,
+            duration: 4000,
+            onClick: handleClick,
+            className: 'cursor-pointer hover:bg-accent transition-colors',
+          });
+        }
+      });
+
+      // Check texts
+      textsData.forEach(item => {
+        if (
+          isTimeReached(item.productionDate.toLocaleString('he-IL')) &&
+          !notifiedItems.current.has(item.id)
+        ) {
+          notifiedItems.current.add(item.id);
+
+          const handleClick = () => {
+            navigate(getPageRoute('text'));
+          };
+
+          toast({
+            title: `${getTypeLabel('text')} חדש`,
+            description: item.title,
+            duration: 4000,
+            onClick: handleClick,
+            className: 'cursor-pointer hover:bg-accent transition-colors',
+          });
+        }
+      });
+
+      // Check files
+      filesData.forEach(item => {
+        if (
+          isTimeReached(item.productionDate.toLocaleString('he-IL')) &&
+          !notifiedItems.current.has(item.id)
+        ) {
+          notifiedItems.current.add(item.id);
+
+          const handleClick = () => {
+            navigate(getPageRoute('file'));
+          };
+
+          toast({
+            title: `${getTypeLabel('file')} חדש`,
             description: item.title,
             duration: 4000,
             onClick: handleClick,

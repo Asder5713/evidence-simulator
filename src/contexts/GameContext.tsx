@@ -1,6 +1,9 @@
 import React, { createContext, useContext, ReactNode, useState, useEffect, useMemo } from 'react';
 import { useGameTime, GameTime } from '@/hooks/use-game-time';
-import { evidence } from '@/data/evidence-data';
+import { emailsData } from '@/data/emails-data';
+import { textsData } from '@/data/texts-data';
+import { filesData } from '@/data/files-data';
+import { emailToEvidence, textToEvidence, fileToEvidence } from '@/types/evidence';
 
 interface GameContextType {
   gameTime: GameTime;
@@ -53,24 +56,19 @@ export function GameProvider({ children }: GameProviderProps) {
       return { emails: 0, texts: 0, visual: 0 };
     }
 
-    const visibleEmails = evidence.filter(item => 
-      item.news_type === 'email' && 
-      gameState.isTimeReached(`${item.production_date} ${item.production_time}`)
+    const visibleEmails = emailsData.filter(item => 
+      gameState.isTimeReached(item.productionDate.toLocaleString('he-IL'))
     );
-    const visibleTexts = evidence.filter(item => 
-      ['intelligence', 'dispatch', 'investigation', 'forensics', 'command'].includes(item.news_type) &&
-      gameState.isTimeReached(`${item.production_date} ${item.production_time}`)
+    const visibleTexts = textsData.filter(item => 
+      gameState.isTimeReached(item.productionDate.toLocaleString('he-IL'))
     );
-    const visibleVisual = evidence.filter(item => 
-      ['image', 'video', 'audio'].includes(item.news_type) &&
-      gameState.isTimeReached(`${item.production_date} ${item.production_time}`)
+    const visibleVisual = filesData.filter(item => 
+      gameState.isTimeReached(item.productionDate.toLocaleString('he-IL'))
     );
 
     // Helper function to parse time from timestamp and convert to minutes
-    const parseTimeToMinutes = (timestamp: string) => {
-      const timeMatch = timestamp.match(/(\d{2}):(\d{2})/);
-      if (!timeMatch) return 0;
-      return parseInt(timeMatch[1]) * 60 + parseInt(timeMatch[2]);
+    const parseTimeToMinutes = (date: Date) => {
+      return date.getHours() * 60 + date.getMinutes();
     };
 
     // Count evidence that appeared after the last page visit (or all if never visited)
@@ -80,8 +78,8 @@ export function GameProvider({ children }: GameProviderProps) {
       }
       
       const lastVisitTime = pageVisitTimes[page] || 0;
-      return evidenceList.filter(evidenceItem => {
-        const evidenceTime = parseTimeToMinutes(evidenceItem.production_time);
+      return evidenceList.filter((evidenceItem: any) => {
+        const evidenceTime = parseTimeToMinutes(evidenceItem.productionDate);
         return evidenceTime > lastVisitTime;
       }).length;
     };
@@ -91,7 +89,6 @@ export function GameProvider({ children }: GameProviderProps) {
       texts: getUnseenCount(visibleTexts, 'texts'),
       visual: getUnseenCount(visibleVisual, 'visual')
     };
-
 
     return counts;
   }, [gameState.isGameStarted, gameState.gameTime, visitedPages, pageVisitTimes]);
